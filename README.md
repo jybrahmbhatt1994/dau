@@ -1,4 +1,4 @@
-# Dhirubhai Ambani University — Frontend
+# DAU — Frontend
 
 A pixel-accurate, fully responsive **Next.js 14 (App Router) + TypeScript + Tailwind CSS** frontend for the DAU site, architected so a **headless WordPress** backend can be dropped in without touching any UI.
 
