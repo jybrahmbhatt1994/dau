@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface font-sans text-black antialiased;
+  }
+
+  /* Keep media block-level to avoid baseline gaps */
+  img,
+  svg,
+  video {
+    display: block;
+  }
+  main {
+    overflow-x: clip;
+  }
+}
+
+@layer utilities {
+  /* Pause the recruiter marquee on hover */
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+}
