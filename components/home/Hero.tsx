@@ -7,7 +7,24 @@ import type { HeroContent } from "@/lib/types";
 
 const AUTOPLAY_MS = 5000;
 
-export function Hero({ data }: { data: HeroContent }) {
+/**
+ * Shared hero (homepage + school pages). The homepage renders it with no extra
+ * props, so its appearance is unchanged. School pages (e.g. SOT) pass:
+ *   - panelClassName="bg-ink"  → dark navy panel instead of the red `bg-brand`
+ *   - watermark={null}         → hide the paper-bird watermark
+ *   - data.eyebrowSub          → muted second line under the eyebrow
+ */
+export function Hero({
+  data,
+  panelClassName = "bg-brand",
+  watermark = "/orange-paper-bird.svg",
+}: {
+  data: HeroContent;
+  /** Tailwind classes for the right panel background (default: red brand). */
+  panelClassName?: string;
+  /** Watermark image src, or null to hide it (default: orange paper bird). */
+  watermark?: string | null;
+}) {
   const slides = data.images;
   const [active, setActive] = useState(0);
 
@@ -83,19 +100,28 @@ export function Hero({ data }: { data: HeroContent }) {
           )}
         </div>
 
-        {/* Right: red rank panel */}
-        <div className="relative flex flex-col justify-center overflow-hidden bg-brand px-8 py-12 text-white sm:px-12 lg:py-0">
+        {/* Right: rank panel (color via panelClassName) */}
+        <div
+          className={`relative flex flex-col justify-center overflow-hidden px-8 py-12 text-white sm:px-12 lg:py-0 ${panelClassName}`}
+        >
           {/* paper-bird watermark (bottom-right) */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/orange-paper-bird.svg"
-            alt=""
-            aria-hidden
-            className="pointer-events-none absolute bottom-6 right-6 w-32 select-none sm:w-40 lg:w-44"
-          />
+          {watermark && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={watermark}
+              alt=""
+              aria-hidden
+              className="pointer-events-none absolute bottom-6 right-6 w-32 select-none sm:w-40 lg:w-44"
+            />
+          )}
 
           <div className="relative max-w-md">
             <p className="text-base font-semibold">{data.eyebrow}</p>
+            {data.eyebrowSub && (
+              <p className="mt-0.5 text-base font-medium text-white/55">
+                {data.eyebrowSub}
+              </p>
+            )}
 
             <div className="mt-8 flex items-center gap-3">
               <span className="font-display text-[clamp(2.5rem,5vw,3.125rem)] font-semibold leading-none">

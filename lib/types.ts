@@ -87,6 +87,8 @@ export interface SectionIntro {
 
 export interface HeroContent {
   eyebrow: string;
+  /** Optional muted second line under the eyebrow (e.g. school pages). */
+  eyebrowSub?: string;
   rankLabel: string;
   rankValue: string;
   subline: string;
@@ -134,10 +136,8 @@ export interface HomeData {
 /** Shared inner-page hero (image + dark panel with title/subline). */
 export interface PageHeroContent {
   title: string;
-  /** Right-side supporting line in the dark panel. Optional. */
   subline?: string;
   image: string;
-  /** Optional breadcrumb (Home / Academics / …) rendered above the title. */
   breadcrumb?: NavChild[];
 }
 
@@ -151,7 +151,7 @@ export interface SubNavLink {
 export interface CtaPanel {
   title: string;
   description: string;
-  cta: string; // button label, e.g. "Know More"
+  cta: string;
   href: string;
 }
 
@@ -161,7 +161,6 @@ export interface CtaPanel {
 
 export interface DeanMessageContent {
   title: string;
-  /** Body copy, one entry per paragraph. */
   paragraphs: string[];
   email: string;
   image: string;
@@ -194,7 +193,6 @@ export interface AcademicsData {
   subNav: SubNavLink[];
   dean: DeanMessageContent;
   schools: SectionIntro & { cards: SchoolCard[] };
-  /** Reuses the existing ProgramCard contract (id, title, excerpt, image, href). */
   programs: SectionIntro & { cards: ProgramCard[] };
   areas: { title: string; description: string; cards: AreaCard[] };
   support: { title: string; cards: SupportCard[] };
@@ -205,7 +203,6 @@ export interface AcademicsData {
 //  ACADEMICS — Office of Dean sub-page (/academics/dean)
 // ============================================================================
 
-/** A person card in the Officials grid (details revealed on hover/focus). */
 export interface Official {
   id: string;
   name: string;
@@ -215,7 +212,6 @@ export interface Official {
   image: string;
 }
 
-/** "Message from Dean's Desk" + "Functions of Office of the Dean" + email. */
 export interface DeansDeskContent {
   title: string;
   paragraphs: string[];
@@ -230,5 +226,46 @@ export interface DeanPageData {
   subNav: SubNavLink[];
   desk: DeansDeskContent;
   officials: { title: string; people: Official[] };
+  cta: { calendar: CtaPanel; areas: CtaPanel };
+}
+
+// ============================================================================
+//  SCHOOL sub-page (e.g. /academics/sot — School of Technology)
+//  Hero reuses HeroContent (homepage hero, dark panel variant).
+// ============================================================================
+
+export interface ResearchArea {
+  id: string;
+  title: string;
+  image: string;
+  href: string;
+}
+
+export interface PeopleCategory {
+  id: string;
+  label: string;
+  image: string;
+  href: string;
+}
+
+export interface VisionMissionBlock {
+  title: string;
+  body: string;
+}
+
+export interface SchoolPageData {
+  hero: HeroContent;
+  subNav: SubNavLink[];
+  intro: {
+    paragraphs: string[];
+    vision: VisionMissionBlock;
+    mission: VisionMissionBlock;
+  };
+  programs: SectionIntro & { cards: ProgramCard[] };
+  research: SectionIntro & { cards: ResearchArea[] };
+  people: { title: string; categories: PeopleCategory[] };
+  /** Reuses the existing homepage <NewsEvents /> component and its data shape. */
+  news: HomeData["news"];
+  events: { title: string; items: EventItem[]; allHref: string };
   cta: { calendar: CtaPanel; areas: CtaPanel };
 }
