@@ -34,35 +34,42 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-1 xl:flex">
-          {navigation.map((item) => (
-            <div key={item.label} className="group relative">
-              <Link
-                href={item.href}
-                className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-black transition-colors group-hover:text-brand"
-              >
-                {item.label}
+          {navigation.map((item, i) => {
+            const alignRight = i >= navigation.length - 4;
+            return (
+              <div key={item.label} className="group relative">
+                <Link
+                  href={item.href}
+                  className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-black transition-colors group-hover:text-brand"
+                >
+                  {item.label}
+                  {item.children && (
+                    <ChevronDown className="h-3.5 w-3.5 text-ash transition-transform group-hover:rotate-180" />
+                  )}
+                </Link>
                 {item.children && (
-                  <ChevronDown className="h-3.5 w-3.5 text-ash transition-transform group-hover:rotate-180" />
+                  <div
+                    className={`invisible absolute top-full z-50 min-w-[230px] translate-y-1 border-t-2 border-brand bg-white opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${
+                      alignRight ? "right-0" : "left-0"
+                    }`}
+                  >
+                    <ul className="py-2">
+                      {item.children.map((child) => (
+                        <li key={child.label}>
+                          <Link
+                            href={child.href}
+                            className="block px-4 py-2.5 text-sm font-medium text-black/80 transition-colors hover:bg-surface hover:text-brand"
+                          >
+                            {child.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
-              </Link>
-              {item.children && (
-                <div className="invisible absolute left-0 top-full z-50 min-w-[230px] translate-y-1 border-t-2 border-brand bg-white opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                  <ul className="py-2">
-                    {item.children.map((child) => (
-                      <li key={child.label}>
-                        <Link
-                          href={child.href}
-                          className="block px-4 py-2.5 text-sm font-medium text-black/80 transition-colors hover:bg-surface hover:text-brand"
-                        >
-                          {child.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </nav>
 
         {/* Morphing hamburger / X — single toggle, floats above the drawer */}

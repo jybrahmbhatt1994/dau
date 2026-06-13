@@ -22,6 +22,10 @@
   video {
     display: block;
   }
+  html,
+  body {
+    overflow-x: clip;
+  }
   main {
     overflow-x: clip;
   }
