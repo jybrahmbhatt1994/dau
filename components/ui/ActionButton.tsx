@@ -1,17 +1,20 @@
 import Link from "next/link";
 import { ArrowRight } from "./icons";
 
-type Variant = "outline" | "outlineLight" | "filledRoyal" | "filledRed";
+type Variant =
+  | "outline"
+  | "outlineLight"
+  | "outlineDark"
+  | "filledRoyal"
+  | "filledRed";
 
 const styles: Record<Variant, string> = {
-  outline:
-    "border border-royal text-royal hover:bg-royal hover:text-white",
-  outlineLight:
-    "border border-white text-white hover:bg-white hover:text-navy",
-  filledRoyal:
-    "border border-royal bg-royal text-white hover:bg-royal/90",
-  filledRed:
-    "border border-brand-alt bg-brand-alt text-white hover:bg-brand-alt/90",
+  outline: "border border-royal text-royal hover:bg-royal hover:text-white",
+  outlineLight: "border border-white text-white hover:bg-white hover:text-navy",
+  // navy outline for use on light/gold backgrounds (e.g. Academic Calendar CTA)
+  outlineDark: "border border-navy text-navy hover:bg-navy hover:text-white",
+  filledRoyal: "border border-royal bg-royal text-white hover:bg-royal/90",
+  filledRed: "border border-brand-alt bg-brand-alt text-white hover:bg-brand-alt/90",
 };
 
 export function ActionButton({

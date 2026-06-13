@@ -1,6 +1,13 @@
-import type { HomeData, NavItem } from "@/lib/types";
+import type {
+  HomeData,
+  NavItem,
+  AcademicsData,
+  DeanPageData,
+} from "@/lib/types";
 import { homeData } from "@/data/home";
 import { navigation } from "@/data/navigation";
+import { academicsData } from "@/data/academics";
+import { deanPageData } from "@/data/dean";
 
 /**
  * Data access layer — the single boundary between the UI and the CMS.
@@ -20,13 +27,6 @@ import { navigation } from "@/data/navigation";
  *   });
  *   const { data } = await res.json();
  *   return mapHome(data);
- *
- * Example (REST):
- *
- *   const posts = await fetch(
- *     `${process.env.WORDPRESS_API_URL}/wp-json/wp/v2/posts?_embed`,
- *     { next: { revalidate: 60 } }
- *   ).then((r) => r.json());
  */
 
 export async function getHomeData(): Promise<HomeData> {
@@ -35,4 +35,12 @@ export async function getHomeData(): Promise<HomeData> {
 
 export async function getNavigation(): Promise<NavItem[]> {
   return navigation;
+}
+
+export async function getAcademicsPage(): Promise<AcademicsData> {
+  return academicsData;
+}
+
+export async function getDeanPage(): Promise<DeanPageData> {
+  return deanPageData;
 }
