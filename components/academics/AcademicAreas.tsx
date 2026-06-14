@@ -28,13 +28,22 @@ function AreaCardItem({ card }: { card: AreaCard }) {
   );
 }
 
+/**
+ * Academic Areas grid (image + title cards, 2-up). Reused on the Academics
+ * landing page (white, id="areas") and the Academic Areas sub-page
+ * (surface, id="areas-of-study") — only `id` and `className` differ.
+ */
 export function AcademicAreas({
   data,
+  id = "areas",
+  className = "bg-white",
 }: {
   data: { title: string; description: string; cards: AreaCard[] };
+  id?: string;
+  className?: string;
 }) {
   return (
-    <section id="areas" className="scroll-mt-24 bg-white py-16 lg:py-20">
+    <section id={id} className={`scroll-mt-24 py-16 lg:py-20 ${className}`}>
       <Container>
         <BleedTitle title={data.title} />
 

@@ -6,15 +6,17 @@ type Variant =
   | "outlineLight"
   | "outlineDark"
   | "filledRoyal"
-  | "filledRed";
+  | "filledRed"
+  | "filledGold";
 
 const styles: Record<Variant, string> = {
   outline: "border border-royal text-royal hover:bg-royal hover:text-white",
   outlineLight: "border border-white text-white hover:bg-white hover:text-navy",
-  // navy outline for use on light/gold backgrounds (e.g. Academic Calendar CTA)
   outlineDark: "border border-navy text-navy hover:bg-navy hover:text-white",
   filledRoyal: "border border-royal bg-royal text-white hover:bg-royal/90",
   filledRed: "border border-brand-alt bg-brand-alt text-white hover:bg-brand-alt/90",
+  // gold fill with navy text — "Apply Now" / "Know More" on light backgrounds
+  filledGold: "border border-gold bg-gold text-navy hover:bg-gold/90",
 };
 
 export function ActionButton({

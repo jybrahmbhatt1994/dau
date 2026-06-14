@@ -269,3 +269,100 @@ export interface SchoolPageData {
   events: { title: string; items: EventItem[]; allHref: string };
   cta: { calendar: CtaPanel; areas: CtaPanel };
 }
+
+// ============================================================================
+//  ACADEMICS — Academic Areas sub-page (/academics/areas)
+//  Reuses AreaCard (grid) + the AcademicAreas component.
+// ============================================================================
+
+export interface AcademicAreasPageData {
+  hero: PageHeroContent;
+  subNav: SubNavLink[];
+  /** Full-width intro paragraphs (one entry per paragraph). */
+  intro: string[];
+  areasOfStudy: { title: string; description: string; cards: AreaCard[] };
+  cta: { calendar: CtaPanel; catalogue: CtaPanel };
+}
+
+// ============================================================================
+//  ACADEMICS — Undergraduate Programs sub-page (/academics/ug-programs)
+//  Pure composition: reuses ProgramSlider (Courses), the homepage AdmissionCTA
+//  + FacultySection, AcademicSupport, ProseIntro and SplitCta.
+// ============================================================================
+
+export interface UgProgramsPageData {
+  hero: PageHeroContent;
+  /** Left label in the lavender sub-nav bar. */
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Full-width intro paragraphs. */
+  intro: string[];
+  /** "Courses" slider — leave description "" to show the title only. */
+  courses: SectionIntro & { cards: ProgramCard[] };
+  /** Reuses the homepage AdmissionCTA data shape. */
+  admissionCta: HomeData["admissionCta"];
+  /** Reuses the homepage FacultySection data shape. */
+  faculty: HomeData["faculty"];
+  support: { title: string; cards: SupportCard[] };
+  cta: { calendar: CtaPanel; catalogue: CtaPanel };
+}
+
+// ============================================================================
+//  ACADEMICS — Program detail page (e.g. /academics/btech-ict)
+// ============================================================================
+
+/** Flexible rich block: title + prose, with optional bullets/image/gallery/button. */
+export interface ProgramBlock {
+  id?: string;
+  title: string;
+  paragraphs: string[];
+  bullets?: string[];
+  /** If present, renders as a 2-column block with the image on the right. */
+  image?: string;
+  /** If present, renders a full-width image strip beneath the prose. */
+  gallery?: string[];
+  /** Optional centered gold button. */
+  button?: { label: string; href: string };
+}
+
+export interface OutcomeItem {
+  code: string; // "PO1", "PSO1", …
+  lead?: string; // bold lead-in, e.g. "Engineering knowledge:"
+  body: string;
+}
+
+export interface SemesterItem {
+  id: string;
+  title: string; // "Semester 1"
+  description: string;
+  courses: { name: string; ltpc: string }[]; // ltpc values, e.g. "1-0-2-2"
+}
+
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+export interface ProgramPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  applyBanner: { text: string; cta: string; href: string };
+  intro: string[];
+  honours: ProgramBlock;
+  honoursMinor: ProgramBlock;
+  outcomes: {
+    programOutcomes: { title: string; viewAllHref: string; items: OutcomeItem[] };
+    specificOutcomes: { title: string; items: OutcomeItem[] };
+  };
+  coreCourses: ProgramBlock;
+  electiveCourses: ProgramBlock;
+  coCurricular: ProgramBlock;
+  semesters: { title: string; description: string; items: SemesterItem[] };
+  electives: { title: string; description: string; items: string[] };
+  admissionCta: HomeData["admissionCta"];
+  faqs: { title: string; items: FaqItem[] };
+  contact: { phone: string; email: string };
+  cta: { calendar: CtaPanel; areas: CtaPanel };
+}
