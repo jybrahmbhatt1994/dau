@@ -7,6 +7,9 @@ import type {
   AcademicAreasPageData,
   UgProgramsPageData,
   ProgramPageData,
+  AboutPageData,
+  LeadershipPageData,
+  AdministrationPageData,
 } from "@/lib/types";
 import { homeData } from "@/data/home";
 import { navigation } from "@/data/navigation";
@@ -16,6 +19,9 @@ import { sotPageData } from "@/data/sot";
 import { academicAreasPageData } from "@/data/academic-areas";
 import { ugProgramsPageData } from "@/data/ug-programs";
 import { btechIctPageData } from "@/data/btech-ict";
+import { aboutPageData } from "@/data/about";
+import { leadershipPageData } from "@/data/leadership";
+import { administrationPageData } from "@/data/administration";
 
 /**
  * Data access layer — the single boundary between the UI and the CMS.
@@ -57,4 +63,19 @@ export async function getUgProgramsPage(): Promise<UgProgramsPageData> {
 /** B.Tech (ICT) program detail page (/academics/btech-ict). */
 export async function getProgramPage(): Promise<ProgramPageData> {
   return btechIctPageData;
+}
+
+/** About DAU page (/about). */
+export async function getAboutPage(): Promise<AboutPageData> {
+  return aboutPageData;
+}
+
+/** Leadership page (/about/leadership). */
+export async function getLeadershipPage(): Promise<LeadershipPageData> {
+  return leadershipPageData;
+}
+
+/** Administration page (/about/administration). */
+export async function getAdministrationPage(): Promise<AdministrationPageData> {
+  return administrationPageData;
 }

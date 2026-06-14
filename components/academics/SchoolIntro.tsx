@@ -5,8 +5,9 @@ export function SchoolIntro({ data }: { data: SchoolPageData["intro"] }) {
   return (
     <section id="vision" className="scroll-mt-24 bg-white py-16 lg:py-20">
       <Container>
-        {/* Intro paragraphs (full width) */}
-        <div className="space-y-5 text-[15px] leading-7 text-black/80 lg:text-base lg:leading-8">
+        {/* Intro paragraphs (full width). `whitespace-pre-line` lets a "\n" in
+            the content render as a line break (used by the About page). */}
+        <div className="space-y-5 whitespace-pre-line text-[15px] leading-7 text-black/80 lg:text-base lg:leading-8">
           {data.paragraphs.map((p, i) => (
             <p key={i}>{p}</p>
           ))}

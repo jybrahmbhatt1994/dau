@@ -366,3 +366,72 @@ export interface ProgramPageData {
   contact: { phone: string; email: string };
   cta: { calendar: CtaPanel; areas: CtaPanel };
 }
+
+// ============================================================================
+//  ABOUT — About DAU page (/about)
+//  Reuses SchoolIntro (intro + Vision/Mission), the homepage ConnectContact,
+//  plus a media+text block and a diversity callout.
+// ============================================================================
+
+export interface AboutPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Same shape SchoolIntro consumes (paragraphs + Vision/Mission). */
+  intro: {
+    paragraphs: string[];
+    vision: VisionMissionBlock;
+    mission: VisionMissionBlock;
+  };
+  media: { image: string; paragraphs: string[] };
+  diversity: { title: string; description: string };
+  /** Reuses the homepage ConnectContact data shape. */
+  contact: HomeData["contact"];
+}
+
+// ============================================================================
+//  ABOUT — Leadership page (/about/leadership)
+//  Reuses ProseIntro, DiversityCallout, ConnectContact + a people slider and a
+//  single-leader profile.
+// ============================================================================
+
+export interface LeaderProfileContent {
+  id?: string; // optional anchor id
+  title: string; // section title, e.g. "President"
+  name: string;
+  role: string;
+  image: string;
+  bio: string[];
+}
+
+export interface LeadershipPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  president: LeaderProfileContent;
+  boardOfGovernors: SectionIntro & { members: FacultyMember[] };
+  academicCouncil: SectionIntro & { members: FacultyMember[] };
+  financeCommittee: SectionIntro & { members: FacultyMember[] };
+  directorGeneral: LeaderProfileContent;
+  directors: SectionIntro & { members: FacultyMember[] };
+  diversity: { title: string; description: string };
+  contact: HomeData["contact"];
+}
+
+// ============================================================================
+//  ABOUT — Administration page (/about/administration)
+//  A sequence of LeaderProfile blocks (alternating image side) + reused
+//  ProseIntro / DiversityCallout / ConnectContact.
+// ============================================================================
+
+export interface AdministrationPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  /** Offices in display order; the route alternates image side + background. */
+  profiles: LeaderProfileContent[];
+  diversity: { title: string; description: string };
+  contact: HomeData["contact"];
+}
