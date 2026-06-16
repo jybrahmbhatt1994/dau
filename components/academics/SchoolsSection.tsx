@@ -32,20 +32,34 @@ function SchoolCardItem({ card }: { card: SchoolCard }) {
   );
 }
 
+/**
+ * Sticky-left intro + stacked image cards (image + title + arrow). Used by the
+ * Academics "Schools" section and the Newsroom "Podcasts" section (with a
+ * BleedTitle), and by the Photo Gallery page (no title — just the left
+ * paragraph). Pass an empty `data.title` to omit the heading.
+ */
 export function SchoolsSection({
   data,
+  id = "schools",
+  className = "bg-surface",
 }: {
   data: SectionIntro & { cards: SchoolCard[] };
+  id?: string;
+  className?: string;
 }) {
   return (
-    <section id="schools" className="scroll-mt-24 bg-surface py-16 lg:py-20">
+    <section id={id} className={`scroll-mt-24 py-16 lg:py-20 ${className}`}>
       <Container>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-12">
           {/* Sticky intro */}
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <BleedTitle title={data.title} />
+          <div className="lg:sticky lg:top-[160px] lg:self-start">
+            {data.title && <BleedTitle title={data.title} />}
             {data.description && (
-              <p className="mt-8 max-w-md text-base font-medium leading-relaxed text-ash">
+              <p
+                className={`max-w-md text-base font-medium leading-relaxed text-ash ${
+                  data.title ? "mt-8" : ""
+                }`}
+              >
                 {data.description}
               </p>
             )}

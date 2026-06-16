@@ -68,9 +68,9 @@ export const navigation: NavItem[] = [
     label: "News & Events",
     href: "/newsroom",
     children: [
-      { label: "Infocus Template", href: "/newsroom/infocus" },
-      { label: "Newsletter", href: "/newsroom/newsletter" },
-      { label: "Photo Gallery", href: "/newsroom/gallery" },
+      { label: "Infocus Template", href: "/newsroom/student-stories" },
+      { label: "Newsletter", href: "/newsroom/newsletters" },
+      { label: "Photo Gallery", href: "/newsroom/photo-gallery" },
     ],
   },
   { label: "Centers", href: "/centers" },

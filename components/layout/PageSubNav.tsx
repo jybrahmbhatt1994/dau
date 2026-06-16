@@ -17,7 +17,7 @@ export function PageSubNav({
   links: SubNavLink[];
 }) {
   return (
-    <nav aria-label={`${label} sections`} className="bg-[#ECEDFF]">
+    <nav aria-label={`${label} sections`} className="sticky top-[72px] z-40 bg-[#ECEDFF] lg:top-[90px]">
       <Container className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-0 sm:h-[56px]">
         <span className="shrink-0 font-display text-lg font-semibold text-navy">
           {label}

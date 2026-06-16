@@ -147,9 +147,9 @@ export interface SubNavLink {
   href: string;
 }
 
-/** One half of a gold/red split CTA. */
+/** One half of a gold/red split CTA. Title optional (some CTAs are title-less). */
 export interface CtaPanel {
-  title: string;
+  title?: string;
   description: string;
   cta: string;
   href: string;
@@ -434,4 +434,57 @@ export interface AdministrationPageData {
   profiles: LeaderProfileContent[];
   diversity: { title: string; description: string };
   contact: HomeData["contact"];
+}
+
+// ============================================================================
+//  NEWS / IN FOCUS pages
+// ============================================================================
+
+export interface MediaLinkItem {
+  id: string;
+  date: string;
+  title: string;
+  href: string;
+}
+
+export interface MediaColumn {
+  title: string;
+  items: MediaLinkItem[];
+  viewAllHref: string;
+}
+
+// --- Newsroom (/newsroom) ---------------------------------------------------
+export interface NewsroomPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  media: { inMedia: MediaColumn; pressRelease: MediaColumn };
+  /** Reuses the homepage <NewsEvents /> shape (title + featured + list). */
+  latestNews: HomeData["news"];
+  stories: SectionIntro & { items: NewsArticle[]; viewAllHref: string };
+  /** Reuses the generalized <SchoolsSection /> (banner + title + arrow). */
+  podcasts: SectionIntro & { cards: SchoolCard[] };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// --- Photo Gallery (/newsroom/photo-gallery) --------------------------------
+export interface PhotoGalleryPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Left-column paragraph (SchoolsSection with no title). */
+  intro: string;
+  categories: SchoolCard[];
+  cta: { calendar: CtaPanel; areas: CtaPanel };
+}
+
+// --- Card-grid template (Newsletters + Student Stories) ---------------------
+export interface CardGridPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  items: NewsArticle[]; // image + date + title + href
+  cta: { left: CtaPanel; right: CtaPanel };
 }

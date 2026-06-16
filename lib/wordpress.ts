@@ -10,6 +10,9 @@ import type {
   AboutPageData,
   LeadershipPageData,
   AdministrationPageData,
+  NewsroomPageData,
+  PhotoGalleryPageData,
+  CardGridPageData,
 } from "@/lib/types";
 import { homeData } from "@/data/home";
 import { navigation } from "@/data/navigation";
@@ -22,6 +25,10 @@ import { btechIctPageData } from "@/data/btech-ict";
 import { aboutPageData } from "@/data/about";
 import { leadershipPageData } from "@/data/leadership";
 import { administrationPageData } from "@/data/administration";
+import { newsroomPageData } from "@/data/newsroom";
+import { photoGalleryPageData } from "@/data/photo-gallery";
+import { newslettersPageData } from "@/data/newsletters";
+import { studentStoriesPageData } from "@/data/student-stories";
 
 /**
  * Data access layer — the single boundary between the UI and the CMS.
@@ -78,4 +85,24 @@ export async function getLeadershipPage(): Promise<LeadershipPageData> {
 /** Administration page (/about/administration). */
 export async function getAdministrationPage(): Promise<AdministrationPageData> {
   return administrationPageData;
+}
+
+/** Newsroom hub (/newsroom). */
+export async function getNewsroomPage(): Promise<NewsroomPageData> {
+  return newsroomPageData;
+}
+
+/** Photo Gallery (/newsroom/photo-gallery). */
+export async function getPhotoGalleryPage(): Promise<PhotoGalleryPageData> {
+  return photoGalleryPageData;
+}
+
+/** Newsletters (/newsroom/newsletters). */
+export async function getNewslettersPage(): Promise<CardGridPageData> {
+  return newslettersPageData;
+}
+
+/** Student Stories / In Focus (/infocus/student-stories). */
+export async function getStudentStoriesPage(): Promise<CardGridPageData> {
+  return studentStoriesPageData;
 }
