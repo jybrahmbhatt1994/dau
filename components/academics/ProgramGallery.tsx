@@ -7,9 +7,19 @@ import "swiper/css";
 /**
  * Full-bleed image gallery slider — same Swiper treatment as the homepage
  * PlacementsSection gallery (centered slides, loop, partial images peeking at
- * both edges). Used for the Co-curricular Activities gallery.
+ * both edges). Used for the Co-curricular Activities gallery and the Campus
+ * Life "Student Life" gallery.
+ *
+ * `aspect` lets callers tune the slide aspect ratio (default `aspect-[4/5]`;
+ * Campus Life passes a squarer `aspect-[15/16]`).
  */
-export function ProgramGallery({ images }: { images: string[] }) {
+export function ProgramGallery({
+  images,
+  aspect = "aspect-[4/5]",
+}: {
+  images: string[];
+  aspect?: string;
+}) {
   return (
     <div className="mt-10 lg:mt-12">
       <Swiper
@@ -25,7 +35,7 @@ export function ProgramGallery({ images }: { images: string[] }) {
       >
         {images.map((src, i) => (
           <SwiperSlide key={i}>
-            <div className="relative aspect-[4/5] w-full overflow-hidden">
+            <div className={`relative ${aspect} w-full overflow-hidden`}>
               <Image
                 src={src}
                 alt=""

@@ -488,3 +488,183 @@ export interface CardGridPageData {
   items: NewsArticle[]; // image + date + title + href
   cta: { left: CtaPanel; right: CtaPanel };
 }
+// ============================================================================
+//  LIFE@DAU — Campus Life page (/life/campus)
+//  Reuses PageHero, PageSubNav, ProseIntro, ProgramSlider/ProgramCard,
+//  ProgramGallery and SplitCta; adds Campus-Life-specific media/feature blocks.
+// ============================================================================
+
+export interface MediaCarouselSlide {
+  image: string;
+  caption?: string;
+}
+
+/** Media slot for a FeatureSection: a full-bleed gallery, a two-up image pair,
+ *  or a single-image carousel. */
+export type FeatureMedia =
+  | { kind: "gallery"; images: string[] }
+  | { kind: "duo"; images: [string, string] }
+  | { kind: "carousel"; slides: MediaCarouselSlide[] };
+
+/** "Title + prose + media" block. `afterParagraphs` render below the media. */
+export interface FeatureSection {
+  id?: string;
+  title: string;
+  paragraphs: string[];
+  afterParagraphs?: string[];
+  media: FeatureMedia;
+}
+
+export interface VirtualTourContent {
+  image: string;
+  label: string;
+  href: string;
+}
+
+export interface SuccessStory {
+  id: string;
+  quote: string;
+  name: string;
+  year: string;
+  image: string;
+}
+
+export interface CampusLifePageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Full-width intro paragraphs (ProseIntro). */
+  intro: string[];
+  studentLife: FeatureSection; // gallery + trailing paragraph
+  virtualTour: VirtualTourContent;
+  residenceLife: FeatureSection; // captioned single-image carousel
+  sportsFacilities: FeatureSection; // two-up images
+  /** "Student Clubs" — reuses ProgramSlider (pass description "" for title-only). */
+  clubs: SectionIntro & { cards: ProgramCard[] };
+  studentBody: { title: string; members: FacultyMember[] };
+  ieee: FeatureSection; // single-image carousel (no caption)
+  successStories: SectionIntro & { items: SuccessStory[] };
+  /** title-less gold + red split CTA. */
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  LIFE@DAU — Student Support page (/life/support)
+//  Reuses PageHero, PageSubNav, ProseIntro, ProgramContentBlock (Wellbeing
+//  intro), ContactPills and SplitCta; adds a rich accordion + a schedule block.
+// ============================================================================
+ 
+export interface SupportAccordionItem {
+  id: string;
+  title: string;
+  paragraphs?: string[];
+  /** Optional inline link appended to the last paragraph (e.g. "click here"). */
+  link?: { label: string; href: string };
+  image?: string;
+  button?: { label: string; href: string };
+}
+ 
+export interface ScheduleCell {
+  name: string;
+  time: string;
+}
+ 
+export interface StudentSupportPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  /** "Student Wellbeing" — title + prose + cream contact pills. */
+  wellbeing: { title: string; paragraphs: string[]; phone: string; email: string };
+  /** Anti-ragging accordion (first item open by default). */
+  antiRagging: SupportAccordionItem[];
+  /** "Medical Facility" — title + intro + schedule grid + trailing prose. */
+  medical: { title: string; intro: string[]; cells: ScheduleCell[]; outro: string[] };
+  /** title-less gold + red split CTA. */
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  LIFE@DAU — Fest & Events page (/life/events)
+//  Reuses PageHero, PageSubNav, ProseIntro, PaginatedCardGrid ("more" mode) and
+//  SplitCta; adds a featured "Upcoming Fest" carousel.
+// ============================================================================
+ 
+export interface FestEventsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  /** "Upcoming Fest" featured carousel (date + title overlay card). */
+  upcomingFest: { title: string; items: EventItem[] };
+  /** "Upcoming Events" 3-col grid with a Show More button. */
+  upcomingEvents: { title: string; items: NewsArticle[] };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  RESEARCH — Dean (Research) page (/research/dean)
+//  Reuses PageHero, PageSubNav, OfficialsSection, SplitCta.
+//  New: DeanResearchDesk (desk message + cream contact pills),
+//       ResearchFunctionsBlock (mixed prose + bullets).
+// ============================================================================
+
+export interface DeanResearchDeskData {
+  title: string;
+  paragraphs: string[];
+  name: string;
+  role: string;
+  image: string;
+  phone: string;
+  email: string;
+}
+
+export interface ResearchBulletGroup {
+  /** Optional lead sentence rendered as a paragraph before the bullet list. */
+  lead?: string;
+  items: string[];
+}
+
+export interface ResearchFunctionsData {
+  title: string;
+  /** Prose paragraphs before the first bullet group. */
+  introParagraphs: string[];
+  /** One or more groups of bullet items, each with an optional lead sentence. */
+  bulletGroups: ResearchBulletGroup[];
+  /** Prose paragraphs after all bullet groups. */
+  outroParagraphs: string[];
+}
+
+export interface DeanResearchPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  desk: DeanResearchDeskData;
+  functions: ResearchFunctionsData;
+  officials: { title: string; people: Official[] };
+  /** left = gold half (e.g. "Dean Faculty"), right = red half (e.g. "Faculty List") */
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  RESEARCH — Research Areas page (/research/areas)
+//  Reuses PageHero, PageSubNav, ProseIntro, ResearchAreasGrid (new component
+//  that mirrors AcademicAreas but stays on a white background throughout),
+//  and SplitCta.
+// ============================================================================
+
+export interface ResearchAreasPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Full-width intro paragraphs on white background (ProseIntro). */
+  intro: string[];
+  /** "Areas" section — BleedTitle + description + 2-col AreaCard grid. */
+  areas: {
+    title: string;
+    description: string;
+    cards: AreaCard[];
+  };
+  /** left = gold half ("Dean Faculty"), right = red half ("Faculty List") */
+  cta: { left: CtaPanel; right: CtaPanel };
+}

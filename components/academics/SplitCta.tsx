@@ -24,7 +24,7 @@ export function SplitCta({
   catalogue: CtaPanel;
 }) {
   return (
-    <section id="related" className="scroll-mt-24 grid grid-cols-1 lg:grid-cols-2">
+    <section id="related" className="scroll-mt-[150px] grid grid-cols-1 lg:grid-cols-2">
       {/* gold half */}
       <div
         className="bg-gold px-6 py-14 sm:px-10 lg:py-20 lg:pr-12"

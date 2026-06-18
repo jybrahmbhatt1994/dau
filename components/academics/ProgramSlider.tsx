@@ -8,17 +8,21 @@ import { ProgramCard } from "@/components/academics/ProgramCard";
 import type { ProgramCard as ProgramCardType, SectionIntro } from "@/lib/types";
 
 /**
- * "Academics" programs — the standard full-bleed-right card slider
- * (PROJECT-GUIDE §7B). Left edge aligns to the container; the right edge
- * bleeds to the screen edge. Client component (Swiper).
+ * Standard full-bleed-right card slider (PROJECT-GUIDE §7B). Left edge aligns to
+ * the container; the right edge bleeds to the screen edge. Client component
+ * (Swiper). Background via `className` (default `bg-white`; Campus Life's
+ * "Student Clubs" passes `bg-surface`). Pass `description: ""` for a title-only
+ * heading.
  */
 export function ProgramSlider({
   data,
+  className = "bg-white",
 }: {
   data: SectionIntro & { cards: ProgramCardType[] };
+  className?: string;
 }) {
   return (
-    <section className="overflow-x-clip bg-white py-16 lg:py-20">
+    <section className={`overflow-x-clip py-16 lg:py-20 ${className}`}>
       <Container>
         <SectionHeading title={data.title} description={data.description} />
       </Container>

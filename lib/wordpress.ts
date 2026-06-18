@@ -13,6 +13,12 @@ import type {
   NewsroomPageData,
   PhotoGalleryPageData,
   CardGridPageData,
+  DeanStudentPageData,
+  FestEventsPageData,
+  CampusLifePageData,
+  StudentSupportPageData,
+  DeanResearchPageData,
+  ResearchAreasPageData,
 } from "@/lib/types";
 import { homeData } from "@/data/home";
 import { navigation } from "@/data/navigation";
@@ -29,6 +35,12 @@ import { newsroomPageData } from "@/data/newsroom";
 import { photoGalleryPageData } from "@/data/photo-gallery";
 import { newslettersPageData } from "@/data/newsletters";
 import { studentStoriesPageData } from "@/data/student-stories";
+import { deanStudentPageData } from "@/data/dean-student";
+import { campusLifePageData } from "@/data/campus-life";
+import { studentSupportPageData } from "@/data/student-support";
+import { festEventsPageData } from "@/data/fest-events";
+import { deanResearchPageData } from "@/data/dean-research";
+import { researchAreasPageData } from "@/data/research-areas";
 
 /**
  * Data access layer — the single boundary between the UI and the CMS.
@@ -105,4 +117,34 @@ export async function getNewslettersPage(): Promise<CardGridPageData> {
 /** Student Stories / In Focus (/infocus/student-stories). */
 export async function getStudentStoriesPage(): Promise<CardGridPageData> {
   return studentStoriesPageData;
+}
+
+/** Dean (Student) page (/life/dean). */
+export async function getDeanStudentPage(): Promise<DeanStudentPageData> {
+  return deanStudentPageData;
+}
+
+/** Campus Life page (/life/campus). */
+export async function getCampusLifePage(): Promise<CampusLifePageData> {
+  return campusLifePageData;
+}
+
+/** Student Support page (/life/support). */
+export async function getStudentSupportPage(): Promise<StudentSupportPageData> {
+  return studentSupportPageData;
+}
+
+/** Fest & Events page (/life/events). */
+export async function getFestEventsPage(): Promise<FestEventsPageData> {
+  return festEventsPageData;
+}
+
+/** Dean (Research) page (/research/dean). */
+export async function getDeanResearchPage(): Promise<DeanResearchPageData> {
+  return deanResearchPageData;
+}
+
+/** Research Areas page (/research/areas). */
+export async function getResearchAreasPage(): Promise<ResearchAreasPageData> {
+  return researchAreasPageData;
 }
