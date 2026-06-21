@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { BleedTitle } from "@/components/ui/SectionTitle";
-import type { DeanDeskContent } from "@/lib/types";
+import type { DeansDeskContent } from "@/lib/types";
 
 /**
  * "Message from Dean's Desk" — a left-bleeding gold-underline title, then a
@@ -12,7 +12,7 @@ import type { DeanDeskContent } from "@/lib/types";
  * (which has bottom padding only) is meant to render directly beneath it so the
  * two read as one continuous grey band — exactly as on the Dean (Student) page.
  */
-export function DeanDeskMessage({ data }: { data: DeanDeskContent }) {
+export function DeanDeskMessage({ data }: { data: DeansDeskContent }) {
   return (
     <section id="message" className="scroll-mt-[150px] bg-surface pt-16 lg:pt-20">
       <Container>
