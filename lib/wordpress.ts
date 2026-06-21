@@ -19,6 +19,20 @@ import type {
   StudentSupportPageData,
   DeanResearchPageData,
   ResearchAreasPageData,
+  ResearchAreaDetailPageData,
+  GrantsPageData,
+  AwardsPageData,
+  FacultyPageData,
+  DeanFacultyPageData,
+  FacultyRecruitmentPageData,
+  FacultyHandbookPageData,
+  FacultyDevelopmentPageData,
+  PlacementTeamPageData,
+  PlacementStatsPageData,
+  TopRecruitersPageData,
+  InternshipsPageData,
+  UgAdmissionsPageData,
+  FinancialSupportPageData,
 } from "@/lib/types";
 import { homeData } from "@/data/home";
 import { navigation } from "@/data/navigation";
@@ -41,6 +55,21 @@ import { studentSupportPageData } from "@/data/student-support";
 import { festEventsPageData } from "@/data/fest-events";
 import { deanResearchPageData } from "@/data/dean-research";
 import { researchAreasPageData } from "@/data/research-areas";
+import { researchAreaDetailPageData } from "@/data/research-area-detail";
+import { grantsPageData } from "@/data/grants";
+import { awardsPageData } from "@/data/awards";
+import { facultyPageData } from "@/data/faculty";
+import { deanFacultyPageData } from "@/data/dean-faculty";
+import { facultyRecruitmentPageData } from "@/data/faculty-recruitment";
+import { facultyHandbookPageData } from "@/data/faculty-handbook";
+import { facultyDevelopmentPageData } from "@/data/faculty-development";
+import { placementTeamPageData } from "@/data/placement-team";
+import { placementStatsPageData } from "@/data/placement-stats";
+import { topRecruitersPageData } from "@/data/top-recruiters";
+import { internshipsPageData } from "@/data/internships";
+import { ugAdmissionsPageData } from "@/data/ug-admissions";
+import { financialSupportPageData } from "@/data/financial-support";
+import { ugScholarshipsPageData } from "@/data/ug-scholarships";
 
 /**
  * Data access layer — the single boundary between the UI and the CMS.
@@ -147,4 +176,86 @@ export async function getDeanResearchPage(): Promise<DeanResearchPageData> {
 /** Research Areas page (/research/areas). */
 export async function getResearchAreasPage(): Promise<ResearchAreasPageData> {
   return researchAreasPageData;
+}
+
+/**
+ * Research Area Detail page (/research/areas/[slug]).
+ * When going headless: map slug → WP post / REST query and return typed data.
+ */
+export async function getResearchAreaDetailPage(
+  _slug: string
+): Promise<ResearchAreaDetailPageData> {
+  // TODO: fetch by slug from WordPress when CMS is live
+  return researchAreaDetailPageData;
+}
+
+/** Grants & Projects page (/research/grants). */
+export async function getGrantsPage(): Promise<GrantsPageData> {
+  return grantsPageData;
+}
+
+/** Awards & Recognition page (/research/awards). */
+export async function getAwardsPage(): Promise<AwardsPageData> {
+  return awardsPageData;
+}
+
+/** Faculty landing page (/faculty). */
+export async function getFacultyPage(): Promise<FacultyPageData> {
+  return facultyPageData;
+}
+
+/** Dean (Faculty) page (/faculty/dean). */
+export async function getDeanFacultyPage(): Promise<DeanFacultyPageData> {
+  return deanFacultyPageData;
+}
+
+/** Faculty Recruitment page (/faculty/recruitment). */
+export async function getFacultyRecruitmentPage(): Promise<FacultyRecruitmentPageData> {
+  return facultyRecruitmentPageData;
+}
+
+/** Faculty Handbook page (/faculty/handbook). */
+export async function getFacultyHandbookPage(): Promise<FacultyHandbookPageData> {
+  return facultyHandbookPageData;
+}
+
+/** Faculty Development & Evaluation page (/faculty/development). */
+export async function getFacultyDevelopmentPage(): Promise<FacultyDevelopmentPageData> {
+  return facultyDevelopmentPageData;
+}
+
+/** Placement Team page (/placements/team). */
+export async function getPlacementTeamPage(): Promise<PlacementTeamPageData> {
+  return placementTeamPageData;
+}
+
+/** Placement Stats page (/placements/stats). */
+export async function getPlacementStatsPage(): Promise<PlacementStatsPageData> {
+  return placementStatsPageData;
+}
+
+/** Top Recruiters page (/placements/recruiters). */
+export async function getTopRecruitersPage(): Promise<TopRecruitersPageData> {
+  return topRecruitersPageData;
+}
+
+/** Internships page (/placements/internships). */
+export async function getInternshipsPage(): Promise<InternshipsPageData> {
+  return internshipsPageData;
+}
+
+/** Undergraduate Admissions page (/admission/ug). */
+export async function getUgAdmissionsPage(): Promise<UgAdmissionsPageData> {
+  return ugAdmissionsPageData;
+}
+
+/** Financial Support page (/admission/financial-support). */
+export async function getFinancialSupportPage(): Promise<FinancialSupportPageData> {
+  return financialSupportPageData;
+}
+
+/** UG Scholarships page (/admission/scholarships). Reuses the
+ *  FinancialSupportPageData shape — same template, different content. */
+export async function getUgScholarshipsPage(): Promise<FinancialSupportPageData> {
+  return ugScholarshipsPageData;
 }

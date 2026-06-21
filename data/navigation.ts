@@ -20,6 +20,7 @@ export const navigation: NavItem[] = [
     label: "Admission",
     href: "/admission",
     children: [
+      { label: "Undergraduate Admissions", href: "/admission/ug" },
       { label: "Financial Support", href: "/admission/financial-support" },
       { label: "UG Scholarships", href: "/admission/ug-scholarships" },
     ],
@@ -50,8 +51,8 @@ export const navigation: NavItem[] = [
     children: [
       { label: "Placement Team", href: "/placements/team" },
       { label: "Placement Stats", href: "/placements/stats" },
-      { label: "Top Recruiter", href: "/placements/top-recruiters" },
-      { label: "Placement Internship", href: "/placements/internship" },
+      { label: "Top Recruiter", href: "/placements/recruiters" },
+      { label: "Placement Internship", href: "/placements/internships" },
     ],
   },
   {

@@ -668,3 +668,733 @@ export interface ResearchAreasPageData {
   /** left = gold half ("Dean Faculty"), right = red half ("Faculty List") */
   cta: { left: CtaPanel; right: CtaPanel };
 }
+
+// ============================================================================
+//  RESEARCH — Research Area Detail page (/research/areas/[slug])
+//  Dynamic page per research area (AI/ML, Algorithms, etc.).
+//  New sections: AreaDetailIntro (2-col prose + director message),
+//  AreaFacultySlider (portrait row), ResearchGroupsGrid (lab cards + button),
+//  SponsoredResearchTable (paginated table), CurrentPublications (3-col cards),
+//  VideoCta (full-bleed play button), UpcomingEvents (reused), SplitCta.
+// ============================================================================
+
+/** Inline types used only on the detail page */
+export interface AreaDetailIntroData {
+  paragraphs: string[];
+  directorName: string;
+  directorRole: string;
+  directorMessage: string;
+}
+
+export interface SponsoredProject {
+  id: string;
+  pi: string;
+  title: string;
+  fundingAgency: string;
+  duration: string;
+  amount: string;
+}
+
+export interface PublicationCard {
+  id: string;
+  image: string;
+  date: string;
+  excerpt: string;
+  author: string;
+  href: string;
+}
+
+export interface VideoCta {
+  image: string;
+  label: string;
+  href: string;
+}
+
+export interface ResearchAreaDetailPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: AreaDetailIntroData;
+  faculty: SectionIntro & { members: FacultyMember[] };
+  groups: {
+    title: string;
+    cards: AreaCard[];
+    projectsHref: string;
+    projectsCta: string;
+  };
+  sponsored: {
+    title: string;
+    projects: SponsoredProject[];
+  };
+  publications: {
+    title: string;
+    items: PublicationCard[];
+  };
+  videoCta: VideoCta;
+  events: { title: string; items: EventItem[]; allHref: string };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  RESEARCH — Grants & Projects page (/research/grants)
+//  Reuses PageHero, PageSubNav, ProseIntro, SponsoredResearchTable, SplitCta.
+//  New: GrantsTabs — client-side tab switcher with sticky-left heading and
+//  vertical grant cards list.
+// ============================================================================
+
+/** Single grant entry shown inside a tab panel */
+export interface GrantCard {
+  id: string;
+  name: string;
+  description: string;
+  applyLabel: string;
+  applyHref: string;
+  /** Optional href for the whole card header; arrow is decorative when omitted */
+  detailHref?: string;
+}
+
+/** One tab panel: pill label + section heading + description + cards list */
+export interface GrantsTabList {
+  tabLabel: string;
+  sectionTitle: string;
+  description: string;
+  cards: GrantCard[];
+}
+
+export interface GrantsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  /** Exactly two tabs by Figma: Available Grants + Past Grants */
+  tabs: [GrantsTabList, GrantsTabList];
+  /** Reuses the SponsoredResearchTable + SponsoredProject types */
+  sponsored: {
+    title: string;
+    projects: SponsoredProject[];
+  };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  RESEARCH — Awards & Recognition page (/research/awards)
+//  Reuses PageHero, PageSubNav, ProseIntro, SplitCta.
+//  New: AwardeesTable — year-keyed list of awardees with segmented year tabs.
+//       PolicySection — BleedTitle + mixed prose/bullets + optional gold CTA.
+// ============================================================================
+
+/** Single awardee row in the List of Awardees table */
+export interface Awardee {
+  id: string;
+  studentName: string;
+  publicationMonth: string;
+  publicationVenue: string;
+  facultyAuthor: string;
+  title: string;
+}
+
+/**
+ * One year's awardee list. Keyed by year string so the CMS can later fetch
+ * each year independently without changing the component contract.
+ */
+export interface AwardeesYearGroup {
+  year: string;        // e.g. "2025-26"
+  awardees: Awardee[];
+}
+
+/** A group of bullet items used by PolicySection */
+export interface PolicyBulletGroup {
+  /** Optional lead sentence rendered as a paragraph before the bullet list */
+  lead?: string;
+  items: string[];
+}
+
+/** Content shape consumed by PolicySection */
+export interface PolicyData {
+  title: string;
+  introParagraphs: string[];
+  bulletGroups: PolicyBulletGroup[];
+  outroParagraphs: string[];
+  button?: {
+    label: string;
+    href: string;
+    external?: boolean;
+  };
+}
+
+export interface AwardsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  awardees: {
+    title: string;
+    /** Ordered list of years (newest first usually). Active = years[0] */
+    years: AwardeesYearGroup[];
+  };
+  policy: PolicyData;
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  FACULTY — landing page (/faculty)
+//  Reuses PageHero, PageSubNav, AdmissionsBanner, SplitCta.
+//  New: FacultyExplorer — tabs (by faculty type) + intro + search + paginated
+//       grid + FacultyCard (portrait with hover-reveal navy panel).
+// ============================================================================
+
+/**
+ * One faculty category (= one tab on the explorer).
+ * Keyed by `slug` so CMS can fetch each category's faculty independently.
+ */
+export interface FacultyTabData {
+  /** Stable slug used for data lookups and any future routing */
+  slug: string;
+  /** Pill label shown in the tab row (e.g. "Regular Faculty") */
+  label: string;
+  /** Intro paragraph shown below the tabs when this tab is active */
+  intro: string;
+  members: FacultyMember[];
+}
+
+export interface FacultyPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Cream banner near the top — "Interested in becoming a faculty" + CTA */
+  applyBanner: { text: string; cta: string; href: string };
+  tabs: FacultyTabData[];
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  FACULTY — Dean (Faculty) sub-page (/faculty/dean)
+//  Reuses PageHero, PageSubNav, SplitCta.
+//  New: DeanFacultyDesk — message + portrait + single lavender email pill
+//  on a white band. Variant of the Dean (Research) desk pattern, white-bg with
+//  email-only contact.
+// ============================================================================
+
+export interface DeanFacultyDeskData {
+  title: string;
+  /** Paragraphs render with whitespace-pre-line so "\n" inside a string
+   *  becomes a line break (used to separate the greeting from body copy). */
+  paragraphs: string[];
+  name: string;
+  role: string;
+  image: string;
+  email: string;
+}
+
+export interface DeanFacultyPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  desk: DeanFacultyDeskData;
+  /** left = gold ("Faculties @ DAU"), right = red ("Faculty Recruitment") */
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  FACULTY — Faculty Recruitment sub-page (/faculty/recruitment)
+//  Reuses PageHero, PageSubNav, ProseIntro, AdmissionsBanner, ProgramGallery,
+//  SplitCta. New: CurrentOpenings (2-col cards), EligibilityCriteria (tabs),
+//  TitledProseBlock (generic titled sub-blocks).
+// ============================================================================
+
+/** Single tab on the Eligibility Criteria section */
+export interface EligibilityTab {
+  /** Stable slug (e.g. "assistant", "associate", "education", "age") */
+  slug: string;
+  /** Pill label shown in the segmented control */
+  label: string;
+  /** Body paragraphs rendered when this tab is active */
+  paragraphs: string[];
+  /** Optional bullet list rendered below the paragraphs */
+  bullets?: string[];
+}
+
+/** One titled sub-block inside a TitledProseBlock section. */
+export interface TitledSubBlock {
+  /** Optional h3 heading above the prose */
+  heading?: string;
+  paragraphs?: string[];
+  bullets?: string[];
+  /** Optional lead-in paragraph above the bullets */
+  bulletsLead?: string;
+}
+
+/** Content shape consumed by TitledProseBlock */
+export interface TitledProseBlockData {
+  title: string;
+  blocks: TitledSubBlock[];
+}
+
+export interface FacultyRecruitmentPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Cream banner near the top — same shape as the Faculty landing banner */
+  applyBanner: { text: string; cta: string; href: string };
+  intro: string[];
+  openings: {
+    title: string;
+    description: string;
+    cards: AreaCard[];
+  };
+  eligibility: {
+    title: string;
+    tabs: EligibilityTab[];
+  };
+  /** "Prospective Faculty" — multi-block titled prose */
+  prospective: TitledProseBlockData;
+  /** Image strip between Prospective Faculty and Compensation Package */
+  gallery: { images: string[] };
+  /** "Compensation Package" — multi-block titled prose with bullets */
+  compensation: TitledProseBlockData;
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  FACULTY — Faculty Handbook sub-page (/faculty/handbook)
+//  Reuses PageHero, PageSubNav, AdmissionsBanner, SplitCta.
+//  New: HandbookContent — prose + centered gold "Download Handbook" button.
+// ============================================================================
+
+export interface HandbookContentData {
+  /** Each entry renders as a <p>. Use `\n` inside a string for line breaks. */
+  paragraphs: string[];
+  downloadButton: {
+    label: string;
+    href: string;
+    /** If true, opens in a new tab (typical for PDF downloads). */
+    external?: boolean;
+  };
+}
+
+export interface FacultyHandbookPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Cream "Interested in becoming a faculty@DAU" banner near the top */
+  applyBanner: { text: string; cta: string; href: string };
+  content: HandbookContentData;
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  FACULTY — Faculty Development & Evaluation (/faculty/development)
+//  Reuses PageHero, PageSubNav, ProseIntro, PolicySection, TitledProseBlock,
+//  DiversityCallout, ConnectContact.
+//  New: TeachingEnhancement (2-col cards on surface), IndustryExposure
+//  (prose + bullets + image carousel), EffectivenessCards (3-col ink-bg row),
+//  PolicyGuidelines (sticky-left + stacked cards), AwardsHighlights (2-col
+//  image-left article cards).
+// ============================================================================
+
+/** Single slide in the Industry Exposure image carousel */
+export interface CarouselSlide {
+  image: string;
+  caption: string;
+}
+
+/** Single card on Teaching Effectiveness 3-up row (ink bg) */
+export interface EffectivenessCard {
+  id: string;
+  label: string;
+  image: string;
+}
+
+/** Single card in the Policy & Guidelines stack */
+export interface PolicyGuidelineCard {
+  id: string;
+  title: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+/** Single item in the Awards & Highlights 2-col grid */
+export interface AwardHighlight {
+  id: string;
+  image: string;
+  date: string;
+  excerpt: string;
+  href: string;
+}
+
+export interface FacultyDevelopmentPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+
+  /** "Faculty Development Programs (FDPs)" — reuses PolicySection shape
+   *  (paragraphs + bullets, optional CTA omitted). */
+  fdps: PolicyData;
+
+  /** "Teaching & Learning Enhancement" — title + description + AreaCard grid */
+  enhancement: {
+    title: string;
+    description: string;
+    cards: AreaCard[];
+  };
+
+  /** "Industry Exposure & Collaboration" — prose + bullets + carousel */
+  industry: {
+    title: string;
+    introParagraphs: string[];
+    bullets: string[];
+    outroParagraphs?: string[];
+    slides: CarouselSlide[];
+  };
+
+  /** "Faculty Evaluation" — 2-col titled sub-blocks on dark ink */
+  evaluation: TitledProseBlockData;
+
+  /** "Teaching Effectiveness" — 3-col image+label cards on dark ink */
+  teachingEffectiveness: {
+    title: string;
+    intro?: string;
+    cards: EffectivenessCard[];
+  };
+
+  /** "Continuous Improvement" — 2-col titled sub-blocks on dark ink */
+  continuousImprovement: TitledProseBlockData;
+
+  /** "Policy & Guidelines" — sticky-left title + vertical cards */
+  policyGuidelines: {
+    title: string;
+    cards: PolicyGuidelineCard[];
+  };
+
+  /** "Awards & Highlights" — 2-col image-left article cards */
+  highlights: {
+    title: string;
+    items: AwardHighlight[];
+  };
+
+  /** Centered diversity callout (reuses existing DiversityCallout) */
+  diversity: { title: string; description: string };
+
+  /** Reuses homepage ConnectContact shape */
+  contact: ContactContent;
+}
+
+// ============================================================================
+//  PLACEMENT — Placement Team page (/placements/team)
+//  Reuses PageHero, PageSubNav, ProseIntro, FacultyCard, Pagination, SplitCta.
+//  New: FacultyMembersGrid — reusable BleedTitle + 4-col grid with optional
+//  pagination. Used for both the small static "Placement Cell Team" and the
+//  larger paginated "Student Placement Cell".
+// ============================================================================
+
+export interface PlacementTeamPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  /** Static team (no pagination by default) */
+  placementCell: {
+    title: string;
+    members: FacultyMember[];
+  };
+  /** Paginated team — typically a longer list */
+  studentCell: {
+    title: string;
+    members: FacultyMember[];
+  };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  PLACEMENT — Placement Stats page (/placements/stats)
+//  Reuses PageHero, PageSubNav, ProseIntro, ProgramGallery, SplitCta.
+//  Also reuses SuccessStory from Campus Life.
+//  New: BarChartSection (UG/PG bar charts on dark ink),
+//       SuccessStoriesCarousel (tilted-frame testimonial slider).
+// ============================================================================
+
+/** One bucket (year) on a placement bar chart */
+export interface BarChartBucket {
+  label: string;
+  highest: number;
+  average: number;
+}
+
+/** Content shape for one BarChartSection (UG or PG) */
+export interface BarChartSectionData {
+  /** Optional section anchor id (passed to the section element) */
+  id?: string;
+  title: string;
+  description: string;
+  legend: {
+    highestLabel: string;
+    averageLabel: string;
+  };
+  buckets: BarChartBucket[];
+}
+
+export interface PlacementStatsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  /** Autoplay image strip between intro and UG chart */
+  gallery: { images: string[] };
+  ugPlacements: BarChartSectionData;
+  pgPlacements: BarChartSectionData;
+  /** Reuses the existing SuccessStory type from Campus Life */
+  successStories: {
+    title: string;
+    items: SuccessStory[];
+  };
+  /** Title-less split CTA per Figma */
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  PLACEMENT — Top Recruiters page (/placements/recruiters)
+//  Reuses PageHero, PageSubNav, ProseIntro, SuccessStories, SplitCta.
+//  New: StatsRow (4-up brand-red stat numbers), RecruitersGrid (sticky-left
+//  title + responsive 5-col logo grid).
+// ============================================================================
+
+/** One stat in the 4-up StatsRow */
+export interface StatItem {
+  value: string;
+  label: string;
+}
+
+/** Single recruiter logo card */
+export interface RecruiterLogo {
+  id: string;
+  name: string;
+  logo: string;
+  /** Optional — when present the whole card becomes a link */
+  href?: string;
+}
+
+export interface TopRecruitersPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  stats: StatItem[];
+  recruiters: {
+    title: string;
+    items: RecruiterLogo[];
+  };
+  /** Reuses the existing SuccessStory type from Campus Life / Placement Stats */
+  successStories: {
+    title: string;
+    items: SuccessStory[];
+  };
+  /** Title-less split CTA per Figma */
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  PLACEMENT — Internships page (/placements/internships)
+//  100% reuse: PageHero, PageSubNav, AdmissionsBanner, ProseIntro,
+//  ImageCarousel, SplitCta. No new components.
+// ============================================================================
+
+export interface InternshipsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Cream "Interested in internship?" banner */
+  applyBanner: { text: string; cta: string; href: string };
+  intro: string[];
+  /** Single-image carousel with prev/next + caption (reuses CarouselSlide) */
+  carousel: { slides: CarouselSlide[] };
+  /** Title-less split CTA per Figma */
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  ADMISSION — Undergraduate Admissions (/admission/ug)
+//  Mega page with functional category tabs. Each category has its own
+//  complete content block (intro → important dates → intake → program
+//  structures → placement stats → eligibility → selection → fees →
+//  scholarships → how to apply → FAQs). Switching tabs swaps everything.
+//
+//  Reuses: PageHero, PageSubNav, AdmissionsBanner, ProseIntro, BleedTitle,
+//  EligibilityCriteria (from Faculty Recruitment), FaqSection, ContactPills,
+//  SplitCta. Bar chart + recruiter logo + stat row types reused too.
+//
+//  New: ImportantDates, IntakeGrid, ProgramStructuresAccordion,
+//  AdmissionPlacementStats, SelectionCriteria, FeeStructure,
+//  ScholarshipsSection, HowToApplySection, UgAdmissionsExplorer (orchestrator).
+// ============================================================================
+
+// ── Sub-types for the UG admissions content ──────────────────────────────
+
+export interface ImportantDateCard {
+  id: string;
+  label: string;
+  /** Date string OR a status like "To be decided" */
+  value: string;
+  /** When true, the value renders muted/grey (used for "To be decided") */
+  pending?: boolean;
+}
+
+export interface IntakeItem {
+  id: string;
+  program: string;
+  count: string;
+}
+
+export interface ProgramStructureItem {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  brochureHref?: string;
+  brochureLabel?: string;
+}
+
+export interface FeeCard {
+  id: string;
+  label: string;
+  value: string;
+  /** Optional small sub-note under the value (e.g. "Refundable at program end") */
+  subNote?: string;
+  /** When true, the value renders in brand red (e.g. the "Food" cell) */
+  highlight?: boolean;
+}
+
+export interface FeeNoteBlock {
+  heading: string;
+  paragraphs: string[];
+}
+
+export interface EducationLoanBlock {
+  heading: string;
+  description: string;
+  image: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+export interface FeeStructureData {
+  title: string;
+  intro: string;
+  cards: FeeCard[];
+  /** Centered italic footnotes directly under the fee grid */
+  footnotes: string[];
+  notes: FeeNoteBlock[];
+  educationLoan: EducationLoanBlock;
+  refundNote: string;
+}
+
+export interface ScholarshipCard {
+  id: string;
+  title: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+export interface HowToApplyData {
+  title: string;
+  backgroundImage: string;
+  steps: string[];
+  cta: { label: string; href: string };
+}
+
+/**
+ * Full content block for one admission category (All India / Gujarat /
+ * NRI-DASA). Each category swaps the entire content stack below the tabs.
+ * Keyed by `slug` so CMS can fetch each category's content independently
+ * (one WP custom post per category, for example).
+ */
+export interface UgAdmissionCategory {
+  slug: string;
+  label: string;
+  intro: string[];
+  importantDates: {
+    title: string;
+    items: ImportantDateCard[];
+  };
+  intake: {
+    title: string;
+    items: IntakeItem[];
+  };
+  programStructures: {
+    title: string;
+    items: ProgramStructureItem[];
+  };
+  placementStats: {
+    title: string;
+    description: string;
+    legend: { highestLabel: string; averageLabel: string };
+    buckets: BarChartBucket[];
+    logos: RecruiterLogo[];
+    stats: StatItem[];
+  };
+  /** Reuses EligibilityCriteria from Faculty Recruitment */
+  eligibility: {
+    title: string;
+    tabs: EligibilityTab[];
+  };
+  selectionCriteria: {
+    title: string;
+    paragraphs: string[];
+  };
+  feeStructure: FeeStructureData;
+  scholarships: {
+    title: string;
+    intro: string;
+    /** Bullet list shown between the intro paragraph and the cards */
+    bullets?: string[];
+    cards: ScholarshipCard[];
+  };
+  howToApply: HowToApplyData;
+  /** Reuses FaqSection from B.Tech ICT page */
+  faqs: {
+    title: string;
+    items: FaqItem[];
+  };
+}
+
+export interface UgAdmissionsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  applyBanner: { text: string; cta: string; href: string };
+  /** All admission categories. The first one is the default active tab. */
+  categories: UgAdmissionCategory[];
+  /** Shared across all categories — contact pills (phone + email) */
+  contact: { phone: string; email: string };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  ADMISSION — Financial Support page (/admission/ug/financial-support)
+//  Reuses PageHero, PageSubNav, ProgramSlider/ProgramCard, FaqSection,
+//  ContactPills, SplitCta.
+//  New: TitledProseSection — generic BleedTitle + paragraphs section.
+// ============================================================================
+
+export interface FinancialSupportPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** "DAU Scholarships" — title + intro paragraph */
+  dauScholarships: {
+    title: string;
+    paragraphs: string[];
+  };
+  /** "Other Scholarships" — reuses the ProgramSlider/ProgramCard shape.
+   *  Pass description "" for a title-only heading. */
+  otherScholarships: SectionIntro & { cards: ProgramCard[] };
+  /** Reuses FaqSection shape */
+  faqs: {
+    title: string;
+    items: FaqItem[];
+  };
+  contact: { phone: string; email: string };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
