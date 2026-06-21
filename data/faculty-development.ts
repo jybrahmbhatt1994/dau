@@ -80,14 +80,10 @@ export const facultyDevelopmentPageData: FacultyDevelopmentPageData = {
   industry: {
     title: "Industry Exposure & Collaboration",
     introParagraphs: [COMMON_PARA],
-    bulletGroups: [
-      {
-        items: [
-          "Faculty internships/immersion programs in industry",
-          "Participation in industry conferences and conclaves",
-          "Guest lectures and collaborative projects",
-        ],
-      },
+    bullets: [
+      "Faculty internships/immersion programs in industry",
+      "Participation in industry conferences and conclaves",
+      "Guest lectures and collaborative projects",
     ],
     outroParagraphs: [],
     slides: [

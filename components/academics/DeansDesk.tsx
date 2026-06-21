@@ -54,7 +54,7 @@ export function DeansDesk({ data }: { data: DeansDeskContent }) {
             {data.functionsTitle}
           </h3>
           <div className="mt-6 space-y-5 text-[15px] leading-7 text-black/80 lg:text-base lg:leading-8">
-            {data.functionsParagraphs.map((p, i) => (
+            {data.functionsParagraphs?.map((p, i) => (
               <p key={i}>{p}</p>
             ))}
           </div>

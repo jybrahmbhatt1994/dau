@@ -216,9 +216,23 @@ export interface DeansDeskContent {
   title: string;
   paragraphs: string[];
   image: string;
-  functionsTitle: string;
-  functionsParagraphs: string[];
-  email: string;
+  /** Academics-dean variant */
+  functionsTitle?: string;
+  functionsParagraphs?: string[];
+  email?: string;
+  /** Student-dean variant */
+  name?: string;
+  role?: string;
+}
+
+export interface DeanStudentPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  desk: DeansDeskContent;
+  contact: { phone: string; email: string };
+  officials: { title: string; people: Official[] };
+  cta: { left: CtaPanel; right: CtaPanel };
 }
 
 export interface DeanPageData {
@@ -927,6 +941,8 @@ export interface TitledSubBlock {
 /** Content shape consumed by TitledProseBlock */
 export interface TitledProseBlockData {
   title: string;
+  /** Optional section-level intro paragraph between the title and sub-blocks */
+  intro?: string;
   blocks: TitledSubBlock[];
 }
 

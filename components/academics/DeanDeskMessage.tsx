@@ -27,12 +27,14 @@ export function DeanDeskMessage({ data }: { data: DeansDeskContent }) {
               ))}
             </div>
 
-            <div className="mt-10">
-              <p className="font-display text-xl font-semibold tracking-wide text-navy">
-                {data.name}
-              </p>
-              <p className="mt-1 text-sm text-ash">{data.role}</p>
-            </div>
+            {(data.name || data.role) && (
+              <div className="mt-10">
+                <p className="font-display text-xl font-semibold tracking-wide text-navy">
+                  {data.name}
+                </p>
+                <p className="mt-1 text-sm text-ash">{data.role}</p>
+              </div>
+            )}
           </div>
 
           {/* Portrait */}
@@ -40,7 +42,7 @@ export function DeanDeskMessage({ data }: { data: DeansDeskContent }) {
             <div className="relative aspect-[7/8] w-full max-w-[410px] overflow-hidden bg-line">
               <Image
                 src={data.image}
-                alt={data.name}
+                alt={data.name ?? "Dean portrait"}
                 fill
                 sizes="(min-width: 1024px) 410px, 100vw"
                 className="object-cover"
