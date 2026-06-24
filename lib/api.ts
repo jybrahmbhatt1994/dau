@@ -41,7 +41,7 @@ export async function wpFetch<T>(
  */
 export async function getPageAcf<T>(
   slug: string,
-  revalidate = 60,
+  revalidate = 10,
 ): Promise<T | null> {
   const pages = await wpFetch<Array<{ acf: T }>>(
     `/wp/v2/pages?slug=${slug}&acf_format=standard&_fields=id,slug,acf`,
