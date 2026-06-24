@@ -22,9 +22,10 @@ export const sotPageData: SchoolPageData = {
     rankValue: "#1",
     subline: "Among new age adademics by Times of India",
     images: [
-      img(1280, 860, "sot-hero-1"),
-      img(1280, 860, "sot-hero-2"),
-      img(1280, 860, "sot-hero-3"),
+      { url: "/images/hero-slider-1.png", alt: "DAU campus main building" },
+      { url: img("campus-life-2", 1000, 700), alt: "DAU campus life" },
+      { url: img("campus-life-3", 1000, 700), alt: "DAU students" },
+      { url: img("campus-life-4", 1000, 700), alt: "DAU facilities" },
     ],
   },
 
