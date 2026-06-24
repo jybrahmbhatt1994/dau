@@ -7,7 +7,7 @@ const nextConfig = {
       // Common headless WordPress media hosts (uncomment / edit when wiring WP):
       { protocol: "https", hostname: "images.unsplash.com" },
       // { protocol: "https", hostname: "randomuser.me" },
-      // { protocol: "https", hostname: "your-wordpress-domain.com" },
+      { protocol: "https", hostname: "dau.123demo.fun" },
       // { protocol: "https", hostname: "*.wp.com" },
     ],
   },
