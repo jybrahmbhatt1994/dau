@@ -137,13 +137,14 @@ interface WpHomeAcf {
 function mapHero(acf: WpHomeAcf): HeroContent {
   return {
     eyebrow: acf.hero_eyebrow,
-    // Empty string from WP → undefined (matches the optional type)
     eyebrowSub: acf.hero_eyebrow_sub || undefined,
     rankLabel: acf.hero_rank_label,
     rankValue: acf.hero_rank_value,
     subline: acf.hero_subline,
-    // Repeater rows → plain string[] (alt is stored in WP but not in HeroContent type)
-    images: (acf.hero_images ?? []).map((row) => row.image),
+    images: (acf.hero_images ?? []).map((row) => ({
+      url: row.image,
+      alt: row.alt || "",
+    })),
   };
 }
 

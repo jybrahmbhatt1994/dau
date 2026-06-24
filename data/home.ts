@@ -21,7 +21,7 @@ export const homeData: HomeData = {
     rankValue: "#1",
     subline: "Among new age academics by Times of India",
     images: [
-      "/images/hero-slider-1.png",
+      img("campus-life-2", 1000, 700),
       img("campus-life-2", 1000, 700),
       img("campus-life-3", 1000, 700),
       img("campus-life-4", 1000, 700),
