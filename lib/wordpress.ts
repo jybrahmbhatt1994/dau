@@ -109,6 +109,20 @@ interface WpHeroImage {
   alt: string;
 }
 
+interface WpLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpAcademicsCard {
+  title: string;
+  excerpt: string;
+  image: string;
+  image_alt: string;
+  href: WpLinkField;
+}
+
 /**
  * Raw ACF shape for the Home page.
  * Add more field groups here as each section is migrated from mock → WP.
@@ -123,7 +137,10 @@ interface WpHomeAcf {
   hero_images: WpHeroImage[];
 
   // TODO — add these as each SCF field group is created:
-  // academics_title, academics_description, academics_cards …
+  // Academics ✅ add these
+  academics_title: string;
+  academics_description: string;
+  academics_cards: WpAcademicsCard[];
   // faculty_title, faculty_members …
   // etc.
 }
@@ -144,6 +161,20 @@ function mapHero(acf: WpHomeAcf): HeroContent {
     images: (acf.hero_images ?? []).map((row) => ({
       url: row.image,
       alt: row.alt || "",
+    })),
+  };
+}
+
+function mapAcademics(acf: WpHomeAcf): HomeData["academics"] {
+  return {
+    title: acf.academics_title,
+    description: acf.academics_description,
+    cards: (acf.academics_cards ?? []).map((card, i) => ({
+      id: String(i),
+      title: card.title,
+      excerpt: card.excerpt,
+      image: card.image,
+      href: card.href?.url ?? "/academics",
     })),
   };
 }
@@ -170,9 +201,9 @@ export async function getHomeData(): Promise<HomeData> {
   return {
     // ✅ Live from WordPress
     hero: mapHero(acf),
+    academics: mapAcademics(acf),
 
     // 🔄 Still from mock — replace each as its SCF group is created
-    academics: homeData.academics,
     admissionCta: homeData.admissionCta,
     faculty: homeData.faculty,
     research: homeData.research,
