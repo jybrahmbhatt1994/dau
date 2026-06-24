@@ -23,9 +23,9 @@ export const sotPageData: SchoolPageData = {
     subline: "Among new age adademics by Times of India",
     images: [
       { url: "/images/hero-slider-1.png", alt: "DAU campus main building" },
-      { url: img("campus-life-2", 1000, 700), alt: "DAU campus life" },
-      { url: img("campus-life-3", 1000, 700), alt: "DAU students" },
-      { url: img("campus-life-4", 1000, 700), alt: "DAU facilities" },
+      { url: img(1000, 700, "campus-life-2"), alt: "DAU campus life" },
+      { url: img(1000, 700, "campus-life-3"), alt: "DAU students" },
+      { url: img(1000, 700, "campus-life-4"), alt: "DAU facilities" },
     ],
   },
 
