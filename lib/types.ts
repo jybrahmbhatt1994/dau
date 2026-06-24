@@ -85,14 +85,18 @@ export interface SectionIntro {
   description: string;
 }
 
+export interface HeroImage {
+  url: string;
+  alt: string;
+}
+
 export interface HeroContent {
   eyebrow: string;
-  /** Optional muted second line under the eyebrow (e.g. school pages). */
   eyebrowSub?: string;
   rankLabel: string;
   rankValue: string;
   subline: string;
-  images: string[]; // was: image: string
+  images: HeroImage[]; // was: string[]
 }
 
 export interface ContactContent {

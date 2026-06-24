@@ -47,11 +47,11 @@ export function Hero({
       <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_1fr]">
         {/* Left: image slider */}
         <div className="group relative aspect-[877/589] w-full overflow-hidden">
-          {slides.map((src, i) => (
+          {slides.map((slide, i) => (
             <Image
-              key={src}
-              src={src}
-              alt={`DAU campus ${i + 1}`}
+              key={slide.url}          // was: src
+              src={slide.url}          // was: src
+              alt={slide.alt || `DAU campus ${i + 1}`}  // WP alt with fallback
               fill
               priority={i === 0}
               sizes="(max-width: 1024px) 100vw, 60vw"
