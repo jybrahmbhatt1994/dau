@@ -17,7 +17,7 @@
  *   6. Components never change.
  */
 
-import { getPageAcf } from "@/lib/api";
+import { wpFetch, getPageAcf } from "@/lib/api";
 
 // ─── Mock data imports (remove each one as its section is migrated to WP) ────
 import { homeData } from "@/data/home";
