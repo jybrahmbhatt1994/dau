@@ -128,21 +128,46 @@ interface WpAcademicsCard {
  * Add more field groups here as each section is migrated from mock → WP.
  */
 interface WpHomeAcf {
-  // Hero (✅ live)
+  // Hero
   hero_eyebrow: string;
   hero_eyebrow_sub: string;
   hero_rank_label: string;
   hero_rank_value: string;
   hero_subline: string;
   hero_images: WpHeroImage[];
-
-  // TODO — add these as each SCF field group is created:
-  // Academics ✅ add these
+ 
+  // Academics
   academics_title: string;
   academics_description: string;
   academics_cards: WpAcademicsCard[];
-  // faculty_title, faculty_members …
-  // etc.
+ 
+  // Admission CTA
+  admission_eyebrow: string;
+  admission_title: string;
+  admission_description: string;
+ 
+  // Faculty (relationship field — returns array of post IDs)
+  faculty_title: string;
+  faculty_description: string;
+  faculty_selected: number[];
+}
+
+// Raw shape of a single faculty CPT post from REST API
+interface WpFacultyPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    position: string;
+    department: string;
+  };
+  // _embedded is present when ?_embed is passed
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{
+      source_url: string;
+      alt_text: string;
+    }>;
+  };
 }
 
 // ============================================================================
@@ -164,7 +189,7 @@ function mapHero(acf: WpHomeAcf): HeroContent {
     })),
   };
 }
-
+ 
 function mapAcademics(acf: WpHomeAcf): HomeData["academics"] {
   return {
     title: acf.academics_title,
@@ -179,6 +204,39 @@ function mapAcademics(acf: WpHomeAcf): HomeData["academics"] {
   };
 }
 
+function mapAdmissionCta(acf: WpHomeAcf): HomeData["admissionCta"] {
+  return {
+    eyebrow: acf.admission_eyebrow,
+    title: acf.admission_title,
+    description: acf.admission_description,
+  };
+}
+
+function mapFacultyMembers(
+  acf: WpHomeAcf,
+  posts: WpFacultyPost[],
+): HomeData["faculty"] {
+  // Preserve the editor's chosen order from the relationship field
+  const orderedPosts = acf.faculty_selected
+    .map((id) => posts.find((p) => p.id === id))
+    .filter((p): p is WpFacultyPost => p !== undefined);
+ 
+  return {
+    title: acf.faculty_title,
+    description: acf.faculty_description,
+    members: orderedPosts.map((post) => ({
+      id: String(post.id),
+      name: post.title.rendered,
+      position: post.acf?.position ?? "",
+      // Featured image via _embedded, fallback to placeholder
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/faculty-${post.id}/289/352`,
+      href: `/faculty/${post.slug}`,
+    })),
+  };
+}
+
 // ============================================================================
 //  DATA ACCESSORS
 //  These are the only functions page components call.
@@ -189,23 +247,31 @@ function mapAcademics(acf: WpHomeAcf): HomeData["academics"] {
 
 export async function getHomeData(): Promise<HomeData> {
   const acf = await getPageAcf<WpHomeAcf>("home");
-
+ 
   if (!acf) {
     console.warn(
-      "[wordpress.ts] Home page ACF not found — falling back to mock data. " +
-      "Check: page slug is 'home', page is published, and 'Show in REST API' is enabled on the field group."
+      "[wordpress.ts] Home page ACF not found — falling back to mock data.",
     );
     return homeData;
   }
-
+ 
+  // Fetch selected faculty posts in parallel with the page data
+  // _embed brings in featured images; acf_format=standard gives us SCF fields
+  const facultyIds = (acf.faculty_selected ?? []).join(",");
+  const facultyPosts = facultyIds
+    ? await wpFetch<WpFacultyPost[]>(
+        `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
+      )
+    : [];
+ 
   return {
     // ✅ Live from WordPress
     hero: mapHero(acf),
     academics: mapAcademics(acf),
-
-    // 🔄 Still from mock — replace each as its SCF group is created
-    admissionCta: homeData.admissionCta,
-    faculty: homeData.faculty,
+    admissionCta: mapAdmissionCta(acf),
+    faculty: mapFacultyMembers(acf, facultyPosts),
+ 
+    // 🔄 Still from mock — replace as each section is migrated
     research: homeData.research,
     publications: homeData.publications,
     placements: homeData.placements,

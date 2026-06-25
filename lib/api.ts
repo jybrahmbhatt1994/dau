@@ -1,8 +1,8 @@
 /**
  * lib/api.ts
  * Base fetch utility for WordPress REST API.
- * All data access goes through here — one place to handle errors,
- * revalidation, and the base URL.
+ * All WordPress data access goes through here — one place to handle
+ * errors, revalidation, and the base URL.
  */
 
 const WP_URL = process.env.WORDPRESS_API_URL;
@@ -12,9 +12,9 @@ if (!WP_URL) {
 }
 
 /**
- * Fetch a WordPress REST API endpoint.
- * @param endpoint  Path after /wp-json  e.g. "/wp/v2/pages?slug=home&acf_format=standard"
- * @param revalidate  ISR revalidation in seconds (default 60). Pass 0 to disable caching.
+ * Fetch any WordPress REST API endpoint.
+ * @param endpoint  Path after /wp-json — e.g. "/wp/v2/pages?slug=home"
+ * @param revalidate  ISR seconds (default 60). Pass 0 to disable caching.
  */
 export async function wpFetch<T>(
   endpoint: string,
@@ -23,7 +23,10 @@ export async function wpFetch<T>(
   const url = `${WP_URL}/wp-json${endpoint}`;
 
   const res = await fetch(url, {
-    next: { revalidate },
+    next: {
+      revalidate:
+        process.env.NODE_ENV === "development" ? 0 : revalidate,
+    },
   });
 
   if (!res.ok) {
@@ -36,12 +39,12 @@ export async function wpFetch<T>(
 }
 
 /**
- * Fetch a single page by slug and return its ACF fields.
+ * Fetch a single WordPress page by slug and return its ACF fields.
  * Returns null if the page is not found.
  */
 export async function getPageAcf<T>(
   slug: string,
-  revalidate = 10,
+  revalidate = 60,
 ): Promise<T | null> {
   const pages = await wpFetch<Array<{ acf: T }>>(
     `/wp/v2/pages?slug=${slug}&acf_format=standard&_fields=id,slug,acf`,
