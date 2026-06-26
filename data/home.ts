@@ -94,11 +94,9 @@ export const homeData: HomeData = {
       img("place-8", 600, 750),
     ],
     recruiters: [
-      // { image: "/images/rec-microsoft.png", name: "Microsoft" },
-      // { image: "/images/rec-google.png",    name: "Google" },
-      // ... etc (or keep using picsum for mocks)
-      { image: img(120, 40, "rec-1"), name: "Microsoft" },
-      { image: img(120, 40, "rec-2"), name: "Google" },
+      { id: "r1", name: "Microsoft", logo: "https://picsum.photos/seed/rec-1/120/40" },
+      { id: "r2", name: "Google",    logo: "https://picsum.photos/seed/rec-2/120/40" },
+      { id: "r3", name: "Amazon",    logo: "https://picsum.photos/seed/rec-3/120/40" },
     ],
     stats: [
       { value: "500+", label: "Students placed" },

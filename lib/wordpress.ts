@@ -371,12 +371,11 @@ function mapPlacements(acf: WpHomeAcf): HomeData["placements"] {
   return {
     title: acf.placements_title,
     description: acf.placements_description,
-    // gallery → plain string[] (component uses src directly)
     gallery: toArray(acf.placements_gallery).map((row) => row.image),
-    // recruiters → { image, name }[] — component updated to use real logos
-    recruiters: toArray(acf.recruiter_logos).map((row) => ({
-      image: row.image,
+    recruiters: toArray(acf.recruiter_logos).map((row, i) => ({
+      id: String(i),
       name: row.name,
+      logo: row.image,   // ← WP field is "image", type field is "logo"
     })),
     stats: toArray(acf.placement_stats).map((row) => ({
       value: row.value,

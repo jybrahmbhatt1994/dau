@@ -106,7 +106,7 @@ export function PlacementsSection({ data }: { data: HomeData["placements"] }) {
           {[...data.recruiters, ...data.recruiters].map((logo, i) => (
             <div key={i} className="flex shrink-0 items-center">
               <img
-                src={logo.image}
+                src={logo.logo}   // ← was logo.image
                 alt={logo.name}
                 className="h-8 w-auto object-contain opacity-60 grayscale"
               />
