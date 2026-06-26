@@ -165,6 +165,8 @@ export const homeData: HomeData = {
   contact: {
     socialTitle: "Connect on social",
     socialDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    linkedinUrl: "#",
+    xUrl: "#",
     contactTitle: "Contact Us",
     contactDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     phone: "+91-9876543212",

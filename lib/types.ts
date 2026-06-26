@@ -102,6 +102,8 @@ export interface HeroContent {
 export interface ContactContent {
   socialTitle: string;
   socialDescription: string;
+  linkedinUrl: string;
+  xUrl: string;
   contactTitle: string;
   contactDescription: string;
   phone: string;
