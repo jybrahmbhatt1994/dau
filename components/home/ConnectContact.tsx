@@ -6,7 +6,7 @@ export function ConnectContact({ data }: { data: HomeData["contact"] }) {
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2">
       {/* Connect on social — gold */}
-      <div className="flex flex-col justify-center bg-gold px-8 py-14 sm:px-14 lg:py-16">
+      <div className="flex flex-col bg-gold px-8 py-14 sm:px-14 lg:py-16">
         <div className="mx-auto w-full max-w-md">
           <h2 className="font-display text-[32px] font-semibold text-navy">
             {data.socialTitle}
@@ -16,14 +16,14 @@ export function ConnectContact({ data }: { data: HomeData["contact"] }) {
           </p>
           <div className="mt-6 flex items-center gap-4">
             <Link
-              href="#"
+              href={data.linkedinUrl || "#"}
               aria-label="LinkedIn"
               className="inline-flex h-11 w-11 items-center justify-center text-navy transition-opacity hover:opacity-70"
             >
               <LinkedInIcon className="h-9 w-9" />
             </Link>
             <Link
-              href="#"
+              href={data.xUrl || "#"}
               aria-label="X (Twitter)"
               className="inline-flex h-11 w-11 items-center justify-center text-navy transition-opacity hover:opacity-70"
             >
@@ -34,7 +34,7 @@ export function ConnectContact({ data }: { data: HomeData["contact"] }) {
       </div>
 
       {/* Contact — red */}
-      <div className="flex flex-col justify-center bg-brand px-8 py-14 text-white sm:px-14 lg:py-16">
+      <div className="flex flex-col bg-brand px-8 py-14 text-white sm:px-14 lg:py-16">
         <div className="mx-auto w-full max-w-md">
           <h2 className="font-display text-[32px] font-semibold">
             {data.contactTitle}

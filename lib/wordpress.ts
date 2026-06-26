@@ -191,6 +191,26 @@ interface WpHomeAcf {
   // News
   news_title: string;
   news_description: string;
+  // Events
+  events_title: string;
+  // Centers
+  centers_title: string;
+  centers_description: string;
+  // Diversity
+  diversity_title: string;
+  diversity_description: string;
+  diversity_image: string;
+}
+
+interface WpSiteSettings {
+  social_title: string;
+  social_description: string;
+  social_linkedin: string;
+  social_x: string;
+  contact_title: string;
+  contact_description: string;
+  contact_phone: string;
+  contact_email: string;
 }
 
 interface WpFacultyPost {
@@ -233,7 +253,43 @@ interface WpNewsPost {
   };
 }
 
+interface WpEventPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+interface WpCenterPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+/** Decode HTML entities from WP REST API title.rendered e.g. "&amp;" → "&" */
+function decodeHtml(html: string): string {
+  return html
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8220;/g, '"')
+    .replace(/&#8221;/g, '"')
+    .replace(/&#8211;/g, "–")
+    .replace(/&#8212;/g, "—");
+}
 
 /** ISO 8601 → "25 Jun, 2026" (used for CPT dates) */
 function formatIsoDate(iso: string): string {
@@ -427,6 +483,76 @@ function mapNews(
   };
 }
 
+function mapEvents(
+  acf: WpHomeAcf,
+  posts: WpEventPost[],
+): HomeData["events"] {
+  return {
+    title: acf.events_title,
+    items: posts.map((post) => ({
+      id: String(post.id),
+      title: post.title.rendered,
+      date: formatIsoDate(post.date),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/event-${post.id}/600/360`,
+      href: `/events/${post.slug}`,
+    })),
+  };
+}
+
+function mapCenters(
+  acf: WpHomeAcf,
+  posts: WpCenterPost[],
+): HomeData["centers"] {
+  return {
+    title: acf.centers_title,
+    description: acf.centers_description,
+    cards: posts.map((post) => ({
+      id: String(post.id),
+      title: decodeHtml(post.title.rendered),
+      // Strip HTML from content.rendered — editors write the excerpt as content
+      excerpt: excerptFromHtml(post.content.rendered, 20),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/center-${post.id}/600/420`,
+      href: `/centers/${post.slug}`,
+    })),
+  };
+}
+
+function mapDiversity(acf: WpHomeAcf): HomeData["diversity"] {
+  return {
+    title: acf.diversity_title,
+    description: acf.diversity_description,
+    image: acf.diversity_image || "/images/bird-evolve.png",
+  };
+}
+
+// ─── getSiteSettings (global — used by any page with ConnectContact) ──────────
+ 
+export async function getSiteSettings(): Promise<ContactContent> {
+  try {
+    const data = await wpFetch<WpSiteSettings>("/dau/v1/options");
+    return {
+      socialTitle:        data.social_title,
+      socialDescription:  data.social_description,
+      linkedinUrl:        data.social_linkedin || "#",
+      xUrl:               data.social_x || "#",
+      contactTitle:       data.contact_title,
+      contactDescription: data.contact_description,
+      phone:              data.contact_phone,
+      email:              data.contact_email,
+    };
+  } catch (err) {
+    console.warn(
+      "[wordpress.ts] getSiteSettings() failed — falling back to mock data.",
+      err,
+    );
+    return homeData.contact;
+  }
+}
+
 // ─── getHomeData ──────────────────────────────────────────────────────────────
 
 export async function getHomeData(): Promise<HomeData> {
@@ -442,19 +568,27 @@ export async function getHomeData(): Promise<HomeData> {
   const facultyIds = (acf.faculty_selected ?? []).join(",");
 
   // All CPT fetches run in parallel — no waterfall
-  const [facultyPosts, researchPosts, newsPosts] = await Promise.all([
-    facultyIds
-      ? wpFetch<WpFacultyPost[]>(
-          `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
-        )
-      : Promise.resolve([] as WpFacultyPost[]),
-    wpFetch<WpResearchPost[]>(
-      `/wp/v2/research-area?_embed=wp:featuredmedia&per_page=6&orderby=date&order=desc`,
-    ),
-    wpFetch<WpNewsPost[]>(
-      `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
-    ),
-  ]);
+  const [facultyPosts, researchPosts, newsPosts, eventPosts, centerPosts, siteSettings] =
+    await Promise.all([
+      facultyIds
+        ? wpFetch<WpFacultyPost[]>(
+            `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
+          )
+        : Promise.resolve([] as WpFacultyPost[]),
+      wpFetch<WpResearchPost[]>(
+        `/wp/v2/research-area?_embed=wp:featuredmedia&per_page=6&orderby=date&order=desc`,
+      ),
+      wpFetch<WpNewsPost[]>(
+        `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
+      ),
+      wpFetch<WpEventPost[]>(
+        `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
+      ),
+      wpFetch<WpCenterPost[]>(
+        `/wp/v2/center?_embed=wp:featuredmedia&per_page=6&orderby=date&order=desc`,
+      ),
+      getSiteSettings(),
+    ]);
 
   return {
     // ✅ Live from WordPress
@@ -467,12 +601,10 @@ export async function getHomeData(): Promise<HomeData> {
     placements:   mapPlacements(acf),
     life:         mapLife(acf),
     news:         mapNews(acf, newsPosts),
-
-    // 🔄 Still from mock
-    events:    homeData.events,
-    centers:   homeData.centers,
-    diversity: homeData.diversity,
-    contact:   homeData.contact,
+    events:       mapEvents(acf, eventPosts),
+    centers:      mapCenters(acf, centerPosts),
+    diversity: mapDiversity(acf),
+    contact:      siteSettings,
   };
 }
 

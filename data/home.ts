@@ -159,6 +159,7 @@ export const homeData: HomeData = {
   diversity: {
     title: "We Are One of The Largest, Most Diverse Universities in India",
     description: LOREM_SHORT,
+    image: "/images/bird-evolve.png", // fallback to local file
   },
 
   contact: {

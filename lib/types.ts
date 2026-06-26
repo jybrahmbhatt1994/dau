@@ -128,7 +128,7 @@ export interface HomeData {
   news: SectionIntro & { featured: NewsArticle; list: NewsArticle[] };
   events: { title: string; items: EventItem[] };
   centers: SectionIntro & { cards: ProgramCard[] };
-  diversity: { title: string; description: string };
+  diversity: { title: string; description: string; image: string };
   contact: ContactContent;
 }
 

@@ -9,7 +9,7 @@ export function DiversitySection({ data }: { data: HomeData["diversity"] }) {
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 flex justify-center">
             <Image
-              src="/images/bird-evolve.png"
+              src={data.image}
               alt="Paper mark"
               width={262}
               height={107}
