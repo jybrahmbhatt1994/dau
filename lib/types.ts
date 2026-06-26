@@ -121,7 +121,7 @@ export interface HomeData {
   publications: SectionIntro & { items: PublicationItem[] };
   placements: SectionIntro & {
     gallery: string[];
-    recruiters: RecruiterLogo[];
+    recruiters: { image: string; name: string }[];;
     stats: Stat[];
   };
   life: SectionIntro & { cards: LifeCard[] };
@@ -1195,10 +1195,10 @@ export interface StatItem {
 //   href?: string;
 // }
 
-export interface RecruiterLogo {
-  image: string;
-  name: string;
-}
+// export interface RecruiterLogo {
+//   image: string;
+//   name: string;
+// }
 
 export interface TopRecruitersPageData {
   hero: PageHeroContent;
