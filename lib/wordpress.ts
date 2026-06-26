@@ -95,6 +95,7 @@ import type {
   InternshipsPageData,
   UgAdmissionsPageData,
   FinancialSupportPageData,
+  ContactContent,
 } from "@/lib/types";
 
 // ============================================================================
