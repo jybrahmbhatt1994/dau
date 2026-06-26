@@ -202,11 +202,11 @@ export const facultyDevelopmentPageData: FacultyDevelopmentPageData = {
 
   contact: {
     socialTitle: "Connect on social",
-    socialDescription:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    socialDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    linkedinUrl: "#",   // ← add this
+    xUrl: "#",          // ← add this
     contactTitle: "Contact Us",
-    contactDescription:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    contactDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     phone: "+91-9876543212",
     email: "info@daiict.ac.in",
   },
