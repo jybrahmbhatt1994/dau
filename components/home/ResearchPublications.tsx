@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ActionButton } from "@/components/ui/ActionButton";
 import type { HomeData } from "@/lib/types";
 
@@ -9,7 +10,8 @@ export function ResearchPublications({ data }: { data: HomeData["publications"] 
     <section className="bg-white pb-16 lg:pb-20">
       <Container>
         {/* Sub-section heading: h3, smaller, no underline */}
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+        <SectionHeading title={data.title} description={data.description} />
+        {/* <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
           <h3 className="shrink-0 font-display text-[clamp(1.75rem,3.5vw,2.5rem)] font-semibold leading-tight text-navy">
             {data.title}
           </h3>
@@ -18,7 +20,7 @@ export function ResearchPublications({ data }: { data: HomeData["publications"] 
               {data.description}
             </p>
           )}
-        </div>
+        </div> */}
 
         {/* 2-column list: image left, date above title */}
         <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">

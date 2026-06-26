@@ -61,6 +61,7 @@ import { ugScholarshipsPageData } from "@/data/ug-scholarships";
 import type {
   HomeData,
   HeroContent,
+  NewsArticle,
   NavItem,
   AcademicsData,
   DeanPageData,
@@ -97,12 +98,12 @@ import type {
 } from "@/lib/types";
 
 // ============================================================================
-//  WORDPRESS RAW SHAPES
-//  One interface per SCF field group. Only the fields we use are typed.
-//  The *_source fields returned by SCF's REST layer are intentionally omitted.
+//  Complete updated section of lib/wordpress.ts
+//  Replace everything from the first interface down to the closing brace
+//  of getHomeData(). Keep all other page accessors below unchanged.
 // ============================================================================
 
-// ─── Home page ───────────────────────────────────────────────────────────────
+// ─── Raw WordPress shapes ────────────────────────────────────────────────────
 
 interface WpHeroImage {
   image: string;
@@ -123,10 +124,33 @@ interface WpAcademicsCard {
   href: WpLinkField;
 }
 
-/**
- * Raw ACF shape for the Home page.
- * Add more field groups here as each section is migrated from mock → WP.
- */
+interface WpPublicationItem {
+  title: string;
+  date: string; // "DD/MM/YYYY" e.g. "01/08/2025"
+  image: string;
+  href: WpLinkField;
+}
+
+interface WpPlacementGalleryItem {
+  image: string;
+}
+
+interface WpRecruiterLogo {
+  image: string;
+  name: string;
+}
+
+interface WpStat {
+  value: string;
+  label: string;
+}
+
+interface WpLifeCard {
+  title: string;
+  image: string;
+  href: WpLinkField;
+}
+
 interface WpHomeAcf {
   // Hero
   hero_eyebrow: string;
@@ -135,24 +159,40 @@ interface WpHomeAcf {
   hero_rank_value: string;
   hero_subline: string;
   hero_images: WpHeroImage[];
- 
   // Academics
   academics_title: string;
   academics_description: string;
   academics_cards: WpAcademicsCard[];
- 
   // Admission CTA
   admission_eyebrow: string;
   admission_title: string;
   admission_description: string;
- 
-  // Faculty (relationship field — returns array of post IDs)
+  // Faculty
   faculty_title: string;
   faculty_description: string;
   faculty_selected: number[];
+  // Research
+  research_title: string;
+  research_description: string;
+  // Publications
+  publications_title: string;
+  publications_description: string;
+  publication_items: WpPublicationItem[] | false;
+  // Placements
+  placements_title: string;
+  placements_description: string;
+  placements_gallery: WpPlacementGalleryItem[] | false;
+  recruiter_logos: WpRecruiterLogo[] | false;
+  placement_stats: WpStat[] | false;
+  // Life @ DAU
+  life_title: string;
+  life_description: string;
+  life_cards: WpLifeCard[] | false;
+  // News
+  news_title: string;
+  news_description: string;
 }
 
-// Raw shape of a single faculty CPT post from REST API
 interface WpFacultyPost {
   id: number;
   slug: string;
@@ -161,7 +201,6 @@ interface WpFacultyPost {
     position: string;
     department: string;
   };
-  // _embedded is present when ?_embed is passed
   _embedded?: {
     "wp:featuredmedia"?: Array<{
       source_url: string;
@@ -170,11 +209,71 @@ interface WpFacultyPost {
   };
 }
 
-// ============================================================================
-//  MAPPERS
-//  Pure functions: WP raw shape → lib/types.ts shape.
-//  No business logic, no side effects.
-// ============================================================================
+interface WpResearchPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{
+      source_url: string;
+      alt_text: string;
+    }>;
+  };
+}
+
+interface WpNewsPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  content: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+/** ISO 8601 → "25 Jun, 2026" (used for CPT dates) */
+function formatIsoDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+/** "DD/MM/YYYY" → "01 Aug, 2025" (used for SCF date picker) */
+function formatScfDate(ddmmyyyy: string): string {
+  const [day, month, year] = ddmmyyyy.split("/");
+  return new Date(`${year}-${month}-${day}`).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+/** SCF returns false for empty repeaters — normalise to [] */
+function toArray<T>(val: T[] | false): T[] {
+  return Array.isArray(val) ? val : [];
+}
+
+/**
+ * Strip HTML tags from WP post content and trim to N words.
+ * Used to generate the excerpt on the homepage featured news card.
+ */
+function excerptFromHtml(html: string, maxWords = 30): string {
+  const text = html
+    .replace(/<[^>]*>/g, " ")  // strip all HTML tags
+    .replace(/\s+/g, " ")      // collapse whitespace
+    .trim();
+  const words = text.split(" ");
+  if (words.length <= maxWords) return text;
+  return words.slice(0, maxWords).join(" ") + "…";
+}
+
+// ─── Mappers ─────────────────────────────────────────────────────────────────
 
 function mapHero(acf: WpHomeAcf): HeroContent {
   return {
@@ -189,7 +288,7 @@ function mapHero(acf: WpHomeAcf): HeroContent {
     })),
   };
 }
- 
+
 function mapAcademics(acf: WpHomeAcf): HomeData["academics"] {
   return {
     title: acf.academics_title,
@@ -212,23 +311,21 @@ function mapAdmissionCta(acf: WpHomeAcf): HomeData["admissionCta"] {
   };
 }
 
-function mapFacultyMembers(
+function mapFaculty(
   acf: WpHomeAcf,
   posts: WpFacultyPost[],
 ): HomeData["faculty"] {
-  // Preserve the editor's chosen order from the relationship field
-  const orderedPosts = acf.faculty_selected
+  const ordered = acf.faculty_selected
     .map((id) => posts.find((p) => p.id === id))
     .filter((p): p is WpFacultyPost => p !== undefined);
- 
+
   return {
     title: acf.faculty_title,
     description: acf.faculty_description,
-    members: orderedPosts.map((post) => ({
+    members: ordered.map((post) => ({
       id: String(post.id),
       name: post.title.rendered,
       position: post.acf?.position ?? "",
-      // Featured image via _embedded, fallback to placeholder
       image:
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
         `https://picsum.photos/seed/faculty-${post.id}/289/352`,
@@ -237,50 +334,146 @@ function mapFacultyMembers(
   };
 }
 
-// ============================================================================
-//  DATA ACCESSORS
-//  These are the only functions page components call.
-//  Each one will eventually be 100% WordPress-powered.
-// ============================================================================
+function mapResearch(
+  acf: WpHomeAcf,
+  posts: WpResearchPost[],
+): HomeData["research"] {
+  return {
+    title: acf.research_title,
+    description: acf.research_description,
+    cards: posts.map((post) => ({
+      id: String(post.id),
+      title: post.title.rendered,
+      date: formatIsoDate(post.date),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/research-${post.id}/600/380`,
+      href: `/research/areas/${post.slug}`,
+    })),
+  };
+}
 
-// ─── Home ────────────────────────────────────────────────────────────────────
+function mapPublications(acf: WpHomeAcf): HomeData["publications"] {
+  return {
+    title: acf.publications_title,
+    description: acf.publications_description,
+    items: toArray(acf.publication_items).map((item, i) => ({
+      id: String(i),
+      title: item.title,
+      date: formatScfDate(item.date),
+      image: item.image,
+      href: item.href?.url ?? "#",
+    })),
+  };
+}
+
+function mapPlacements(acf: WpHomeAcf): HomeData["placements"] {
+  return {
+    title: acf.placements_title,
+    description: acf.placements_description,
+    // gallery → plain string[] (component uses src directly)
+    gallery: toArray(acf.placements_gallery).map((row) => row.image),
+    // recruiters → { image, name }[] — component updated to use real logos
+    recruiters: toArray(acf.recruiter_logos).map((row) => ({
+      image: row.image,
+      name: row.name,
+    })),
+    stats: toArray(acf.placement_stats).map((row) => ({
+      value: row.value,
+      label: row.label,
+    })),
+  };
+}
+
+function mapLife(acf: WpHomeAcf): HomeData["life"] {
+  return {
+    title: acf.life_title,
+    description: acf.life_description,
+    cards: toArray(acf.life_cards).map((card, i) => ({
+      id: String(i),
+      title: card.title,
+      image: card.image,
+      href: card.href?.url ?? "/life",
+    })),
+  };
+}
+
+function mapNews(
+  acf: WpHomeAcf,
+  posts: WpNewsPost[],
+): HomeData["news"] {
+  if (posts.length === 0) return homeData.news;
+ 
+  const [featuredPost, ...listPosts] = posts;
+ 
+  const toNewsArticle = (post: WpNewsPost): NewsArticle => ({
+    id: String(post.id),
+    title: post.title.rendered,
+    date: formatIsoDate(post.date),
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/news-${post.id}/681/411`,
+    href: `/newsroom/${post.slug}`,
+  });
+ 
+  return {
+    title: acf.news_title,
+    description: acf.news_description,
+    featured: {
+      ...toNewsArticle(featuredPost),
+      // Strip HTML + trim to 30 words for the homepage excerpt
+      excerpt: excerptFromHtml(featuredPost.content.rendered, 30),
+    },
+    list: listPosts.map(toNewsArticle),
+  };
+}
+
+// ─── getHomeData ──────────────────────────────────────────────────────────────
 
 export async function getHomeData(): Promise<HomeData> {
   const acf = await getPageAcf<WpHomeAcf>("home");
- 
+
   if (!acf) {
     console.warn(
       "[wordpress.ts] Home page ACF not found — falling back to mock data.",
     );
     return homeData;
   }
- 
-  // Fetch selected faculty posts in parallel with the page data
-  // _embed brings in featured images; acf_format=standard gives us SCF fields
+
   const facultyIds = (acf.faculty_selected ?? []).join(",");
-  const facultyPosts = facultyIds
-    ? await wpFetch<WpFacultyPost[]>(
-        `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
-      )
-    : [];
- 
+
+  // All CPT fetches run in parallel — no waterfall
+  const [facultyPosts, researchPosts, newsPosts] = await Promise.all([
+    facultyIds
+      ? wpFetch<WpFacultyPost[]>(
+          `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
+        )
+      : Promise.resolve([] as WpFacultyPost[]),
+    wpFetch<WpResearchPost[]>(
+      `/wp/v2/research-area?_embed=wp:featuredmedia&per_page=6&orderby=date&order=desc`,
+    ),
+    wpFetch<WpNewsPost[]>(
+      `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
+    ),
+  ]);
+
   return {
     // ✅ Live from WordPress
-    hero: mapHero(acf),
-    academics: mapAcademics(acf),
+    hero:         mapHero(acf),
+    academics:    mapAcademics(acf),
     admissionCta: mapAdmissionCta(acf),
-    faculty: mapFacultyMembers(acf, facultyPosts),
- 
-    // 🔄 Still from mock — replace as each section is migrated
-    research: homeData.research,
-    publications: homeData.publications,
-    placements: homeData.placements,
-    life: homeData.life,
-    news: homeData.news,
-    events: homeData.events,
-    centers: homeData.centers,
+    faculty:      mapFaculty(acf, facultyPosts),
+    research:     mapResearch(acf, researchPosts),
+    publications: mapPublications(acf),
+    placements:   mapPlacements(acf),
+    life:         mapLife(acf),
+    news:         mapNews(acf, newsPosts),
+
+    // 🔄 Still from mock
+    events:    homeData.events,
+    centers:   homeData.centers,
     diversity: homeData.diversity,
-    contact: homeData.contact,
+    contact:   homeData.contact,
   };
 }
 

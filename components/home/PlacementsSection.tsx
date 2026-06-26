@@ -103,10 +103,13 @@ export function PlacementsSection({ data }: { data: HomeData["placements"] }) {
       {/* Recruiter marquee — infinite scroll, no borders, dummy logos */}
       <div className="mt-12 overflow-hidden py-4">
         <div className="flex w-max animate-marquee items-center gap-16">
-          {[...DUMMY_LOGOS, ...DUMMY_LOGOS].map((logo, i) => (
-            <div key={i} className="flex shrink-0 items-center gap-2 text-white/40">
-              {logo.mark}
-              <span className="text-lg font-semibold tracking-wide">{logo.label}</span>
+          {[...data.recruiters, ...data.recruiters].map((logo, i) => (
+            <div key={i} className="flex shrink-0 items-center">
+              <img
+                src={logo.image}
+                alt={logo.name}
+                className="h-8 w-auto object-contain opacity-60 grayscale"
+              />
             </div>
           ))}
         </div>

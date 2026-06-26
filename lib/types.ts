@@ -121,7 +121,7 @@ export interface HomeData {
   publications: SectionIntro & { items: PublicationItem[] };
   placements: SectionIntro & {
     gallery: string[];
-    recruiters: string[];
+    recruiters: RecruiterLogo[]
     stats: Stat[];
   };
   life: SectionIntro & { cards: LifeCard[] };
