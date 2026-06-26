@@ -121,7 +121,7 @@ export interface HomeData {
   publications: SectionIntro & { items: PublicationItem[] };
   placements: SectionIntro & {
     gallery: string[];
-    recruiters: RecruiterLogo[]
+    recruiters: RecruiterLogo[];
     stats: Stat[];
   };
   life: SectionIntro & { cards: LifeCard[] };
@@ -1187,12 +1187,17 @@ export interface StatItem {
 }
 
 /** Single recruiter logo card */
+// export interface RecruiterLogo {
+//   id: string;
+//   name: string;
+//   logo: string;
+//   /** Optional — when present the whole card becomes a link */
+//   href?: string;
+// }
+
 export interface RecruiterLogo {
-  id: string;
+  image: string;
   name: string;
-  logo: string;
-  /** Optional — when present the whole card becomes a link */
-  href?: string;
 }
 
 export interface TopRecruitersPageData {
