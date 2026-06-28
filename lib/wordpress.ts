@@ -97,6 +97,7 @@ import type {
   FinancialSupportPageData,
   ContactContent,
   PolicyData,
+  GrantCard,
 } from "@/lib/types";
 
 // ============================================================================
