@@ -96,6 +96,7 @@ import type {
   UgAdmissionsPageData,
   FinancialSupportPageData,
   ContactContent,
+  PolicyData,
 } from "@/lib/types";
 
 // ============================================================================
