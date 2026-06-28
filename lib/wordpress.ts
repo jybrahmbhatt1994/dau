@@ -274,7 +274,385 @@ interface WpCenterPost {
   };
 }
 
+interface WpRaLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+ 
+interface WpRaBreadcrumb {
+  label: string;
+  href: string;
+}
+ 
+interface WpRaSubNavLink {
+  label: string;
+  href: string;
+}
+ 
+interface WpRaIntroParagraph {
+  paragraph: string; // contains HTML e.g. "<p>...</p>"
+}
+ 
+interface WpResearchAreasAcf {
+  ra_hero_title: string;
+  ra_hero_subline: string;
+  ra_hero_image: string;
+  ra_breadcrumb: WpRaBreadcrumb[] | false;
+  ra_subnav_label: string;
+  ra_subnav_links: WpRaSubNavLink[] | false;
+  ra_intro: WpRaIntroParagraph[] | false;
+  ra_areas_title: string;
+  ra_areas_description: string;
+  ra_cta_left_title: string;
+  ra_cta_left_description: string;
+  ra_cta_left_label: string;
+  ra_cta_left_href: WpRaLinkField;
+  ra_cta_right_title: string;
+  ra_cta_right_description: string;
+  ra_cta_right_label: string;
+  ra_cta_right_href: WpRaLinkField;
+}
+
+interface WpDrLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+ 
+interface WpDrBreadcrumb {
+  label: string;
+  href: string;
+}
+ 
+interface WpDrSubNavLink {
+  label: string;
+  href: string;
+}
+ 
+interface WpDrParagraph {
+  paragraph: string; // HTML string
+}
+ 
+interface WpDrOfficial {
+  name: string;
+  position: string;
+  email: string;
+  phone: string;
+  image: string;
+}
+ 
+interface WpDrBulletGroupItem {
+  item: string;
+}
+ 
+interface WpDrBulletGroup {
+  lead: string;
+  items: WpDrBulletGroupItem[];
+}
+ 
+interface WpDeanResearchAcf {
+  // Hero
+  dr_hero_title: string;
+  dr_hero_subline: string;
+  dr_hero_image: string;
+  dr_breadcrumb: WpDrBreadcrumb[] | false;
+  // Sub Nav
+  dr_subnav_label: string;
+  dr_subnav_links: WpDrSubNavLink[] | false;
+  // Dean's Desk
+  dr_desk_title: string;
+  dr_desk_paragraphs: WpDrParagraph[] | false;
+  dr_desk_name: string;
+  dr_desk_role: string;
+  dr_desk_image: string;
+  dr_desk_phone: string;
+  dr_desk_email: string;
+  // Functions
+  dr_functions_title: string;
+  dr_functions_intro: WpDrParagraph[] | false;
+  dr_functions_bullet_groups: WpDrBulletGroup[] | false;
+  dr_functions_outro: WpDrParagraph[] | false;
+  // Officials
+  dr_officials_title: string;
+  dr_officials: WpDrOfficial[] | false;
+  // CTA
+  dr_cta_left_title: string;
+  dr_cta_left_description: string;
+  dr_cta_left_label: string;
+  dr_cta_left_href: WpDrLinkField;
+  dr_cta_right_title: string;
+  dr_cta_right_description: string;
+  dr_cta_right_label: string;
+  dr_cta_right_href: WpDrLinkField;
+}
+
+interface WpGpLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+ 
+interface WpGpBreadcrumb {
+  label: string;
+  href: string;
+}
+ 
+interface WpGpSubNavLink {
+  label: string;
+  href: string;
+}
+ 
+interface WpGpSponsoredProject {
+  pi: string;
+  title: string;
+  funding_agency: string;
+  duration: string;
+  amount: string;
+}
+ 
+interface WpGrantsPageAcf {
+  // Hero
+  gp_hero_title: string;
+  gp_hero_subline: string;
+  gp_hero_image: string;
+  gp_breadcrumb: WpGpBreadcrumb[] | false;
+  // Sub Nav
+  gp_subnav_label: string;
+  gp_subnav_links: WpGpSubNavLink[] | false;
+  // Intro — wysiwyg field (HTML string, not repeater)
+  gp_intro: string;
+  // Grant tabs
+  gp_available_title: string;
+  gp_available_description: string;
+  gp_past_title: string;
+  gp_past_description: string;
+  // Sponsored research
+  gp_sponsored_title: string;
+  gp_sponsored_projects: WpGpSponsoredProject[] | false;
+  // CTA
+  gp_cta_left_title: string;
+  gp_cta_left_description: string;
+  gp_cta_left_label: string;
+  gp_cta_left_href: WpGpLinkField;
+  gp_cta_right_title: string;
+  gp_cta_right_description: string;
+  gp_cta_right_label: string;
+  gp_cta_right_href: WpGpLinkField;
+}
+ 
+// Grant CPT post shape
+interface WpGrantPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content: { rendered: string };
+  acf: {
+    apply_label?: string;
+    apply_href?: WpGpLinkField;
+    detail_href?: WpGpLinkField;
+  };
+}
+
+interface WpAwLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+ 
+interface WpAwBreadcrumb {
+  label: string;
+  href: string;
+}
+ 
+interface WpAwSubNavLink {
+  label: string;
+  href: string;
+}
+ 
+interface WpAwAwardee {
+  student_name: string;
+  publication_month: string;
+  publication_venue: string;
+  faculty_author: string;
+  title: string;
+}
+ 
+interface WpAwYear {
+  year: string;
+  awardees: WpAwAwardee[] | false;
+}
+ 
+interface WpAwardsPageAcf {
+  // Hero
+  aw_hero_title: string;
+  aw_hero_subline: string;
+  aw_hero_image: string;
+  aw_breadcrumb: WpAwBreadcrumb[] | false;
+  // Sub Nav
+  aw_subnav_label: string;
+  aw_subnav_links: WpAwSubNavLink[] | false;
+  // Intro — wysiwyg (may contain component HTML — we strip to plain text)
+  aw_intro: string;
+  // Awardees
+  aw_awardees_title: string;
+  aw_years: WpAwYear[] | false;
+  // Policy — wysiwyg (rendered as-is on frontend via dangerouslySetInnerHTML)
+  aw_policy_title: string;
+  aw_policy_content: string;
+  aw_policy_button_label: string;
+  aw_policy_button_href: WpAwLinkField | string; // empty string when not set
+  // CTA
+  aw_cta_left_title: string;
+  aw_cta_left_description: string;
+  aw_cta_left_label: string;
+  aw_cta_left_href: WpAwLinkField;
+  aw_cta_right_title: string;
+  aw_cta_right_description: string;
+  aw_cta_right_label: string;
+  aw_cta_right_href: WpAwLinkField;
+}
+
+interface WpAbBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpAbSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpAbParagraph {
+  paragraph: string; // plain text, \r\n line breaks preserved
+}
+
+interface WpAboutPageAcf {
+  // Hero
+  ab_hero_title: string;
+  ab_hero_subline: string;
+  ab_hero_image: string;
+  ab_breadcrumb: WpAbBreadcrumb[] | false;
+  // Sub Nav
+  ab_subnav_label: string;
+  ab_subnav_links: WpAbSubNavLink[] | false;
+  // Intro
+  ab_intro_paragraphs: WpAbParagraph[] | false;
+  ab_vision_title: string;
+  ab_vision_body: string;
+  ab_mission_title: string;
+  ab_mission_body: string;
+  // Media block
+  ab_media_image: string;
+  ab_media_paragraphs: WpAbParagraph[] | false;
+  // Diversity
+  ab_diversity_title: string;
+  ab_diversity_description: string;
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+/**
+ * Extract plain-text <p> content from a wysiwyg HTML blob.
+ * Returns an array of paragraph strings, stripping all tags.
+ * Used for intro fields where editors paste HTML.
+ */
+function extractPlainParagraphs(html: string): string[] {
+  if (!html) return [];
+  const pMatches = [...html.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)];
+  if (pMatches.length > 0) {
+    return pMatches
+      .map((m) =>
+        decodeHtml(m[1].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()),
+      )
+      .filter(Boolean);
+  }
+  // Fallback: strip all tags if no <p> found
+  const plain = decodeHtml(
+    html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
+  );
+  return plain ? [plain] : [];
+}
+ 
+/**
+ * REPLACE the existing parsePolicyHtml() function in lib/wordpress.ts
+ * with this improved version.
+ *
+ * Correctly handles:
+ *   <p>intro text</p>
+ *   <ul>...</ul>
+ *   <p>lead text between lists</p>   ← was being lost before
+ *   <ul>...</ul>
+ *   <p>outro text</p>
+ */
+function parsePolicyHtml(html: string): PolicyData {
+  if (!html) {
+    return { title: "", introParagraphs: [], bulletGroups: [], outroParagraphs: [] };
+  }
+
+  // Tokenise the HTML into an ordered sequence of blocks:
+  // each token is either a <p>...</p> or a <ul>...</ul>
+  const tokenRegex = /(<p[^>]*>[\s\S]*?<\/p>|<ul[\s\S]*?<\/ul>)/gi;
+  const tokens = [...html.matchAll(tokenRegex)].map((m) => m[1].trim());
+
+  const introParagraphs: string[] = [];
+  const bulletGroups: Array<{ lead?: string; items: string[] }> = [];
+  const outroParagraphs: string[] = [];
+
+  let seenFirstList = false;
+  // Text immediately before a <ul> becomes its lead sentence
+  let pendingLead: string | undefined;
+
+  for (const token of tokens) {
+    const isUl = /^<ul/i.test(token);
+
+    if (isUl) {
+      // Extract <li> items
+      const liMatches = [...token.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
+      const items = liMatches
+        .map((m) =>
+          decodeHtml(m[1].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()),
+        )
+        .filter(Boolean);
+
+      if (items.length > 0) {
+        bulletGroups.push({ lead: pendingLead, items });
+      }
+
+      pendingLead = undefined;
+      seenFirstList = true;
+    } else {
+      // It's a <p> — extract plain text
+      const text = decodeHtml(
+        token.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
+      );
+      if (!text) continue;
+
+      if (!seenFirstList) {
+        // Before any list → intro paragraph
+        introParagraphs.push(text);
+      } else {
+        // After at least one list — could be:
+        // a) lead for the NEXT list → hold it as pendingLead
+        // b) outro paragraph if no more lists follow
+        // We always set as pendingLead; if no next list follows,
+        // we flush it to outroParagraphs at the end.
+        if (pendingLead) {
+          // Two paragraphs in a row between lists — flush previous as outro
+          outroParagraphs.push(pendingLead);
+        }
+        pendingLead = text;
+      }
+    }
+  }
+
+  // Flush any remaining pendingLead as outro (no list followed it)
+  if (pendingLead) {
+    outroParagraphs.push(pendingLead);
+  }
+
+  return { title: "", introParagraphs, bulletGroups, outroParagraphs };
+}
 
 /** Decode HTML entities from WP REST API title.rendered e.g. "&amp;" → "&" */
 function decodeHtml(html: string): string {
@@ -530,6 +908,83 @@ function mapDiversity(acf: WpHomeAcf): HomeData["diversity"] {
   };
 }
 
+function parseFunctionsHtml(html: string): {
+  introParagraphs: string[];
+  bulletGroups: Array<{ lead?: string; items: string[] }>;
+  outroParagraphs: string[];
+} {
+  // Normalise: unwrap <div> tags, collapse whitespace
+  const cleaned = html
+    .replace(/<div[^>]*>/gi, "")
+    .replace(/<\/div>/gi, "")
+    .replace(/\r?\n/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+ 
+  const introParagraphs: string[] = [];
+  const bulletGroups: Array<{ lead?: string; items: string[] }> = [];
+  const outroParagraphs: string[] = [];
+ 
+  // Split by <ul>...</ul> blocks to separate prose from lists
+  const parts = cleaned.split(/(<ul[\s\S]*?<\/ul>)/gi);
+ 
+  let seenFirstList = false;
+  let pendingLead: string | undefined;
+ 
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+ 
+    if (/<ul/i.test(trimmed)) {
+      // Extract <li> items
+      const liMatches = [...trimmed.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
+      const items = liMatches.map((m) =>
+        m[1].replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim(),
+      ).filter(Boolean);
+ 
+      if (items.length > 0) {
+        bulletGroups.push({ lead: pendingLead, items });
+        pendingLead = undefined;
+        seenFirstList = true;
+      }
+    } else {
+      // Extract <p> tags from this prose chunk
+      const pMatches = [...trimmed.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)];
+      const paragraphs = pMatches.map((m) =>
+        decodeHtml(m[1].replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim()),
+      ).filter(Boolean);
+ 
+      for (const p of paragraphs) {
+        if (!seenFirstList && bulletGroups.length === 0) {
+          // Check if the next sibling will be a <ul> — treat last p before ul as lead
+          // Simple heuristic: if it ends with a colon, it's an intro/lead line
+          if (p.endsWith(":")) {
+            pendingLead = p;
+          } else {
+            introParagraphs.push(p);
+          }
+        } else if (seenFirstList && parts.indexOf(part) === parts.length - 1) {
+          outroParagraphs.push(p);
+        } else {
+          // Paragraph between lists — treat as lead for next list
+          pendingLead = p;
+        }
+      }
+    }
+  }
+ 
+  return { introParagraphs, bulletGroups, outroParagraphs };
+}
+
+function extractParagraphs(html: string): string[] {
+  const pMatches = [...html.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)];
+  return pMatches
+    .map((m) =>
+      decodeHtml(m[1].replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim()),
+    )
+    .filter(Boolean);
+}
+
 // ─── getSiteSettings (global — used by any page with ConnectContact) ──────────
  
 export async function getSiteSettings(): Promise<ContactContent> {
@@ -653,7 +1108,76 @@ export async function getProgramPage(): Promise<ProgramPageData> {
 // ─── About ───────────────────────────────────────────────────────────────────
 
 export async function getAboutPage(): Promise<AboutPageData> {
-  return aboutPageData;
+  const [acf, contact] = await Promise.all([
+    getPageAcf<WpAboutPageAcf>("about"),
+    getSiteSettings(),
+  ]);
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] About page ACF not found — falling back to mock data.",
+    );
+    return aboutPageData;
+  }
+
+  // Normalise \r\n → \n so whitespace-pre-line renders line breaks correctly
+  const normalise = (s: string) => s.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  // Media paragraphs — if empty fall back to intro paragraphs (same content
+  // is used in both blocks on the mock page)
+  const rawMediaParagraphs = toArray(acf.ab_media_paragraphs);
+  const mediaParagraphs =
+    rawMediaParagraphs.length > 0
+      ? rawMediaParagraphs.map((r) => normalise(r.paragraph))
+      : toArray(acf.ab_intro_paragraphs).map((r) => normalise(r.paragraph));
+
+  return {
+    hero: {
+      title: acf.ab_hero_title,
+      subline: acf.ab_hero_subline || undefined,
+      image: acf.ab_hero_image,
+      breadcrumb: toArray(acf.ab_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.ab_subnav_label,
+
+    subNav: toArray(acf.ab_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: {
+      // \r\n normalised → \n; SchoolIntro uses whitespace-pre-line so
+      // line breaks within a paragraph block render correctly
+      paragraphs: toArray(acf.ab_intro_paragraphs).map((r) =>
+        normalise(r.paragraph),
+      ),
+      vision: {
+        title: acf.ab_vision_title,
+        body: acf.ab_vision_body,
+      },
+      mission: {
+        title: acf.ab_mission_title,
+        body: acf.ab_mission_body,
+      },
+    },
+
+    media: {
+      image: acf.ab_media_image,
+      paragraphs: mediaParagraphs,
+    },
+
+    diversity: {
+      title: acf.ab_diversity_title,
+      description: acf.ab_diversity_description,
+    },
+
+    // ✅ Live from Site Settings options page
+    contact,
+  };
 }
 
 export async function getLeadershipPage(): Promise<LeadershipPageData> {
@@ -704,11 +1228,175 @@ export async function getFestEventsPage(): Promise<FestEventsPageData> {
 // ─── Research ─────────────────────────────────────────────────────────────────
 
 export async function getDeanResearchPage(): Promise<DeanResearchPageData> {
-  return deanResearchPageData;
+  const acf = await getPageAcf<WpDeanResearchAcf>("dean-research");
+ 
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Dean Research page ACF not found — falling back to mock data.",
+    );
+    return deanResearchPageData;
+  }
+ 
+  // Desk paragraphs: each row may contain multiple <p> tags — flatten all
+  const deskParagraphs = toArray(acf.dr_desk_paragraphs).flatMap((row) =>
+    extractParagraphs(row.paragraph),
+  );
+ 
+  // Functions: the editor put everything into the first intro row as HTML
+  // Parse it into the structured introParagraphs / bulletGroups / outroParagraphs
+  const functionsHtml = toArray(acf.dr_functions_intro)
+    .map((row) => row.paragraph)
+    .join(" ");
+ 
+  const { introParagraphs, bulletGroups, outroParagraphs } =
+    functionsHtml
+      ? parseFunctionsHtml(functionsHtml)
+      : { introParagraphs: [], bulletGroups: [], outroParagraphs: [] };
+ 
+  // If editor used the separate bullet_groups repeater, merge those too
+  const scfBulletGroups = toArray(acf.dr_functions_bullet_groups).map((g) => ({
+    lead: g.lead || undefined,
+    items: toArray(g.items).map((i) => i.item).filter(Boolean),
+  }));
+ 
+  const scfOutro = toArray(acf.dr_functions_outro).map((row) =>
+    row.paragraph.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
+  );
+ 
+  return {
+    hero: {
+      title: acf.dr_hero_title,
+      subline: acf.dr_hero_subline || undefined,
+      image: acf.dr_hero_image,
+      breadcrumb: toArray(acf.dr_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+ 
+    subNavLabel: acf.dr_subnav_label,
+ 
+    subNav: toArray(acf.dr_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+ 
+    desk: {
+      title: acf.dr_desk_title,
+      paragraphs: deskParagraphs,
+      name: acf.dr_desk_name,
+      role: acf.dr_desk_role,
+      image: acf.dr_desk_image,
+      phone: acf.dr_desk_phone,
+      email: acf.dr_desk_email,
+    },
+ 
+    functions: {
+      title: acf.dr_functions_title,
+      introParagraphs,
+      bulletGroups: [...bulletGroups, ...scfBulletGroups],
+      outroParagraphs: [...outroParagraphs, ...scfOutro],
+    },
+ 
+    officials: {
+      title: acf.dr_officials_title,
+      people: toArray(acf.dr_officials).map((o, i) => ({
+        id: String(i),
+        name: o.name,
+        position: o.position,
+        email: o.email || "",
+        phone: o.phone || "",
+        image:
+          o.image ||
+          `https://picsum.photos/seed/official-${i}/290/338`,
+      })),
+    },
+ 
+    cta: {
+      left: {
+        title: acf.dr_cta_left_title || undefined,
+        description: acf.dr_cta_left_description,
+        cta: acf.dr_cta_left_label,
+        href: acf.dr_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.dr_cta_right_title || undefined,
+        description: acf.dr_cta_right_description,
+        cta: acf.dr_cta_right_label,
+        href: acf.dr_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getResearchAreasPage(): Promise<ResearchAreasPageData> {
-  return researchAreasPageData;
+  const [acf, areaPosts] = await Promise.all([
+    // Note: WP page slug is "research-areas-data" (not "research-areas")
+    getPageAcf<WpResearchAreasAcf>("research-areas-data"),
+    wpFetch<WpResearchPost[]>(
+      `/wp/v2/research-area?_embed=wp:featuredmedia&per_page=20&orderby=title&order=asc`,
+    ),
+  ]);
+ 
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Research Areas page ACF not found — falling back to mock data.",
+    );
+    return researchAreasPageData;
+  }
+ 
+  return {
+    hero: {
+      title: acf.ra_hero_title,
+      subline: acf.ra_hero_subline || undefined,
+      image: acf.ra_hero_image,
+      breadcrumb: toArray(acf.ra_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+ 
+    subNavLabel: acf.ra_subnav_label,
+ 
+    subNav: toArray(acf.ra_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+ 
+    // Strip HTML tags from each paragraph (editors used textarea wysiwyg)
+    intro: toArray(acf.ra_intro).map((row) =>
+      row.paragraph.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
+    ),
+ 
+    areas: {
+      title: acf.ra_areas_title,
+      description: acf.ra_areas_description,
+      // Map research-area CPT posts → AreaCard[]
+      cards: areaPosts.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/area-${post.id}/148/148`,
+        href: `/research/areas/${post.slug}`,
+      })),
+    },
+ 
+    cta: {
+      left: {
+        title: acf.ra_cta_left_title || undefined,
+        description: acf.ra_cta_left_description,
+        cta: acf.ra_cta_left_label,
+        href: acf.ra_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.ra_cta_right_title || undefined,
+        description: acf.ra_cta_right_description,
+        cta: acf.ra_cta_right_label,
+        href: acf.ra_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 /**
@@ -722,11 +1410,195 @@ export async function getResearchAreaDetailPage(
 }
 
 export async function getGrantsPage(): Promise<GrantsPageData> {
-  return grantsPageData;
+  const [acf, availableGrants, pastGrants] = await Promise.all([
+    getPageAcf<WpGrantsPageAcf>("grants-projects"),
+    // Term IDs: available=4, past=3
+    wpFetch<WpGrantPost[]>(
+      `/wp/v2/grant?grants-type=4&acf_format=standard&per_page=20&orderby=date&order=desc`,
+    ),
+    wpFetch<WpGrantPost[]>(
+      `/wp/v2/grant?grants-type=3&acf_format=standard&per_page=20&orderby=date&order=desc`,
+    ),
+  ]);
+ 
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Grants page ACF not found — falling back to mock data.",
+    );
+    return grantsPageData;
+  }
+ 
+  // Extract plain text from the wysiwyg intro HTML
+  const introText = acf.gp_intro
+    ? acf.gp_intro
+        .replace(/<[^>]*>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+    : "";
+ 
+  // Map a grant CPT post → GrantCard
+  const toGrantCard = (post: WpGrantPost, i: number): GrantCard => ({
+    id: String(post.id),
+    name: decodeHtml(post.title.rendered),
+    description: excerptFromHtml(post.content.rendered, 40),
+    applyLabel: post.acf?.apply_label || "Apply",
+    applyHref: post.acf?.apply_href?.url || "#",
+    detailHref: post.acf?.detail_href?.url || undefined,
+  });
+ 
+  return {
+    hero: {
+      title: acf.gp_hero_title,
+      subline: acf.gp_hero_subline || undefined,
+      image: acf.gp_hero_image,
+      breadcrumb: toArray(acf.gp_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+ 
+    subNavLabel: acf.gp_subnav_label,
+ 
+    subNav: toArray(acf.gp_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+ 
+    intro: introText ? [introText] : [],
+ 
+    // Exactly two tabs as required by GrantsPageData type
+    tabs: [
+      {
+        tabLabel: "Available Grants",
+        sectionTitle: acf.gp_available_title,
+        description: acf.gp_available_description,
+        cards: availableGrants.map(toGrantCard),
+      },
+      {
+        tabLabel: "Past Grants",
+        sectionTitle: acf.gp_past_title,
+        description: acf.gp_past_description,
+        cards: pastGrants.map(toGrantCard),
+      },
+    ],
+ 
+    sponsored: {
+      title: acf.gp_sponsored_title,
+      projects: toArray(acf.gp_sponsored_projects).map((p, i) => ({
+        id: String(i),
+        pi: p.pi,
+        title: p.title,
+        fundingAgency: p.funding_agency,
+        duration: p.duration,
+        amount: p.amount,
+      })),
+    },
+ 
+    cta: {
+      left: {
+        title: acf.gp_cta_left_title || undefined,
+        description: acf.gp_cta_left_description,
+        cta: acf.gp_cta_left_label,
+        href: acf.gp_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.gp_cta_right_title || undefined,
+        description: acf.gp_cta_right_description,
+        cta: acf.gp_cta_right_label,
+        href: acf.gp_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getAwardsPage(): Promise<AwardsPageData> {
-  return awardsPageData;
+  const acf = await getPageAcf<WpAwardsPageAcf>("awards-recognition");
+ 
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Awards page ACF not found — falling back to mock data.",
+    );
+    return awardsPageData;
+  }
+ 
+  // Policy button href — can be empty string or WpAwLinkField object
+  const policyButtonHref =
+    typeof acf.aw_policy_button_href === "object" &&
+    acf.aw_policy_button_href?.url
+      ? acf.aw_policy_button_href.url
+      : null;
+ 
+  // Parse policy wysiwyg HTML into PolicyData shape
+  const policyParsed = parsePolicyHtml(acf.aw_policy_content);
+ 
+  return {
+    hero: {
+      title: acf.aw_hero_title,
+      subline: acf.aw_hero_subline || undefined,
+      image: acf.aw_hero_image,
+      breadcrumb: toArray(acf.aw_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+ 
+    subNavLabel: acf.aw_subnav_label,
+ 
+    subNav: toArray(acf.aw_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+ 
+    // Strip component HTML from intro wysiwyg — extract plain paragraphs
+    intro: extractPlainParagraphs(acf.aw_intro),
+ 
+    awardees: {
+      title: acf.aw_awardees_title,
+      years: toArray(acf.aw_years).map((yearRow, yi) => ({
+        year: yearRow.year,
+        awardees: toArray(yearRow.awardees).map((a, ai) => ({
+          id: `${yearRow.year}-${ai + 1}`,
+          studentName: a.student_name,
+          publicationMonth: a.publication_month,
+          publicationVenue: a.publication_venue,
+          facultyAuthor: a.faculty_author,
+          title: a.title,
+        })),
+      })),
+    },
+ 
+    policy: {
+      title: acf.aw_policy_title,
+      introParagraphs: policyParsed.introParagraphs,
+      bulletGroups: policyParsed.bulletGroups,
+      outroParagraphs: policyParsed.outroParagraphs,
+      button:
+        acf.aw_policy_button_label && policyButtonHref
+          ? {
+              label: acf.aw_policy_button_label,
+              href: policyButtonHref,
+              external:
+                typeof acf.aw_policy_button_href === "object" &&
+                acf.aw_policy_button_href?.target === "_blank",
+            }
+          : undefined,
+    },
+ 
+    cta: {
+      left: {
+        title: acf.aw_cta_left_title || undefined,
+        description: acf.aw_cta_left_description,
+        cta: acf.aw_cta_left_label,
+        href: acf.aw_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.aw_cta_right_title || undefined,
+        description: acf.aw_cta_right_description,
+        cta: acf.aw_cta_right_label,
+        href: acf.aw_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 // ─── Faculty ──────────────────────────────────────────────────────────────────
