@@ -1356,7 +1356,7 @@ export async function getLeadershipPage(): Promise<LeadershipPageData> {
         mapMember(m, i, "dir"),
       ),
     },
- 
+  
     diversity: {
       title: acf.ld_diversity_title,
       description: acf.ld_diversity_description,
