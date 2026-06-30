@@ -98,6 +98,7 @@ import type {
   ContactContent,
   PolicyData,
   GrantCard,
+  FacultyMember,
 } from "@/lib/types";
 
 // ============================================================================
