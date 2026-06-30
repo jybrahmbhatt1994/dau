@@ -552,6 +552,78 @@ interface WpAboutPageAcf {
   ab_diversity_description: string;
 }
 
+interface WpLdLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+ 
+interface WpLdBreadcrumb {
+  label: string;
+  href: string;
+}
+ 
+interface WpLdSubNavLink {
+  label: string;
+  href: string;
+}
+ 
+interface WpLdParagraph {
+  paragraph: string;
+}
+ 
+interface WpLdMember {
+  name: string;
+  position: string;
+  image: string;
+  // Link field returns "" (empty string) when blank, or a WpLdLinkField when set
+  href: WpLdLinkField | "";
+}
+ 
+interface WpLeadershipPageAcf {
+  // Hero
+  ld_hero_title: string;
+  ld_hero_subline: string;
+  ld_hero_image: string;
+  ld_breadcrumb: WpLdBreadcrumb[] | false;
+  // Sub Nav
+  ld_subnav_label: string;
+  ld_subnav_links: WpLdSubNavLink[] | false;
+  // Intro
+  ld_intro_paragraphs: WpLdParagraph[] | false;
+  // President
+  ld_president_title: string;
+  ld_president_name: string;
+  ld_president_role: string;
+  ld_president_image: string;
+  ld_president_bio: WpLdParagraph[] | false;
+  // Board of Governors
+  ld_bog_title: string;
+  ld_bog_description: string;
+  ld_bog_members: WpLdMember[] | false;
+  // Academic Council
+  ld_ac_title: string;
+  ld_ac_description: string;
+  ld_ac_members: WpLdMember[] | false;
+  // Finance Committee
+  ld_fc_title: string;
+  ld_fc_description: string;
+  ld_fc_members: WpLdMember[] | false;
+  // Director General
+  ld_dg_title: string;
+  ld_dg_name: string;
+  ld_dg_role: string;
+  ld_dg_image: string;
+  ld_dg_bio: WpLdParagraph[] | false;
+  // Directors
+  ld_directors_title: string;
+  ld_directors_description: string;
+  ld_directors_members: WpLdMember[] | false;
+  // Diversity
+  ld_diversity_title: string;
+  ld_diversity_description: string;
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 /**
@@ -574,6 +646,24 @@ function extractPlainParagraphs(html: string): string[] {
     html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
   );
   return plain ? [plain] : [];
+}
+
+/** Normalise \r\n line endings to \n for whitespace-pre-line rendering */
+function normaliseLineBreaks(s: string): string {
+  return s.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+ 
+/** Map a WpLdMember row → FacultyMember, handling the "" vs object href quirk */
+function mapMember(m: WpLdMember, i: number, prefix: string): FacultyMember {
+  const href =
+    typeof m.href === "object" && m.href?.url ? m.href.url : "#";
+  return {
+    id: `${prefix}-${i}`,
+    name: m.name,
+    position: m.position,
+    image: m.image || `https://picsum.photos/seed/${prefix}-${i}/580/700`,
+    href,
+  };
 }
  
 /**
@@ -1183,7 +1273,98 @@ export async function getAboutPage(): Promise<AboutPageData> {
 }
 
 export async function getLeadershipPage(): Promise<LeadershipPageData> {
-  return leadershipPageData;
+  const [acf, contact] = await Promise.all([
+    getPageAcf<WpLeadershipPageAcf>("leadership"),
+    getSiteSettings(),
+  ]);
+ 
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Leadership page ACF not found — falling back to mock data.",
+    );
+    return leadershipPageData;
+  }
+ 
+  return {
+    hero: {
+      title: acf.ld_hero_title,
+      subline: acf.ld_hero_subline || undefined,
+      image: acf.ld_hero_image,
+      breadcrumb: toArray(acf.ld_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+ 
+    subNavLabel: acf.ld_subnav_label,
+ 
+    subNav: toArray(acf.ld_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+ 
+    intro: toArray(acf.ld_intro_paragraphs).map((r) =>
+      normaliseLineBreaks(r.paragraph),
+    ),
+ 
+    president: {
+      title: acf.ld_president_title,
+      name: acf.ld_president_name,
+      role: acf.ld_president_role,
+      image: acf.ld_president_image,
+      bio: toArray(acf.ld_president_bio).map((r) =>
+        normaliseLineBreaks(r.paragraph),
+      ),
+    },
+ 
+    boardOfGovernors: {
+      title: acf.ld_bog_title,
+      description: acf.ld_bog_description,
+      members: toArray(acf.ld_bog_members).map((m, i) =>
+        mapMember(m, i, "bog"),
+      ),
+    },
+ 
+    academicCouncil: {
+      title: acf.ld_ac_title,
+      description: acf.ld_ac_description,
+      members: toArray(acf.ld_ac_members).map((m, i) =>
+        mapMember(m, i, "ac"),
+      ),
+    },
+ 
+    financeCommittee: {
+      title: acf.ld_fc_title,
+      description: acf.ld_fc_description,
+      members: toArray(acf.ld_fc_members).map((m, i) =>
+        mapMember(m, i, "fc"),
+      ),
+    },
+ 
+    directorGeneral: {
+      title: acf.ld_dg_title,
+      name: acf.ld_dg_name,
+      role: acf.ld_dg_role,
+      image: acf.ld_dg_image,
+      bio: toArray(acf.ld_dg_bio).map((r) => normaliseLineBreaks(r.paragraph)),
+    },
+ 
+    directors: {
+      title: acf.ld_directors_title,
+      description: acf.ld_directors_description,
+      members: toArray(acf.ld_directors_members).map((m, i) =>
+        mapMember(m, i, "dir"),
+      ),
+    },
+ 
+    diversity: {
+      title: acf.ld_diversity_title,
+      description: acf.ld_diversity_description,
+    },
+ 
+    // ✅ Live from Site Settings options page
+    contact,
+  };
 }
 
 export async function getAdministrationPage(): Promise<AdministrationPageData> {
