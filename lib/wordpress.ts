@@ -625,7 +625,7 @@ interface WpLeadershipPageAcf {
   ld_diversity_description: string;
 }
 
-<<<<<<< HEAD
+
 interface WpAdBreadcrumb {
   label: string;
   href: string;
@@ -662,8 +662,7 @@ interface WpAdministrationPageAcf {
   ad_diversity_description: string;
 }
 
-=======
->>>>>>> 7d61fc3fe55c63741bb824d142cb7ac92007a1c2
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 /**
