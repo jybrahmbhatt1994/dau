@@ -722,6 +722,7 @@ export interface PublicationCard {
   excerpt: string;
   author: string;
   href: string;
+  fullContent?: string;
 }
 
 export interface VideoCta {

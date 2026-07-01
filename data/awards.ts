@@ -81,7 +81,7 @@ export const awardsPageData: AwardsPageData = {
     ],
     button: {
       label: "Download Policy Document",
-      href: "/files/research-policy.pdf",
+      href: "/files/Policy_Student-Research-Excellence-VER_1",
       external: true,
     },
   },

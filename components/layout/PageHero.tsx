@@ -46,7 +46,7 @@ export function PageHero({ title, subline, image, breadcrumb }: PageHeroContent)
         >
           <div className="flex h-full flex-col justify-between gap-8 lg:items-end lg:text-right">
             <div className="w-full">
-              {breadcrumb && breadcrumb.length > 0 && (
+              {/* {breadcrumb && breadcrumb.length > 0 && (
                 <nav
                   aria-label="Breadcrumb"
                   className="mb-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs font-medium text-white/70 lg:justify-end"
@@ -64,7 +64,7 @@ export function PageHero({ title, subline, image, breadcrumb }: PageHeroContent)
                     </span>
                   ))}
                 </nav>
-              )}
+              )} */}
 
               {/* inline-block so the gold underline matches the title block width */}
               {/* relative wrapper shrinks to the title; the underline is

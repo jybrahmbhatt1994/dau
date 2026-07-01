@@ -662,6 +662,86 @@ interface WpAdministrationPageAcf {
   ad_diversity_description: string;
 }
 
+interface WpRaDetailLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+ 
+interface WpRaDetailSubNavLink {
+  label: string;
+  href: string;
+}
+ 
+interface WpRaDetailParagraph {
+  paragraph: string;
+}
+ 
+interface WpRaDetailGroupCard {
+  title: string;
+  image: string | false;
+  href: WpRaDetailLinkField | "";
+}
+ 
+interface WpRaDetailSponsoredProject {
+  pi: string;
+  title: string;
+  funding_agency: string;
+  duration: string;
+  amount: string;
+}
+ 
+interface WpRaDetailPublication {
+  image: string | false;
+  date: string;
+  excerpt: string;
+  author: string;
+  href: WpRaDetailLinkField | "";
+  full_content: string; // wysiwyg HTML for popup
+}
+ 
+interface WpResearchAreaDetailAcf {
+  // Hero
+  ra_hero_subline: string;
+  ra_hero_image: string;
+  // Sub Nav
+  ra_subnav_label?: string;
+  ra_subnav_links: WpRaDetailSubNavLink[] | false;
+  // Intro
+  ra_intro_paragraphs: WpRaDetailParagraph[] | false;
+  ra_director_name: string;
+  ra_director_role: string;
+  ra_director_message: string;
+  // Faculty
+  ra_faculty_title: string;
+  ra_faculty_description: string;
+  ra_faculty_selected: number[];
+  // Research Groups
+  ra_groups_title: string;
+  ra_groups_cards: WpRaDetailGroupCard[] | false;
+  ra_groups_cta_label: string;
+  ra_groups_cta_href: WpRaDetailLinkField | "";
+  // Sponsored Research
+  ra_sponsored_title: string;
+  ra_sponsored_projects: WpRaDetailSponsoredProject[] | false;
+  // Publications
+  ra_publications_title: string;
+  ra_publications: WpRaDetailPublication[] | false;
+  // Video CTA
+  ra_video_image: string;
+  ra_video_label: string;
+  ra_video_href: string;
+  // CTA
+  ra_cta_left_title: string;
+  ra_cta_left_description: string;
+  ra_cta_left_label: string;
+  ra_cta_left_href: WpRaDetailLinkField;
+  ra_cta_right_title: string;
+  ra_cta_right_description: string;
+  ra_cta_right_label: string;
+  ra_cta_right_href: WpRaDetailLinkField;
+}
+
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -837,6 +917,11 @@ function excerptFromHtml(html: string, maxWords = 30): string {
   const words = text.split(" ");
   if (words.length <= maxWords) return text;
   return words.slice(0, maxWords).join(" ") + "…";
+}
+
+function linkUrl(field: WpRaDetailLinkField | "" | undefined): string {
+  if (!field || typeof field === "string") return "#";
+  return field.url || "#";
 }
 
 // ─── Mappers ─────────────────────────────────────────────────────────────────
@@ -1678,9 +1763,169 @@ export async function getResearchAreasPage(): Promise<ResearchAreasPageData> {
  * When going headless: fetch WP post by slug and map to ResearchAreaDetailPageData.
  */
 export async function getResearchAreaDetailPage(
-  _slug: string
+  slug: string,
 ): Promise<ResearchAreaDetailPageData> {
-  return researchAreaDetailPageData;
+  // Fetch the research-area CPT post by slug
+  const posts = await wpFetch<
+    Array<{ id: number; slug: string; title: { rendered: string }; acf: WpResearchAreaDetailAcf }>
+  >(
+    `/wp/v2/research-area?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
+  );
+ 
+  if (!posts || posts.length === 0) {
+    console.warn(
+      `[wordpress.ts] Research area '${slug}' not found — falling back to mock data.`,
+    );
+    return researchAreaDetailPageData;
+  }
+ 
+  const post = posts[0];
+  const acf = post.acf;
+  const title = decodeHtml(post.title.rendered);
+ 
+  // Fetch faculty + events in parallel
+  const facultyIds = (acf.ra_faculty_selected ?? []).join(",");
+ 
+  const [facultyPosts, eventPosts] = await Promise.all([
+    facultyIds
+      ? wpFetch<WpFacultyPost[]>(
+          `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
+        )
+      : Promise.resolve([] as WpFacultyPost[]),
+    wpFetch<WpEventPost[]>(
+      `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
+    ),
+  ]);
+ 
+  // Map faculty — preserve editor's chosen order
+  const orderedFaculty = (acf.ra_faculty_selected ?? [])
+    .map((id) => facultyPosts.find((p) => p.id === id))
+    .filter((p): p is WpFacultyPost => p !== undefined);
+ 
+  return {
+    hero: {
+      title,
+      subline: acf.ra_hero_subline || undefined,
+      image: acf.ra_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Research", href: "/research" },
+        { label: "Research Areas", href: "/research/areas" },
+        { label: title, href: `/research/areas/${slug}` },
+      ],
+    },
+ 
+    subNavLabel: acf.ra_subnav_label || title,
+ 
+    subNav: toArray(acf.ra_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+ 
+    intro: {
+      paragraphs: toArray(acf.ra_intro_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+      directorName: acf.ra_director_name || "",
+      directorRole: acf.ra_director_role || "",
+      directorMessage: acf.ra_director_message || "",
+    },
+ 
+    faculty: {
+      title: acf.ra_faculty_title,
+      description: acf.ra_faculty_description.trim(),
+      members: orderedFaculty.map((p) => ({
+        id: String(p.id),
+        name: decodeHtml(p.title.rendered),
+        position: p.acf?.position ?? "",
+        image:
+          p._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/faculty-${p.id}/190/220`,
+        href: `/faculty/${p.slug}`,
+      })),
+    },
+ 
+    groups: {
+      title: acf.ra_groups_title,
+      cards: toArray(acf.ra_groups_cards).map((card, i) => ({
+        id: String(i),
+        title: card.title,
+        // image: false means no image set — use picsum fallback
+        image:
+          card.image && card.image !== false
+            ? card.image
+            : `https://picsum.photos/seed/group-${i}/148/148`,
+        href: linkUrl(card.href),
+      })),
+      projectsHref: linkUrl(acf.ra_groups_cta_href),
+      projectsCta: acf.ra_groups_cta_label || "Research Projects",
+    },
+ 
+    sponsored: {
+      title: acf.ra_sponsored_title,
+      projects: toArray(acf.ra_sponsored_projects).map((p, i) => ({
+        id: String(i),
+        pi: p.pi,
+        title: p.title,
+        fundingAgency: p.funding_agency,
+        duration: p.duration,
+        amount: p.amount,
+      })),
+    },
+ 
+    publications: {
+      title: acf.ra_publications_title,
+      items: toArray(acf.ra_publications).map((pub, i) => ({
+        id: String(i),
+        image:
+          pub.image && pub.image !== false
+            ? pub.image
+            : `https://picsum.photos/seed/pub-${i}/400/267`,
+        date: pub.date,
+        excerpt: pub.excerpt,
+        author: pub.author,
+        href: linkUrl(pub.href),
+        // full_content is the wysiwyg HTML — passed through as-is for popup rendering
+        // The component should render this with dangerouslySetInnerHTML
+        fullContent: pub.full_content || "",
+      })),
+    },
+ 
+    videoCta: {
+      image: acf.ra_video_image,
+      label: acf.ra_video_label,
+      href: acf.ra_video_href || "#",
+    },
+ 
+    events: {
+      title: "Upcoming Events",
+      allHref: "/life/events",
+      items: eventPosts.map((ev) => ({
+        id: String(ev.id),
+        title: decodeHtml(ev.title.rendered),
+        date: formatIsoDate(ev.date),
+        image:
+          ev._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/event-${ev.id}/418/260`,
+        href: `/events/${ev.slug}`,
+      })),
+    },
+ 
+    cta: {
+      left: {
+        title: acf.ra_cta_left_title || undefined,
+        description: acf.ra_cta_left_description,
+        cta: acf.ra_cta_left_label,
+        href: acf.ra_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.ra_cta_right_title || undefined,
+        description: acf.ra_cta_right_description,
+        cta: acf.ra_cta_right_label,
+        href: acf.ra_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getGrantsPage(): Promise<GrantsPageData> {
