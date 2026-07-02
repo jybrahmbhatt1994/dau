@@ -22,12 +22,18 @@ export async function wpFetch<T>(
 ): Promise<T> {
   const url = `${WP_URL}/wp-json${endpoint}`;
 
-  const res = await fetch(url, {
-    next: {
-      revalidate:
-        process.env.NODE_ENV === "development" ? 0 : revalidate,
-    },
-  });
+  // In dev always bypass cache. In prod: revalidate=0 uses cache:'no-store'
+  // (fully skips Vercel's Data Cache, which persists across deploys); any
+  // positive value uses next:{revalidate} for ISR as normal.
+  const effectiveRevalidate =
+    process.env.NODE_ENV === "development" ? 0 : revalidate;
+
+  const res = await fetch(
+    url,
+    effectiveRevalidate === 0
+      ? { cache: "no-store" }
+      : { next: { revalidate: effectiveRevalidate } },
+  );
 
   if (!res.ok) {
     throw new Error(
