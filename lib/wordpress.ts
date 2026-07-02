@@ -1852,7 +1852,7 @@ export async function getResearchAreaDetailPage(
         title: card.title,
         // image: false means no image set — use picsum fallback
         image:
-          card.image && card.image !== false
+          typeof card.image === "string" && card.image
             ? card.image
             : `https://picsum.photos/seed/group-${i}/148/148`,
         href: linkUrl(card.href),
@@ -1878,7 +1878,7 @@ export async function getResearchAreaDetailPage(
       items: toArray(acf.ra_publications).map((pub, i) => ({
         id: String(i),
         image:
-          pub.image && pub.image !== false
+          typeof pub.image === "string" && pub.image
             ? pub.image
             : `https://picsum.photos/seed/pub-${i}/400/267`,
         date: pub.date,
