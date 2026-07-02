@@ -1792,17 +1792,25 @@ export async function getResearchAreaDetailPage(
   // Fetch faculty + events in parallel
   const facultyIds = (acf.ra_faculty_selected ?? []).join(",");
 
+  // Each secondary fetch gets its own .catch so a missing CPT (faculty/event
+  // not yet set up on production WP) doesn't kill the whole page.
   const [facultyPosts, eventPosts] = await Promise.all([
     facultyIds
       ? wpFetch<WpFacultyPost[]>(
           `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
           0,
-        )
+        ).catch((err) => {
+          console.warn("[wordpress.ts] faculty fetch failed for research area — rendering without faculty:", err);
+          return [] as WpFacultyPost[];
+        })
       : Promise.resolve([] as WpFacultyPost[]),
     wpFetch<WpEventPost[]>(
       `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
       0,
-    ),
+    ).catch((err) => {
+      console.warn("[wordpress.ts] event fetch failed for research area — rendering without events:", err);
+      return [] as WpEventPost[];
+    }),
   ]);
  
   // Map faculty — preserve editor's chosen order
