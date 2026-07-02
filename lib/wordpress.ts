@@ -1765,35 +1765,43 @@ export async function getResearchAreasPage(): Promise<ResearchAreasPageData> {
 export async function getResearchAreaDetailPage(
   slug: string,
 ): Promise<ResearchAreaDetailPageData> {
-  // Fetch the research-area CPT post by slug
+  try {
+  // revalidate=0 → bypass ISR cache so we never serve stale fallback data
+  // while production WordPress is being populated.
+  // Change to a positive number (e.g. 60) once all research area posts exist on the CMS.
   const posts = await wpFetch<
     Array<{ id: number; slug: string; title: { rendered: string }; acf: WpResearchAreaDetailAcf }>
   >(
     `/wp/v2/research-area?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
+    0,
   );
- 
+
   if (!posts || posts.length === 0) {
     console.warn(
-      `[wordpress.ts] Research area '${slug}' not found — falling back to mock data.`,
+      `[wordpress.ts] Research area '${slug}' not found in WordPress` +
+      ` (${process.env.WORDPRESS_API_URL}/wp-json/wp/v2/research-area?slug=${slug})` +
+      ` — falling back to mock data.`,
     );
     return researchAreaDetailPageData;
   }
- 
+
   const post = posts[0];
   const acf = post.acf;
   const title = decodeHtml(post.title.rendered);
- 
+
   // Fetch faculty + events in parallel
   const facultyIds = (acf.ra_faculty_selected ?? []).join(",");
- 
+
   const [facultyPosts, eventPosts] = await Promise.all([
     facultyIds
       ? wpFetch<WpFacultyPost[]>(
           `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
+          0,
         )
       : Promise.resolve([] as WpFacultyPost[]),
     wpFetch<WpEventPost[]>(
       `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
+      0,
     ),
   ]);
  
@@ -1926,6 +1934,13 @@ export async function getResearchAreaDetailPage(
       },
     },
   };
+  } catch (err) {
+    console.error(
+      `[wordpress.ts] getResearchAreaDetailPage('${slug}') failed — falling back to mock data.`,
+      err,
+    );
+    return researchAreaDetailPageData;
+  }
 }
 
 export async function getGrantsPage(): Promise<GrantsPageData> {

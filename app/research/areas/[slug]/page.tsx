@@ -10,6 +10,11 @@ import { UpcomingEvents } from "@/components/research/UpcomingEvents";
 import { SplitCta } from "@/components/academics/SplitCta";
 import { getResearchAreaDetailPage } from "@/lib/wordpress";
 
+// Always render fresh — never let Next.js serve a stale ISR-cached response
+// while WordPress data is being set up. Switch to `export const revalidate = 60`
+// once all research area posts exist on the production CMS.
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "AI, ML and Data Science — Research Area — Dhirubhai Ambani University",
   description:
