@@ -1583,6 +1583,8 @@ export async function getAcademicAreasPage(): Promise<AcademicAreasPageData> {
       })),
     },
 
+    subNavLabel: acf.aa_hero_title,
+
     // NOTE: AcademicAreasPageData.subNav is SubNavLink[] — no separate label
     // field on this type (unlike pages using subNavLabel). Label on the
     // frontend comes from the post title via the page component.
