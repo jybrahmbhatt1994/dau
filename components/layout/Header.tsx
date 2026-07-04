@@ -6,11 +6,14 @@ import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { ChevronDown } from "@/components/ui/icons";
 import { utilityLinks } from "@/data/navigation";
-import type { NavItem } from "@/lib/types";
+import type { NavItem, NavChild } from "@/lib/types";
 
 export function Header({ navigation }: { navigation: NavItem[] }) {
   const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
+  // Mobile-only: tracks which nested (3rd-level) group is expanded, keyed by
+  // "parentLabel > childLabel" so nested toggles never collide across groups.
+  const [openSubGroup, setOpenSubGroup] = useState<string | null>(null);
 
   // Lock background scroll while the drawer is open
   useEffect(() => {
@@ -55,13 +58,40 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
                   >
                     <ul className="py-2">
                       {item.children.map((child) => (
-                        <li key={child.label}>
+                        <li key={child.label} className="group/nested relative">
                           <Link
                             href={child.href}
-                            className="block px-4 py-2.5 text-sm font-medium text-black/80 transition-colors hover:bg-surface hover:text-brand"
+                            className="flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-medium text-black/80 transition-colors hover:bg-surface hover:text-brand"
                           >
-                            {child.label}
+                            <span>{child.label}</span>
+                            {child.children && (
+                              <ChevronDown className="h-3 w-3 -rotate-90 text-ash" />
+                            )}
                           </Link>
+
+                          {/* 3rd-level flyout — opens to the right of the parent dropdown */}
+                          {child.children && (
+                            <div
+                              className={`invisible absolute top-0 z-50 min-w-[240px] border-t-2 border-brand bg-white opacity-0 shadow-lg transition-all duration-150 group-hover/nested:visible group-hover/nested:opacity-100 ${
+                                alignRight
+                                  ? "right-full mr-px"
+                                  : "left-full ml-px"
+                              }`}
+                            >
+                              <ul className="py-2">
+                                {child.children.map((grandchild) => (
+                                  <li key={grandchild.label}>
+                                    <Link
+                                      href={grandchild.href}
+                                      className="block px-4 py-2.5 text-sm font-medium text-black/80 transition-colors hover:bg-surface hover:text-brand"
+                                    >
+                                      {grandchild.label}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -142,7 +172,9 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
                   {item.children && (
                     <button
                       type="button"
-                      onClick={() => setOpenGroup(groupOpen ? null : item.label)}
+                      onClick={() =>
+                        setOpenGroup(groupOpen ? null : item.label)
+                      }
                       className="px-3 py-3 text-ash"
                       aria-label={`Toggle ${item.label} submenu`}
                     >
@@ -160,17 +192,61 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
                     }`}
                   >
                     <ul className="min-h-0 overflow-hidden bg-surface">
-                      {item.children.map((child) => (
-                        <li key={child.label}>
-                          <Link
-                            href={child.href}
-                            onClick={() => setOpen(false)}
-                            className="block px-6 py-2.5 text-sm font-medium text-black/75"
-                          >
-                            {child.label}
-                          </Link>
-                        </li>
-                      ))}
+                      {item.children.map((child) => {
+                        const subKey = `${item.label} > ${child.label}`;
+                        const subOpen = openSubGroup === subKey;
+
+                        return (
+                          <li key={child.label}>
+                            <div className="flex items-center justify-between">
+                              <Link
+                                href={child.href}
+                                onClick={() => setOpen(false)}
+                                className="flex-1 px-6 py-2.5 text-sm font-medium text-black/75"
+                              >
+                                {child.label}
+                              </Link>
+                              {child.children && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setOpenSubGroup(subOpen ? null : subKey)
+                                  }
+                                  className="px-4 py-2.5 text-ash"
+                                  aria-label={`Toggle ${child.label} submenu`}
+                                >
+                                  <ChevronDown
+                                    className={`h-3.5 w-3.5 transition-transform duration-300 ${subOpen ? "rotate-180" : ""}`}
+                                  />
+                                </button>
+                              )}
+                            </div>
+
+                            {/* 3rd-level nested accordion */}
+                            {child.children && (
+                              <div
+                                className={`grid overflow-hidden transition-all duration-300 ease-in-out ${
+                                  subOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                }`}
+                              >
+                                <ul className="min-h-0 overflow-hidden bg-white">
+                                  {child.children.map((grandchild) => (
+                                    <li key={grandchild.label}>
+                                      <Link
+                                        href={grandchild.href}
+                                        onClick={() => setOpen(false)}
+                                        className="block px-9 py-2.5 text-sm text-black/70"
+                                      >
+                                        {grandchild.label}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}

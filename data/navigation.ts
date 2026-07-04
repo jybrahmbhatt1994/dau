@@ -12,7 +12,16 @@ export const navigation: NavItem[] = [
       { label: "Dean", href: "/academics/dean" },
       { label: "SOT", href: "/academics/sot" },
       { label: "Academic Areas", href: "/academics/areas" },
-      { label: "UG Programs", href: "/academics/ug-programs" },
+      {
+        label: "Programs of Study",
+        href: "/academics/programs-of-study",
+        children: [
+          { label: "Undergraduate Programs", href: "/academics/program/undergraduate-programs" },
+          { label: "Postgraduate Programs", href: "/academics/program/postgraduate-programs" },
+          { label: "Dual Degree Programs", href: "/academics/program/dual-degree-programs" },
+          { label: "Doctoral Program", href: "/academics/program/doctoral-program" },
+        ],
+      },
       { label: "B.Tech", href: "/academics/btech" },
     ],
   },

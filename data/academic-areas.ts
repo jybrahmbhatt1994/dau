@@ -16,6 +16,7 @@ export const academicAreasPageData: AcademicAreasPageData = {
     ],
   },
 
+  subNavLabel: "Academic Areas",
   subNav: [
     { label: "Areas of Study", href: "#areas-of-study" },
     { label: "Related Links", href: "#related" },

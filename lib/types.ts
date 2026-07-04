@@ -6,6 +6,8 @@
 export interface NavChild {
   label: string;
   href: string;
+  /** Optional third-level submenu (e.g. Academics → Programs of Study → UG) */
+  children?: NavChild[];
 }
 
 export interface NavItem {
@@ -297,6 +299,8 @@ export interface SchoolPageData {
 
 export interface AcademicAreasPageData {
   hero: PageHeroContent;
+  /** Left label in the lavender sub-nav bar. */
+  subNavLabel: string;
   subNav: SubNavLink[];
   /** Full-width intro paragraphs (one entry per paragraph). */
   intro: string[];
@@ -326,6 +330,8 @@ export interface UgProgramsPageData {
   support: { title: string; cards: SupportCard[] };
   cta: { calendar: CtaPanel; catalogue: CtaPanel };
 }
+
+export type ProgramsListingPageData = UgProgramsPageData;
 
 // ============================================================================
 //  ACADEMICS — Program detail page (e.g. /academics/btech-ict)

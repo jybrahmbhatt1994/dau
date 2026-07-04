@@ -742,8 +742,196 @@ interface WpResearchAreaDetailAcf {
   ra_cta_right_href: WpRaDetailLinkField;
 }
 
+interface WpAaLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpAaBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpAaSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpAaParagraph {
+  paragraph: string;
+}
+
+interface WpAaAreaCard {
+  title: string;
+  image: string;
+  href: WpAaLinkField;
+}
+
+interface WpAcademicAreasPageAcf {
+  // Hero
+  aa_hero_title: string;
+  aa_hero_subline: string;
+  aa_hero_image: string;
+  aa_breadcrumb: WpAaBreadcrumb[] | false;
+  // Sub Nav
+  aa_subnav_links: WpAaSubNavLink[] | false;
+  // Intro
+  aa_intro_paragraphs: WpAaParagraph[] | false;
+  // Areas of Study
+  aa_areas_title: string;
+  aa_areas_description: string;
+  aa_areas_cards: WpAaAreaCard[] | false;
+  // CTA
+  aa_cta_calendar_title: string;
+  aa_cta_calendar_description: string;
+  aa_cta_calendar_label: string;
+  aa_cta_calendar_href: WpAaLinkField;
+  aa_cta_catalogue_title: string;
+  aa_cta_catalogue_description: string;
+  aa_cta_catalogue_label: string;
+  aa_cta_catalogue_href: WpAaLinkField;
+}
+
+interface WpDaLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpDaBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpDaSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpDaParagraph {
+  paragraph: string;
+}
+
+interface WpDaOfficial {
+  name: string;
+  position: string;
+  email: string;
+  phone: string;
+  image: string;
+}
+
+interface WpDeanAcademicsAcf {
+  // Hero
+  da_hero_title: string;
+  da_hero_subline: string;
+  da_hero_image: string;
+  da_breadcrumb: WpDaBreadcrumb[] | false;
+  // Sub Nav
+  da_subnav_links: WpDaSubNavLink[] | false;
+  // Dean's Desk
+  da_desk_title: string;
+  da_desk_paragraphs: WpDaParagraph[] | false;
+  da_desk_image: string;
+  da_functions_title: string;
+  da_functions_paragraphs: WpDaParagraph[] | false;
+  da_desk_email: string;
+  // Officials
+  da_officials_title: string;
+  da_officials: WpDaOfficial[] | false;
+  // CTA
+  da_cta_calendar_title: string;
+  da_cta_calendar_description: string;
+  da_cta_calendar_label: string;
+  da_cta_calendar_href: WpDaLinkField;
+  da_cta_areas_title: string;
+  da_cta_areas_description: string;
+  da_cta_areas_label: string;
+  da_cta_areas_href: WpDaLinkField;
+}
+
+interface WpPcLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpPcBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpPcSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpPcParagraph {
+  paragraph: string;
+}
+
+interface WpPcCourseCard {
+  title: string;
+  excerpt: string;
+  image: string;
+  href: WpPcLinkField;
+}
+
+interface WpPcSupportCard {
+  title: string;
+  excerpt: string;
+  image: string;
+  href: WpPcLinkField | "";
+}
+
+interface WpProgramCategoryAcf {
+  // Hero
+  pc_hero_subline: string;
+  pc_hero_image: string;
+  pc_breadcrumb: WpPcBreadcrumb[] | false;
+  // Sub Nav
+  pc_subnav_label?: string;
+  pc_subnav_links: WpPcSubNavLink[] | false;
+  // Intro
+  pc_intro_paragraphs: WpPcParagraph[] | false;
+  // Courses
+  pc_courses_title: string;
+  pc_courses_description: string;
+  pc_courses_cards: WpPcCourseCard[] | false;
+  // Admission CTA
+  pc_admission_eyebrow: string;
+  pc_admission_title: string;
+  pc_admission_description: string;
+  // Faculty
+  pc_faculty_title: string;
+  pc_faculty_description: string;
+  pc_faculty_selected: number[];
+  // Academic Support
+  pc_support_title: string;
+  pc_support_cards: WpPcSupportCard[] | false;
+  // CTA
+  pc_cta_calendar_title: string;
+  pc_cta_calendar_description: string;
+  pc_cta_calendar_label: string;
+  pc_cta_calendar_href: WpPcLinkField;
+  pc_cta_catalogue_title: string;
+  pc_cta_catalogue_description: string;
+  pc_cta_catalogue_label: string;
+  pc_cta_catalogue_href: WpPcLinkField;
+}
+
+interface WpProgramCategoryPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: WpProgramCategoryAcf;
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function normaliseLB(s: string): string {
+  return s.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+}
 
 /**
  * Extract plain-text <p> content from a wysiwyg HTML blob.
@@ -1298,7 +1486,74 @@ export async function getAcademicsPage(): Promise<AcademicsData> {
 }
 
 export async function getDeanPage(): Promise<DeanPageData> {
-  return deanPageData;
+  const acf = await getPageAcf<WpDeanAcademicsAcf>("dean-academics");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Dean (Academics) page ACF not found — falling back to mock data.",
+    );
+    return deanPageData;
+  }
+
+  return {
+    hero: {
+      title: acf.da_hero_title,
+      subline: acf.da_hero_subline || undefined,
+      image: acf.da_hero_image,
+      breadcrumb: toArray(acf.da_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNav: toArray(acf.da_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    // DeansDeskContent combines the message + functions + email in one object,
+    // matching the existing DeanPageData type exactly.
+    desk: {
+      title: acf.da_desk_title,
+      paragraphs: toArray(acf.da_desk_paragraphs).map((r) =>
+        normaliseLB(r.paragraph),
+      ),
+      image: acf.da_desk_image,
+      functionsTitle: acf.da_functions_title,
+      functionsParagraphs: toArray(acf.da_functions_paragraphs).map((r) =>
+        normaliseLB(r.paragraph),
+      ),
+      email: acf.da_desk_email,
+    },
+
+    officials: {
+      title: acf.da_officials_title,
+      people: toArray(acf.da_officials).map((o, i) => ({
+        id: String(i),
+        name: o.name,
+        position: o.position,
+        email: o.email || "",
+        phone: o.phone || "",
+        image:
+          o.image || `https://picsum.photos/seed/official-${i}/580/680`,
+      })),
+    },
+
+    cta: {
+      calendar: {
+        title: acf.da_cta_calendar_title || undefined,
+        description: normaliseLB(acf.da_cta_calendar_description),
+        cta: acf.da_cta_calendar_label,
+        href: acf.da_cta_calendar_href?.url ?? "#",
+      },
+      areas: {
+        title: acf.da_cta_areas_title || undefined,
+        description: normaliseLB(acf.da_cta_areas_description),
+        cta: acf.da_cta_areas_label,
+        href: acf.da_cta_areas_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 /** School of Technology */
@@ -1308,12 +1563,187 @@ export async function getSchoolPage(): Promise<SchoolPageData> {
 
 /** Academic Areas sub-page (/academics/areas) */
 export async function getAcademicAreasPage(): Promise<AcademicAreasPageData> {
-  return academicAreasPageData;
+  const acf = await getPageAcf<WpAcademicAreasPageAcf>("academic-areas");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Academic Areas page ACF not found — falling back to mock data.",
+    );
+    return academicAreasPageData;
+  }
+
+  return {
+    hero: {
+      title: acf.aa_hero_title,
+      subline: acf.aa_hero_subline || undefined,
+      image: acf.aa_hero_image,
+      breadcrumb: toArray(acf.aa_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    // NOTE: AcademicAreasPageData.subNav is SubNavLink[] — no separate label
+    // field on this type (unlike pages using subNavLabel). Label on the
+    // frontend comes from the post title via the page component.
+    subNav: toArray(acf.aa_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.aa_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    areasOfStudy: {
+      title: acf.aa_areas_title,
+      description: acf.aa_areas_description,
+      cards: toArray(acf.aa_areas_cards).map((card, i) => ({
+        id: String(i),
+        title: card.title,
+        image: card.image,
+        href: card.href?.url ?? "#",
+      })),
+    },
+
+    cta: {
+      calendar: {
+        title: acf.aa_cta_calendar_title || undefined,
+        description: acf.aa_cta_calendar_description,
+        cta: acf.aa_cta_calendar_label,
+        href: acf.aa_cta_calendar_href?.url ?? "#",
+      },
+      catalogue: {
+        title: acf.aa_cta_catalogue_title || undefined,
+        description: acf.aa_cta_catalogue_description,
+        cta: acf.aa_cta_catalogue_label,
+        href: acf.aa_cta_catalogue_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 /** Undergraduate Programs sub-page (/academics/ug-programs) */
-export async function getUgProgramsPage(): Promise<UgProgramsPageData> {
-  return ugProgramsPageData;
+// export async function getUgProgramsPage(): Promise<UgProgramsPageData> {
+//   return ugProgramsPageData;
+// }
+
+export async function getProgramsListingPage(
+  slug: string,
+): Promise<ProgramsListingPageData> {
+  const posts = await wpFetch<WpProgramCategoryPost[]>(
+    `/wp/v2/pragrams-of-study?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
+  );
+
+  if (!posts || posts.length === 0) {
+    console.warn(
+      `[wordpress.ts] Program category '${slug}' not found — falling back to mock data.`,
+    );
+    return ugProgramsPageData;
+  }
+
+  const post = posts[0];
+  const acf = post.acf;
+  const title = decodeHtml(post.title.rendered);
+
+  // Fetch related faculty in parallel-friendly fashion (relationship field)
+  const facultyIds = (acf.pc_faculty_selected ?? []).join(",");
+  const facultyPosts = facultyIds
+    ? await wpFetch<WpFacultyPost[]>(
+        `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
+      )
+    : [];
+
+  const orderedFaculty = (acf.pc_faculty_selected ?? [])
+    .map((id) => facultyPosts.find((p) => p.id === id))
+    .filter((p): p is WpFacultyPost => p !== undefined);
+
+  return {
+    hero: {
+      title,
+      subline: acf.pc_hero_subline || undefined,
+      image: acf.pc_hero_image,
+      breadcrumb: toArray(acf.pc_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.pc_subnav_label || title,
+
+    subNav: toArray(acf.pc_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.pc_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    // TEMPORARY: manual repeater until the Courses CPT exists.
+    // Swap this block to fetch from the Courses CPT (filtered by this
+    // category) without touching the component or any other section.
+    courses: {
+      title: acf.pc_courses_title,
+      description: acf.pc_courses_description,
+      cards: toArray(acf.pc_courses_cards).map((card, i) => ({
+        id: String(i),
+        title: card.title,
+        excerpt: card.excerpt,
+        image: card.image,
+        href: card.href?.url ?? "#",
+      })),
+    },
+
+    admissionCta: {
+      eyebrow: acf.pc_admission_eyebrow,
+      title: acf.pc_admission_title,
+      description: acf.pc_admission_description,
+    },
+
+    faculty: {
+      title: acf.pc_faculty_title,
+      description: acf.pc_faculty_description,
+      members: orderedFaculty.map((p) => ({
+        id: String(p.id),
+        name: decodeHtml(p.title.rendered),
+        position: p.acf?.position ?? "",
+        image:
+          p._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/faculty-${p.id}/580/700`,
+        href: `/faculty/${p.slug}`,
+      })),
+    },
+
+    support: {
+      title: acf.pc_support_title,
+      cards: toArray(acf.pc_support_cards).map((card, i) => ({
+        id: String(i),
+        title: card.title,
+        excerpt: card.excerpt,
+        image: card.image,
+        href:
+          typeof card.href === "object" && card.href?.url
+            ? card.href.url
+            : "#",
+      })),
+    },
+
+    cta: {
+      calendar: {
+        title: acf.pc_cta_calendar_title || undefined,
+        description: acf.pc_cta_calendar_description,
+        cta: acf.pc_cta_calendar_label,
+        href: acf.pc_cta_calendar_href?.url ?? "#",
+      },
+      catalogue: {
+        title: acf.pc_cta_catalogue_title || undefined,
+        description: acf.pc_cta_catalogue_description,
+        cta: acf.pc_cta_catalogue_label,
+        href: acf.pc_cta_catalogue_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 /** B.Tech (ICT) program detail page (/academics/btech-ict) */
