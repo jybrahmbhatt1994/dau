@@ -1159,8 +1159,8 @@ function buildProgramBlock(opts: {
   buttonLabel?: string;
   buttonHref?: WpPgLinkField | "";
 }): ProgramBlock {
-  const bullets = toArray(opts.bullets).map((b) => b.bullet).filter(Boolean);
-  const gallery = toArray(opts.gallery).map((g) => g.image).filter(Boolean);
+  const bullets = toArray(opts.bullets ?? false).map((b) => b.bullet).filter(Boolean);
+  const gallery = toArray(opts.gallery ?? false).map((g) => g.image).filter(Boolean);
 
   return {
     title: opts.title,
