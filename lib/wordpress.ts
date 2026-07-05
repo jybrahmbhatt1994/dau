@@ -871,13 +871,6 @@ interface WpPcParagraph {
   paragraph: string;
 }
 
-interface WpPcCourseCard {
-  title: string;
-  excerpt: string;
-  image: string;
-  href: WpPcLinkField;
-}
-
 interface WpPcSupportCard {
   title: string;
   excerpt: string;
@@ -898,7 +891,7 @@ interface WpProgramCategoryAcf {
   // Courses
   pc_courses_title: string;
   pc_courses_description: string;
-  pc_courses_cards: WpPcCourseCard[] | false;
+  pc_courses_selected: number[];
   // Admission CTA
   pc_admission_eyebrow: string;
   pc_admission_title: string;
@@ -928,10 +921,260 @@ interface WpProgramCategoryPost {
   acf: WpProgramCategoryAcf;
 }
 
+interface WpSotLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpSotHeroImage {
+  image: string;
+  alt: string;
+}
+
+interface WpSotSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpSotParagraph {
+  paragraph: string;
+}
+
+interface WpSotPeopleCategory {
+  label: string;
+  image: string;
+  href: WpSotLinkField;
+}
+
+interface WpSchoolPageAcf {
+  // Hero
+  sot_hero_eyebrow: string;
+  sot_hero_eyebrow_sub: string;
+  sot_hero_rank_label: string;
+  sot_hero_rank_value: string;
+  sot_hero_subline: string;
+  sot_hero_images: WpSotHeroImage[];
+  // Sub Nav
+  sot_subnav_links: WpSotSubNavLink[] | false;
+  // Intro
+  sot_intro_paragraphs: WpSotParagraph[] | false;
+  sot_vision_title: string;
+  sot_vision_body: string;
+  sot_mission_title: string;
+  sot_mission_body: string;
+  // Programs
+  sot_programs_title: string;
+  sot_programs_description: string;
+  sot_programs_selected: number[];
+  // Research
+  sot_research_title: string;
+  sot_research_description: string;
+  sot_research_selected: number[];
+  // People
+  sot_people_title: string;
+  sot_people_categories: WpSotPeopleCategory[] | false;
+  // News
+  sot_news_title: string;
+  sot_news_description: string;
+  // Events
+  sot_events_title: string;
+  // CTA
+  sot_cta_calendar_title: string;
+  sot_cta_calendar_description: string;
+  sot_cta_calendar_label: string;
+  sot_cta_calendar_href: WpSotLinkField;
+  sot_cta_areas_title: string;
+  sot_cta_areas_description: string;
+  sot_cta_areas_label: string;
+  sot_cta_areas_href: WpSotLinkField;
+}
+
+// Course CPT post shape (used for the Programs section)
+interface WpCoursePost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+interface WpPgLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpPgSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpPgParagraph {
+  paragraph: string;
+}
+
+interface WpPgBullet {
+  bullet: string;
+}
+
+interface WpPgGalleryImage {
+  image: string;
+}
+
+interface WpPgOutcomeItem {
+  code: string;
+  lead: string;
+  body: string;
+}
+
+interface WpPgElectiveName {
+  name: string;
+}
+
+interface WpPgSemesterCourse {
+  name: string;
+  ltpc: string;
+}
+
+interface WpPgSemesterItem {
+  title: string;
+  description: string;
+  courses: WpPgSemesterCourse[] | false;
+}
+
+interface WpPgFaqItem {
+  question: string;
+  answer: string;
+}
+
+interface WpCourseAcf {
+  // Hero
+  pg_hero_subline: string;
+  pg_hero_image: string;
+  // Sub Nav
+  pg_subnav_label: string;
+  pg_subnav_links: WpPgSubNavLink[] | false;
+  // Apply Banner
+  pg_banner_text: string;
+  pg_banner_cta: string;
+  pg_banner_href: WpPgLinkField | "";
+  // Intro
+  pg_intro_paragraphs: WpPgParagraph[] | false;
+  // Honours
+  pg_honours_title: string;
+  pg_honours_paragraphs: WpPgParagraph[] | false;
+  pg_honours_bullets: WpPgBullet[] | false;
+  pg_honours_image: string | false;
+  pg_honours_gallery: WpPgGalleryImage[] | false;
+  pg_honours_button_label: string;
+  pg_honours_button_href: WpPgLinkField | "";
+  // Honours Minor
+  pg_hm_title: string;
+  pg_hm_paragraphs: WpPgParagraph[] | false;
+  pg_hm_bullets: WpPgBullet[] | false;
+  pg_hm_image: string | false;
+  // Outcomes
+  pg_po_title: string;
+  pg_po_view_all_href: WpPgLinkField | "";
+  pg_po_items: WpPgOutcomeItem[] | false;
+  pg_pso_title: string;
+  pg_pso_items: WpPgOutcomeItem[] | false;
+  // Core Courses
+  pg_core_title: string;
+  pg_core_paragraphs: WpPgParagraph[] | false;
+  pg_core_bullets: WpPgBullet[] | false;
+  pg_core_image: string | false;
+  // Elective Courses
+  pg_elective_title: string;
+  pg_elective_paragraphs: WpPgParagraph[] | false;
+  pg_elective_bullets: WpPgBullet[] | false;
+  // Electives Table
+  pg_electives_table_title: string;
+  pg_electives_table_description: string;
+  pg_electives_table_items: WpPgElectiveName[] | false;
+  // Co-curricular
+  pg_cc_title: string;
+  pg_cc_paragraphs: WpPgParagraph[] | false;
+  pg_cc_gallery: WpPgGalleryImage[] | false;
+  // Semesters
+  pg_semesters_title: string;
+  pg_semesters_description: string;
+  pg_semesters_items: WpPgSemesterItem[] | false;
+  // Admission CTA
+  pg_admission_eyebrow: string;
+  pg_admission_title: string;
+  pg_admission_description: string;
+  // FAQs
+  pg_faqs_title: string;
+  pg_faqs_items: WpPgFaqItem[] | false;
+  // Contact
+  pg_contact_phone: string;
+  pg_contact_email: string;
+  // CTA
+  pg_cta_calendar_title: string;
+  pg_cta_calendar_description: string;
+  pg_cta_calendar_label: string;
+  pg_cta_calendar_href: WpPgLinkField;
+  pg_cta_areas_title: string;
+  pg_cta_areas_description: string;
+  pg_cta_areas_label: string;
+  pg_cta_areas_href: WpPgLinkField;
+}
+
+interface WpCourseDetailPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: WpCourseAcf;
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function normaliseLB(s: string): string {
   return s.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
+}
+
+/** Extract URL from a link field that may be an object OR an empty string "" */
+function pgLinkUrl(field: WpPgLinkField | "" | undefined): string {
+  if (!field || typeof field === "string") return "#";
+  return field.url || "#";
+}
+
+/** Extract an image URL that may be `false` when unset */
+function pgImage(val: string | false | undefined): string | undefined {
+  return typeof val === "string" && val ? val : undefined;
+}
+
+/** Build a ProgramBlock from the 5 shared sub-field groups (Honours, Core, etc) */
+function buildProgramBlock(opts: {
+  title: string;
+  paragraphs: WpPgParagraph[] | false;
+  bullets?: WpPgBullet[] | false;
+  image?: string | false;
+  gallery?: WpPgGalleryImage[] | false;
+  buttonLabel?: string;
+  buttonHref?: WpPgLinkField | "";
+}): ProgramBlock {
+  const bullets = toArray(opts.bullets).map((b) => b.bullet).filter(Boolean);
+  const gallery = toArray(opts.gallery).map((g) => g.image).filter(Boolean);
+
+  return {
+    title: opts.title,
+    paragraphs: toArray(opts.paragraphs).map((p) =>
+      p.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+    ...(bullets.length > 0 && { bullets }),
+    ...(pgImage(opts.image) && { image: pgImage(opts.image) }),
+    ...(gallery.length > 0 && { gallery }),
+    ...(opts.buttonLabel &&
+      opts.buttonHref &&
+      typeof opts.buttonHref === "object" && {
+        button: { label: opts.buttonLabel, href: opts.buttonHref.url },
+      }),
+  };
 }
 
 /**
@@ -1559,7 +1802,147 @@ export async function getDeanPage(): Promise<DeanPageData> {
 
 /** School of Technology */
 export async function getSchoolPage(): Promise<SchoolPageData> {
-  return sotPageData;
+  const acf = await getPageAcf<WpSchoolPageAcf>("school-of-technology");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] School of Technology page ACF not found — falling back to mock data.",
+    );
+    return sotPageData;
+  }
+
+  const programIds = (acf.sot_programs_selected ?? []).join(",");
+  const researchIds = (acf.sot_research_selected ?? []).join(",");
+
+  // Fetch everything in parallel — relationship-selected courses, relationship-
+  // selected research areas, latest news, latest events. No waterfall.
+  const [coursePosts, researchPosts, newsPosts, eventPosts] = await Promise.all([
+    programIds
+      ? wpFetch<WpCoursePost[]>(
+          `/wp/v2/course?include=${programIds}&_embed=wp:featuredmedia&acf_format=standard`,
+        )
+      : Promise.resolve([] as WpCoursePost[]),
+    researchIds
+      ? wpFetch<WpResearchPost[]>(
+          `/wp/v2/research-area?include=${researchIds}&_embed=wp:featuredmedia&acf_format=standard`,
+        )
+      : Promise.resolve([] as WpResearchPost[]),
+    wpFetch<WpNewsPost[]>(
+      `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
+    ),
+    wpFetch<WpEventPost[]>(
+      `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
+    ),
+  ]);
+
+  // Preserve editor's chosen order for both relationship fields
+  const orderedCourses = (acf.sot_programs_selected ?? [])
+    .map((id) => coursePosts.find((p) => p.id === id))
+    .filter((p): p is WpCoursePost => p !== undefined);
+
+  const orderedResearch = (acf.sot_research_selected ?? [])
+    .map((id) => researchPosts.find((p) => p.id === id))
+    .filter((p): p is WpResearchPost => p !== undefined);
+
+  return {
+    hero: {
+      eyebrow: acf.sot_hero_eyebrow,
+      eyebrowSub: acf.sot_hero_eyebrow_sub || undefined,
+      rankLabel: acf.sot_hero_rank_label,
+      rankValue: acf.sot_hero_rank_value,
+      subline: acf.sot_hero_subline,
+      images: (acf.sot_hero_images ?? []).map((row) => ({
+        url: row.image,
+        alt: row.alt || "",
+      })),
+    },
+
+    subNav: toArray(acf.sot_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: {
+      paragraphs: toArray(acf.sot_intro_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+      vision: { title: acf.sot_vision_title, body: acf.sot_vision_body },
+      mission: { title: acf.sot_mission_title, body: acf.sot_mission_body },
+    },
+
+    programs: {
+      title: acf.sot_programs_title,
+      description: acf.sot_programs_description,
+      cards: orderedCourses.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        excerpt: excerptFromHtml(post.content.rendered, 25),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/course-${post.id}/732/488`,
+        href: `/academics/program/${post.slug}`,
+      })),
+    },
+
+    research: {
+      title: acf.sot_research_title,
+      description: acf.sot_research_description,
+      cards: orderedResearch.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/research-${post.id}/836/460`,
+        href: `/research/areas/${post.slug}`,
+      })),
+    },
+
+    people: {
+      title: acf.sot_people_title,
+      categories: toArray(acf.sot_people_categories).map((cat, i) => ({
+        id: String(i),
+        label: cat.label,
+        image: cat.image,
+        href: cat.href?.url ?? "#",
+      })),
+    },
+
+    // News — reuses HomeData["news"] shape (featured + list), same mapper
+    // pattern as the homepage: first post is featured, next 4 are the list.
+    news: mapNews(
+      { news_title: acf.sot_news_title, news_description: acf.sot_news_description } as WpHomeAcf,
+      newsPosts,
+    ),
+
+    events: {
+      title: acf.sot_events_title,
+      items: eventPosts.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        date: formatIsoDate(post.date),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/event-${post.id}/836/460`,
+        href: `/events/${post.slug}`,
+      })),
+      allHref: "/life/events",
+    },
+
+    cta: {
+      calendar: {
+        title: acf.sot_cta_calendar_title || undefined,
+        description: acf.sot_cta_calendar_description,
+        cta: acf.sot_cta_calendar_label,
+        href: acf.sot_cta_calendar_href?.url ?? "#",
+      },
+      areas: {
+        title: acf.sot_cta_areas_title || undefined,
+        description: acf.sot_cta_areas_description,
+        cta: acf.sot_cta_areas_label,
+        href: acf.sot_cta_areas_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 /** Academic Areas sub-page (/academics/areas) */
@@ -1637,30 +2020,44 @@ export async function getProgramsListingPage(
   const posts = await wpFetch<WpProgramCategoryPost[]>(
     `/wp/v2/pragrams-of-study?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
   );
-
+ 
   if (!posts || posts.length === 0) {
     console.warn(
       `[wordpress.ts] Program category '${slug}' not found — falling back to mock data.`,
     );
     return ugProgramsPageData;
   }
-
+ 
   const post = posts[0];
   const acf = post.acf;
   const title = decodeHtml(post.title.rendered);
-
-  // Fetch related faculty in parallel-friendly fashion (relationship field)
+ 
   const facultyIds = (acf.pc_faculty_selected ?? []).join(",");
-  const facultyPosts = facultyIds
-    ? await wpFetch<WpFacultyPost[]>(
-        `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
-      )
-    : [];
-
+  const courseIds = (acf.pc_courses_selected ?? []).join(",");
+ 
+  // Fetch faculty + courses in parallel — no waterfall
+  const [facultyPosts, coursePosts] = await Promise.all([
+    facultyIds
+      ? wpFetch<WpFacultyPost[]>(
+          `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
+        )
+      : Promise.resolve([] as WpFacultyPost[]),
+    courseIds
+      ? wpFetch<WpCoursePost[]>(
+          `/wp/v2/course?include=${courseIds}&_embed=wp:featuredmedia&acf_format=standard`,
+        )
+      : Promise.resolve([] as WpCoursePost[]),
+  ]);
+ 
+  // Preserve editor's chosen order for both relationship fields
   const orderedFaculty = (acf.pc_faculty_selected ?? [])
     .map((id) => facultyPosts.find((p) => p.id === id))
     .filter((p): p is WpFacultyPost => p !== undefined);
-
+ 
+  const orderedCourses = (acf.pc_courses_selected ?? [])
+    .map((id) => coursePosts.find((p) => p.id === id))
+    .filter((p): p is WpCoursePost => p !== undefined);
+ 
   return {
     hero: {
       title,
@@ -1671,39 +2068,39 @@ export async function getProgramsListingPage(
         href: b.href,
       })),
     },
-
+ 
     subNavLabel: acf.pc_subnav_label || title,
-
+ 
     subNav: toArray(acf.pc_subnav_links).map((l) => ({
       label: l.label,
       href: l.href,
     })),
-
+ 
     intro: toArray(acf.pc_intro_paragraphs).map((r) =>
       r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
     ),
-
-    // TEMPORARY: manual repeater until the Courses CPT exists.
-    // Swap this block to fetch from the Courses CPT (filtered by this
-    // category) without touching the component or any other section.
+ 
+    // ✅ Now live from the course CPT via relationship field
     courses: {
       title: acf.pc_courses_title,
       description: acf.pc_courses_description,
-      cards: toArray(acf.pc_courses_cards).map((card, i) => ({
-        id: String(i),
-        title: card.title,
-        excerpt: card.excerpt,
-        image: card.image,
-        href: card.href?.url ?? "#",
+      cards: orderedCourses.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        excerpt: excerptFromHtml(post.content.rendered, 25),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/course-${post.id}/732/488`,
+        href: `/academics/course/${post.slug}`,
       })),
     },
-
+ 
     admissionCta: {
       eyebrow: acf.pc_admission_eyebrow,
       title: acf.pc_admission_title,
       description: acf.pc_admission_description,
     },
-
+ 
     faculty: {
       title: acf.pc_faculty_title,
       description: acf.pc_faculty_description,
@@ -1717,7 +2114,7 @@ export async function getProgramsListingPage(
         href: `/faculty/${p.slug}`,
       })),
     },
-
+ 
     support: {
       title: acf.pc_support_title,
       cards: toArray(acf.pc_support_cards).map((card, i) => ({
@@ -1731,7 +2128,7 @@ export async function getProgramsListingPage(
             : "#",
       })),
     },
-
+ 
     cta: {
       calendar: {
         title: acf.pc_cta_calendar_title || undefined,
@@ -1750,8 +2147,164 @@ export async function getProgramsListingPage(
 }
 
 /** B.Tech (ICT) program detail page (/academics/btech-ict) */
-export async function getProgramPage(): Promise<ProgramPageData> {
-  return btechIctPageData;
+export async function getProgramPage(slug: string): Promise<ProgramPageData> {
+  const posts = await wpFetch<WpCourseDetailPost[]>(
+    `/wp/v2/course?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
+  );
+
+  if (!posts || posts.length === 0) {
+    console.warn(
+      `[wordpress.ts] Course '${slug}' not found — falling back to mock data.`,
+    );
+    return btechIctPageData;
+  }
+
+  const post = posts[0];
+  const acf = post.acf;
+  const title = decodeHtml(post.title.rendered);
+
+  return {
+    hero: {
+      title,
+      subline: acf.pg_hero_subline || undefined,
+      image: acf.pg_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Academics", href: "/academics" },
+        { label: title, href: `/academics/course/${slug}` },
+      ],
+    },
+
+    subNavLabel: acf.pg_subnav_label || title,
+
+    subNav: toArray(acf.pg_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    applyBanner: {
+      text: acf.pg_banner_text,
+      cta: acf.pg_banner_cta,
+      href: pgLinkUrl(acf.pg_banner_href),
+    },
+
+    intro: toArray(acf.pg_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    honours: buildProgramBlock({
+      title: acf.pg_honours_title,
+      paragraphs: acf.pg_honours_paragraphs,
+      bullets: acf.pg_honours_bullets,
+      image: acf.pg_honours_image,
+      gallery: acf.pg_honours_gallery,
+      buttonLabel: acf.pg_honours_button_label,
+      buttonHref: acf.pg_honours_button_href,
+    }),
+
+    honoursMinor: buildProgramBlock({
+      title: acf.pg_hm_title,
+      paragraphs: acf.pg_hm_paragraphs,
+      bullets: acf.pg_hm_bullets,
+      image: acf.pg_hm_image,
+    }),
+
+    outcomes: {
+      programOutcomes: {
+        title: acf.pg_po_title,
+        viewAllHref: pgLinkUrl(acf.pg_po_view_all_href),
+        items: toArray(acf.pg_po_items).map((item) => ({
+          code: item.code,
+          lead: item.lead || undefined,
+          body: item.body,
+        })),
+      },
+      specificOutcomes: {
+        title: acf.pg_pso_title,
+        items: toArray(acf.pg_pso_items).map((item) => ({
+          code: item.code,
+          lead: item.lead || undefined,
+          body: item.body,
+        })),
+      },
+    },
+
+    coreCourses: buildProgramBlock({
+      title: acf.pg_core_title,
+      paragraphs: acf.pg_core_paragraphs,
+      bullets: acf.pg_core_bullets,
+      image: acf.pg_core_image,
+    }),
+
+    electiveCourses: buildProgramBlock({
+      title: acf.pg_elective_title,
+      paragraphs: acf.pg_elective_paragraphs,
+      bullets: acf.pg_elective_bullets,
+    }),
+
+    semesters: {
+      title: acf.pg_semesters_title,
+      description: acf.pg_semesters_description,
+      items: toArray(acf.pg_semesters_items).map((sem, i) => ({
+        id: `sem-${i + 1}`,
+        title: sem.title,
+        description: sem.description,
+        courses: toArray(sem.courses).map((c) => ({
+          name: c.name,
+          ltpc: c.ltpc,
+        })),
+      })),
+    },
+
+    electives: {
+      title: acf.pg_electives_table_title,
+      description: acf.pg_electives_table_description,
+      items: toArray(acf.pg_electives_table_items)
+        .map((e) => e.name)
+        .filter(Boolean),
+    },
+
+    coCurricular: buildProgramBlock({
+      title: acf.pg_cc_title,
+      paragraphs: acf.pg_cc_paragraphs,
+      gallery: acf.pg_cc_gallery,
+    }),
+
+    admissionCta: {
+      eyebrow: acf.pg_admission_eyebrow,
+      title: acf.pg_admission_title,
+      description: acf.pg_admission_description,
+    },
+
+    faqs: {
+      title: acf.pg_faqs_title,
+      items: toArray(acf.pg_faqs_items).map((f, i) => ({
+        id: `faq-${i + 1}`,
+        question: f.question,
+        answer: f.answer,
+      })),
+    },
+
+    contact: {
+      phone: acf.pg_contact_phone,
+      email: acf.pg_contact_email,
+    },
+
+    cta: {
+      calendar: {
+        title: acf.pg_cta_calendar_title || undefined,
+        description: acf.pg_cta_calendar_description,
+        cta: acf.pg_cta_calendar_label,
+        href: acf.pg_cta_calendar_href?.url ?? "#",
+      },
+      areas: {
+        title: acf.pg_cta_areas_title || undefined,
+        description: acf.pg_cta_areas_description,
+        cta: acf.pg_cta_areas_label,
+        href: acf.pg_cta_areas_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 // ─── About ───────────────────────────────────────────────────────────────────
