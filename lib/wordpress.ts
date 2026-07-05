@@ -100,6 +100,7 @@ import type {
   GrantCard,
   FacultyMember,
   ProgramsListingPageData,
+  ProgramBlock,
 } from "@/lib/types";
 
 // ============================================================================
