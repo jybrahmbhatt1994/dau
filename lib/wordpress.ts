@@ -103,6 +103,8 @@ import type {
   FacultyMember,
   ProgramsListingPageData,
   ProgramBlock,
+  AdmissionPageData,
+  AdmissionDataset,
 } from "@/lib/types";
 
 // ============================================================================
