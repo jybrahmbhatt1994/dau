@@ -56,6 +56,8 @@ import { internshipsPageData } from "@/data/internships";
 import { ugAdmissionsPageData } from "@/data/ug-admissions";
 import { financialSupportPageData } from "@/data/financial-support";
 import { ugScholarshipsPageData } from "@/data/ug-scholarships";
+import { admissionPageData } from "@/data/admission";
+import { admissionDatasets } from "@/data/admission";
 
 // ─── lib/types.ts imports ─────────────────────────────────────────────────────
 import type {
@@ -1132,7 +1134,327 @@ interface WpCourseDetailPost {
   acf: WpCourseAcf;
 }
 
+interface WpAdmissionFilterResponse {
+  streams: {
+    slug: string;
+    label: string;
+    courses: { slug: string; label: string; hasCategories: boolean }[];
+  }[];
+  categories: { slug: string; label: string }[];
+}
+
+interface WpAdmissionPageAcf {
+  hero: { title: string; subline: string; image: string };
+  sub_nav_label: string;
+  sub_nav?: { label: string; href: string }[];
+  apply_banner: { text: string; cta: string; href: string };
+  filter_placeholders: { stream: string; course: string; category: string };
+  empty_prompt: string;
+  contact: { phone: string; email: string };
+  cta_left: { title?: string; description: string; cta: string; href: string };
+  cta_right: { title?: string; description: string; cta: string; href: string };
+}
+
+interface WpParagraphRow {
+  paragraph: string;
+}
+interface WpBulletRow {
+  bullet: string;
+}
+
+interface WpAdmissionAcf {
+  intro_paragraphs?: WpParagraphRow[];
+  important_dates?: {
+    title: string;
+    items?: { label: string; value: string; pending?: boolean }[];
+  };
+  intake?: {
+    title: string;
+    items?: { program: string; count: string }[];
+  };
+  program_structures?: {
+    title: string;
+    items?: {
+      title: string;
+      description: string;
+      image: string;
+      brochure_href?: string;
+      brochure_label?: string;
+    }[];
+  };
+  placement_stats?: {
+    title: string;
+    description: string;
+    legend?: { highest_label: string; average_label: string };
+    buckets?: { label: string; highest: number; average: number }[];
+    logos?: { name: string; logo: string; href?: string }[];
+    stats?: { value: string; label: string }[];
+  };
+  eligibility?: {
+    title: string;
+    tabs?: {
+      label: string;
+      paragraphs?: WpParagraphRow[];
+      bullets?: WpBulletRow[];
+    }[];
+  };
+  selection_criteria?: {
+    title: string;
+    paragraphs?: WpParagraphRow[];
+  };
+  fee_structure?: {
+    title: string;
+    intro: string;
+    cards?: {
+      label: string;
+      value: string;
+      sub_note?: string;
+      highlight?: boolean;
+    }[];
+    footnotes?: { footnote: string }[];
+    notes?: { heading: string; paragraphs?: WpParagraphRow[] }[];
+    education_loan?: {
+      heading: string;
+      description: string;
+      image: string;
+      cta_label: string;
+      cta_href: string;
+    };
+    refund_note?: string;
+  };
+  scholarships?: {
+    title: string;
+    intro: string;
+    bullets?: WpBulletRow[];
+    cards?: {
+      title: string;
+      description: string;
+      cta_label: string;
+      cta_href: string;
+    }[];
+  };
+  how_to_apply?: {
+    title: string;
+    background_image: string;
+    steps?: { step: string }[];
+    cta_label: string;
+    cta_href: string;
+  };
+  faqs?: {
+    title: string;
+    items?: { question: string; answer: string }[];
+  };
+}
+
+interface WpAdmissionPost {
+  id: number;
+  acf: WpAdmissionAcf;
+  course_slug: string | null;
+  category_slug: string | null;
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+
+
+/** Stable, human-inspectable id from a section slug + row index (ACF
+ * repeater rows have no natural id — the frontend only needs a React key). */
+const rowId = (section: string, i: number) => `${section}-${i}`;
+ 
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_]+/g, "-");
+
+function arr<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
+}
+
+// No local fetch helper here — every call below uses the `wpFetch` /
+// `getPageAcf` already imported at the top of lib/wordpress.ts from
+// "@/lib/api". Their signature is `wpFetch<T>(endpoint, revalidate = 60)`
+// where `endpoint` starts with "/wp/v2/…" or "/dau/v1/…" — no "/wp-json"
+
+function mapAdmissionDataset(post: WpAdmissionPost): AdmissionDataset {
+  const acf = post.acf;
+ 
+  return {
+    courseSlug: post.course_slug ?? "",
+    categorySlug: post.category_slug ?? undefined,
+ 
+    intro: arr<WpParagraphRow>(acf.intro_paragraphs).map((r) => r.paragraph),
+ 
+    importantDates: {
+      title: acf.important_dates?.title ?? "Important Dates",
+      items: arr<{ label: string; value: string; pending?: boolean }>(
+        acf.important_dates?.items
+      ).map((it, i) => ({
+        id: rowId("date", i),
+        label: it.label,
+        value: it.value,
+        pending: it.pending,
+      })),
+    },
+ 
+    intake: {
+      title: acf.intake?.title ?? "Intake",
+      items: arr<{ program: string; count: string }>(
+        acf.intake?.items
+      ).map((it, i) => ({
+        id: rowId("intake", i),
+        program: it.program,
+        count: it.count,
+      })),
+    },
+ 
+    programStructures: {
+      title: acf.program_structures?.title ?? "Program Structures",
+      items: arr<{
+        title: string;
+        description: string;
+        image: string;
+        brochure_href?: string;
+        brochure_label?: string;
+      }>(acf.program_structures?.items).map((it, i) => ({
+        id: rowId("program", i),
+        title: it.title,
+        description: it.description,
+        image: it.image,
+        brochureHref: it.brochure_href,
+        brochureLabel: it.brochure_label,
+      })),
+    },
+ 
+    placementStats: {
+      title: acf.placement_stats?.title ?? "Placement Statistics",
+      description: acf.placement_stats?.description ?? "",
+      legend: {
+        highestLabel: acf.placement_stats?.legend?.highest_label ?? "Highest",
+        averageLabel: acf.placement_stats?.legend?.average_label ?? "Average",
+      },
+      buckets: arr<{ label: string; highest: number; average: number }>(
+        acf.placement_stats?.buckets
+      ).map((b) => ({
+        label: b.label,
+        highest: b.highest,
+        average: b.average,
+      })),
+      logos: arr<{ name: string; logo: string; href?: string }>(
+        acf.placement_stats?.logos
+      ).map((l, i) => ({
+        id: rowId("logo", i),
+        name: l.name,
+        logo: l.logo,
+        href: l.href,
+      })),
+      stats: arr<{ value: string; label: string }>(
+        acf.placement_stats?.stats
+      ).map((s) => ({
+        value: s.value,
+        label: s.label,
+      })),
+    },
+ 
+    eligibility: {
+      title: acf.eligibility?.title ?? "Eligibility Criteria",
+      tabs: arr<{
+        label: string;
+        paragraphs?: WpParagraphRow[];
+        bullets?: WpBulletRow[];
+      }>(acf.eligibility?.tabs).map((t) => ({
+        slug: slugify(t.label),
+        label: t.label,
+        paragraphs: arr<WpParagraphRow>(t.paragraphs).map((p) => p.paragraph),
+        bullets: t.bullets?.length
+          ? t.bullets.map((b) => b.bullet)
+          : undefined,
+      })),
+    },
+ 
+    selectionCriteria: {
+      title: acf.selection_criteria?.title ?? "Selection Criteria",
+      paragraphs: arr<WpParagraphRow>(acf.selection_criteria?.paragraphs).map(
+        (p) => p.paragraph
+      ),
+    },
+ 
+    feeStructure: {
+      title: acf.fee_structure?.title ?? "Fee Structure",
+      intro: acf.fee_structure?.intro ?? "",
+      cards: arr<{
+        label: string;
+        value: string;
+        sub_note?: string;
+        highlight?: boolean;
+      }>(acf.fee_structure?.cards).map((c, i) => ({
+        id: rowId("fee", i),
+        label: c.label,
+        value: c.value,
+        subNote: c.sub_note,
+        highlight: c.highlight,
+      })),
+      footnotes: arr<{ footnote: string }>(acf.fee_structure?.footnotes).map(
+        (f) => f.footnote
+      ),
+      notes: arr<{ heading: string; paragraphs?: WpParagraphRow[] }>(
+        acf.fee_structure?.notes
+      ).map((n) => ({
+        heading: n.heading,
+        paragraphs: arr<WpParagraphRow>(n.paragraphs).map((p) => p.paragraph),
+      })),
+      educationLoan: {
+        heading: acf.fee_structure?.education_loan?.heading ?? "Education Loan",
+        description: acf.fee_structure?.education_loan?.description ?? "",
+        image: acf.fee_structure?.education_loan?.image ?? "",
+        ctaLabel: acf.fee_structure?.education_loan?.cta_label ?? "",
+        ctaHref: acf.fee_structure?.education_loan?.cta_href ?? "",
+      },
+      refundNote: acf.fee_structure?.refund_note ?? "",
+    },
+ 
+    scholarships: {
+      title: acf.scholarships?.title ?? "Scholarships",
+      intro: acf.scholarships?.intro ?? "",
+      bullets: acf.scholarships?.bullets?.length
+        ? acf.scholarships.bullets.map((b) => b.bullet)
+        : undefined,
+      cards: arr<{
+        title: string;
+        description: string;
+        cta_label: string;
+        cta_href: string;
+      }>(acf.scholarships?.cards).map((c, i) => ({
+        id: rowId("scholarship", i),
+        title: c.title,
+        description: c.description,
+        ctaLabel: c.cta_label,
+        ctaHref: c.cta_href,
+      })),
+    },
+ 
+    howToApply: {
+      title: acf.how_to_apply?.title ?? "How to Apply",
+      backgroundImage: acf.how_to_apply?.background_image ?? "",
+      steps: arr<{ step: string }>(acf.how_to_apply?.steps).map((s) => s.step),
+      cta: {
+        label: acf.how_to_apply?.cta_label ?? "",
+        href: acf.how_to_apply?.cta_href ?? "",
+      },
+    },
+ 
+    faqs: {
+      title: acf.faqs?.title ?? "FAQs",
+      items: arr<{ question: string; answer: string }>(acf.faqs?.items).map(
+        (it, i) => ({
+        id: rowId("faq", i),
+        question: it.question,
+        answer: it.answer,
+      })),
+    },
+  };
+}
 
 function normaliseLB(s: string): string {
   return s.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
@@ -3174,6 +3496,78 @@ export async function getInternshipsPage(): Promise<InternshipsPageData> {
 
 export async function getUgAdmissionsPage(): Promise<UgAdmissionsPageData> {
   return ugAdmissionsPageData;
+}
+
+export async function getAdmissionPage(): Promise<AdmissionPageData> {
+  const [filterRes, acf] = await Promise.all([
+    wpFetch<WpAdmissionFilterResponse>("/dau/v1/admission-filter"),
+    getPageAcf<WpAdmissionPageAcf>("admission"),
+  ]);
+ 
+  if (!acf) {
+    throw new Error(
+      'WordPress Page with slug "admission" not found — create it in wp-admin and attach the "Admission Page Settings" ACF field group.'
+    );
+  }
+ 
+  return {
+    hero: {
+      title: acf.hero.title,
+      subline: acf.hero.subline,
+      image: acf.hero.image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Admission", href: "/admission" },
+      ],
+    },
+    subNavLabel: acf.sub_nav_label,
+    subNav: arr<{ label: string; href: string }>(acf.sub_nav).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+    applyBanner: {
+      text: acf.apply_banner.text,
+      cta: acf.apply_banner.cta,
+      href: acf.apply_banner.href,
+    },
+    filter: {
+      streams: filterRes.streams,
+      categories: filterRes.categories,
+      placeholders: {
+        stream: acf.filter_placeholders.stream,
+        course: acf.filter_placeholders.course,
+        category: acf.filter_placeholders.category,
+      },
+      emptyPrompt: acf.empty_prompt,
+    },
+    contact: {
+      phone: acf.contact.phone,
+      email: acf.contact.email,
+    },
+    cta: {
+      left: acf.cta_left,
+      right: acf.cta_right,
+    },
+  };
+}
+
+export async function getAdmissionDataset(
+  course: string,
+  category?: string
+): Promise<AdmissionDataset | null> {
+  const params = new URLSearchParams({
+    course_slug: course,
+    per_page: "1",
+    acf_format: "standard",
+  });
+  if (category) params.set("category_slug", category);
+
+  const posts = await wpFetch<WpAdmissionPost[]>(
+    `/wp/v2/admission?${params.toString()}`
+  );
+
+  const post = posts[0];
+  return post ? mapAdmissionDataset(post) : null;
 }
 
 export async function getFinancialSupportPage(): Promise<FinancialSupportPageData> {

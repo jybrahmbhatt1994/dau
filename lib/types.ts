@@ -1406,6 +1406,69 @@ export interface UgAdmissionsPageData {
 }
 
 // ============================================================================
+//  APPEND TO lib/types.ts  (below the UgAdmissionsPageData block)
+// ============================================================================
+//  ADMISSION — /admission cascading-filter page
+//  WP mapping: CPT `admission` + taxonomies `admission_stream`,
+//  `admission_course`, `admission_category`. Slugs here MUST equal the
+//  taxonomy term slugs in WordPress — they are the join keys.
+// ============================================================================
+
+/** One course option (= one `admission_course` term). */
+export interface AdmissionCourseOption {
+  slug: string;
+  label: string;
+  /** true only for B.Tech courses — enables the 3rd (category) dropdown */
+  hasCategories: boolean;
+}
+
+/** One stream option (= one `admission_stream` term) with its courses. */
+export interface AdmissionStreamOption {
+  slug: string;
+  label: string;
+  courses: AdmissionCourseOption[];
+}
+
+/** One category option (= one `admission_category` term). Global list —
+ *  applies to every course whose `hasCategories` is true. */
+export interface AdmissionCategoryOption {
+  slug: string;
+  label: string;
+}
+
+/**
+ * One resolved content block = one WP `admission` post.
+ * Same sections as UgAdmissionCategory (per spec, all streams share the
+ * section shape); keyed by course (+ category for B.Tech courses).
+ */
+export type AdmissionDataset = Omit<UgAdmissionCategory, "slug" | "label"> & {
+  /** `admission_course` term slug this post is tagged with */
+  courseSlug: string;
+  /** `admission_category` term slug — absent for non-B.Tech courses */
+  categorySlug?: string;
+};
+
+/** Everything the 3-dropdown filter needs to render (no content). */
+export interface AdmissionFilterConfig {
+  streams: AdmissionStreamOption[];
+  categories: AdmissionCategoryOption[];
+  placeholders: { stream: string; course: string; category: string };
+  /** Message shown below the filter before a complete selection is made */
+  emptyPrompt: string;
+}
+
+export interface AdmissionPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  applyBanner: { text: string; cta: string; href: string };
+  filter: AdmissionFilterConfig;
+  /** Shared across all selections — contact pills (phone + email) */
+  contact: { phone: string; email: string };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
 //  ADMISSION — Financial Support page (/admission/ug/financial-support)
 //  Reuses PageHero, PageSubNav, ProgramSlider/ProgramCard, FaqSection,
 //  ContactPills, SplitCta.
