@@ -2279,14 +2279,12 @@ export async function getAcademicsPage(): Promise<AcademicsData> {
 
   const programIds = (acf.ac_programs_selected ?? []).join(",");
 
-  // Fetch relationship-selected posts in parallel — no waterfall
-  const [programPosts, areaPosts] = await Promise.all([
-    programIds
-      ? wpFetch<WpProgramCategorySlimPost[]>(
-          `/wp/v2/pragrams-of-study?include=${programIds}&acf_format=standard&_fields=id,slug,title,acf`,
-        )
-      : Promise.resolve([] as WpProgramCategorySlimPost[]),
-  ]);
+  // Fetch relationship-selected posts (no waterfall needed — just one call)
+  const programPosts = programIds
+    ? await wpFetch<WpProgramCategorySlimPost[]>(
+        `/wp/v2/pragrams-of-study?include=${programIds}&acf_format=standard&_fields=id,slug,title,acf`,
+      )
+    : ([] as WpProgramCategorySlimPost[]);
 
   // Preserve editor's chosen order for both relationship fields
   const orderedPrograms = (acf.ac_programs_selected ?? [])
