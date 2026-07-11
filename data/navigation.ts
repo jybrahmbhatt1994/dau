@@ -22,16 +22,16 @@ export const navigation: NavItem[] = [
           { label: "Doctoral Program", href: "/academics/program/doctoral-program" },
         ],
       },
-      { label: "B.Tech", href: "/academics/btech" },
+      // { label: "B.Tech", href: "/academics/btech" },
     ],
   },
   {
     label: "Admission",
     href: "/admission",
     children: [
-      { label: "Undergraduate Admissions", href: "/admission/ug" },
+      // { label: "Undergraduate Admissions", href: "/admission/ug" },
       { label: "Financial Support", href: "/admission/financial-support" },
-      { label: "UG Scholarships", href: "/admission/ug-scholarships" },
+      { label: "Scholarships", href: "/admission/scholarships" },
     ],
   },
   {

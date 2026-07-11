@@ -105,6 +105,7 @@ import type {
   ProgramBlock,
   AdmissionPageData,
   AdmissionDataset,
+  ScholarshipDetailPageData,
 } from "@/lib/types";
 
 // ============================================================================
@@ -1255,6 +1256,222 @@ interface WpAdmissionPost {
   category_slug: string | null;
 }
 
+interface WpAcLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpAcSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpAcParagraph {
+  paragraph: string;
+}
+
+interface WpAcSchoolCard {
+  title: string;
+  image: string;
+  href: WpAcLinkField;
+}
+
+interface WpAcSupportCard {
+  title: string;
+  excerpt: string;
+  image: string;
+  href: WpAcLinkField | "";
+}
+
+interface WpAcAreaCard {
+  title: string;
+  image: string;
+  href: WpAcLinkField;
+}
+
+interface WpAcademicsLandingAcf {
+  // Hero
+  ac_hero_subline: string;
+  ac_hero_image: string;
+  // Sub Nav
+  ac_subnav_links: WpAcSubNavLink[] | false;
+  // Dean
+  ac_dean_title: string;
+  ac_dean_paragraphs: WpAcParagraph[] | false;
+  ac_dean_email: string;
+  ac_dean_image: string;
+  // Schools
+  ac_schools_title: string;
+  ac_schools_description: string;
+  ac_schools_cards: WpAcSchoolCard[] | false;
+  // Programs (relationship → pragrams-of-study)
+  ac_programs_title: string;
+  ac_programs_description: string;
+  ac_programs_selected: number[];
+  // Areas (relationship → research-area)
+  ac_areas_title: string;
+  ac_areas_description: string;
+  ac_areas_cards: WpAcAreaCard[] | false;
+  // Support
+  ac_support_title: string;
+  ac_support_cards: WpAcSupportCard[] | false;
+  // CTA
+  ac_cta_calendar_title: string;
+  ac_cta_calendar_description: string;
+  ac_cta_calendar_label: string;
+  ac_cta_calendar_href: WpAcLinkField;
+  ac_cta_catalogue_title: string;
+  ac_cta_catalogue_description: string;
+  ac_cta_catalogue_label: string;
+  ac_cta_catalogue_href: WpAcLinkField;
+}
+
+// Program category CPT post shape (pragrams-of-study) — minimal fields needed
+interface WpProgramCategorySlimPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    pc_hero_subline?: string;
+    pc_hero_image?: string;
+  };
+}
+
+interface WpFsLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpFsBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpFsSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFsParagraph {
+  paragraph: string;
+}
+
+interface WpFsScholarshipCard {
+  title: string;
+  excerpt: string;
+  image: string;
+  href: WpFsLinkField;
+}
+
+interface WpFsFaqItem {
+  question: string;
+  answer: string;
+}
+
+interface WpFinancialSupportAcf {
+  // Hero
+  fs_hero_subline: string;
+  fs_hero_image: string;
+  fs_breadcrumb: WpFsBreadcrumb[] | false;
+  // Sub Nav
+  fs_subnav_label: string;
+  fs_subnav_links: WpFsSubNavLink[] | false;
+  // DAU Scholarships
+  fs_dau_title: string;
+  fs_dau_paragraphs: WpFsParagraph[] | false;
+  // Other Scholarships
+  fs_other_title: string;
+  fs_other_description: string;
+  fs_other_cards: WpFsScholarshipCard[] | false;
+  // FAQs
+  fs_faqs_title: string;
+  fs_faqs_items: WpFsFaqItem[] | false;
+  // Contact
+  fs_contact_phone: string;
+  fs_contact_email: string;
+  // CTA
+  fs_cta_left_title: string;
+  fs_cta_left_description: string;
+  fs_cta_left_label: string;
+  fs_cta_left_href: WpFsLinkField;
+  fs_cta_right_title: string;
+  fs_cta_right_description: string;
+  fs_cta_right_label: string;
+  fs_cta_right_href: WpFsLinkField;
+}
+
+interface WpUsLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+ 
+interface WpUsBreadcrumb {
+  label: string;
+  href: string;
+}
+ 
+interface WpUsSubNavLink {
+  label: string;
+  href: string;
+}
+ 
+interface WpUsParagraph {
+  paragraph: string;
+}
+ 
+interface WpUsFaqItem {
+  question: string;
+  answer: string;
+}
+ 
+interface WpUgScholarshipsAcf {
+  // Hero
+  us_hero_subline: string;
+  us_hero_image: string;
+  us_breadcrumb: WpUsBreadcrumb[] | false;
+  // Sub Nav
+  us_subnav_label: string;
+  us_subnav_links: WpUsSubNavLink[] | false;
+  // DAU Scholarships
+  us_dau_title: string;
+  us_dau_paragraphs: WpUsParagraph[] | false;
+  // Scholarships Offered (relationship → scholarship CPT)
+  us_offered_title: string;
+  us_offered_description: string;
+  us_offered_selected: number[];
+  // FAQs
+  us_faqs_title: string;
+  us_faqs_items: WpUsFaqItem[] | false;
+  // Contact
+  us_contact_phone: string;
+  us_contact_email: string;
+  // CTA
+  us_cta_left_title: string;
+  us_cta_left_description: string;
+  us_cta_left_label: string;
+  us_cta_left_href: WpUsLinkField;
+  us_cta_right_title: string;
+  us_cta_right_description: string;
+  us_cta_right_label: string;
+  us_cta_right_href: WpUsLinkField;
+}
+ 
+// Slim scholarship post shape — only what the hub-page card needs
+interface WpScholarshipSlimPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    sch_hero_subline?: string;
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 
@@ -2051,7 +2268,125 @@ export async function getNavigation(): Promise<NavItem[]> {
 // ─── Academics ───────────────────────────────────────────────────────────────
 
 export async function getAcademicsPage(): Promise<AcademicsData> {
-  return academicsData;
+  const acf = await getPageAcf<WpAcademicsLandingAcf>("academics");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Academics landing page ACF not found — falling back to mock data.",
+    );
+    return academicsData;
+  }
+
+  const programIds = (acf.ac_programs_selected ?? []).join(",");
+
+  // Fetch relationship-selected posts in parallel — no waterfall
+  const [programPosts, areaPosts] = await Promise.all([
+    programIds
+      ? wpFetch<WpProgramCategorySlimPost[]>(
+          `/wp/v2/pragrams-of-study?include=${programIds}&acf_format=standard&_fields=id,slug,title,acf`,
+        )
+      : Promise.resolve([] as WpProgramCategorySlimPost[]),
+  ]);
+
+  // Preserve editor's chosen order for both relationship fields
+  const orderedPrograms = (acf.ac_programs_selected ?? [])
+    .map((id) => programPosts.find((p) => p.id === id))
+    .filter((p): p is WpProgramCategorySlimPost => p !== undefined);
+
+  return {
+    hero: {
+      title: "Academics", // static per design; page title comes from WP post title if preferred
+      subline: acf.ac_hero_subline || undefined,
+      image: acf.ac_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Academics", href: "/academics" },
+      ],
+    },
+
+    subNav: toArray(acf.ac_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    dean: {
+      title: acf.ac_dean_title,
+      paragraphs: toArray(acf.ac_dean_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+      email: acf.ac_dean_email,
+      image: acf.ac_dean_image,
+    },
+
+    schools: {
+      title: acf.ac_schools_title,
+      description: acf.ac_schools_description,
+      cards: toArray(acf.ac_schools_cards).map((card, i) => ({
+        id: String(i),
+        title: card.title,
+        image: card.image,
+        href: card.href?.url ?? "#",
+      })),
+    },
+
+    // ✅ Live from pragrams-of-study CPT via relationship field
+    programs: {
+      title: acf.ac_programs_title,
+      description: acf.ac_programs_description,
+      cards: orderedPrograms.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        excerpt: post.acf?.pc_hero_subline
+          ? post.acf.pc_hero_subline.slice(0, 140)
+          : "",
+        image:
+          post.acf?.pc_hero_image ??
+          `https://picsum.photos/seed/program-${post.id}/732/488`,
+        href: `/academics/program/${post.slug}`,
+      })),
+    },
+
+    // ✅ Live from research-area CPT via relationship field
+    areas: {
+      title: acf.ac_areas_title,
+      description: acf.ac_areas_description,
+      cards: toArray(acf.ac_areas_cards).map((card, i) => ({
+        id: String(i),
+        title: card.title,
+        image: card.image,
+        href: card.href?.url ?? "#",
+      })),
+    },
+
+    support: {
+      title: acf.ac_support_title,
+      cards: toArray(acf.ac_support_cards).map((card, i) => ({
+        id: String(i),
+        title: card.title,
+        excerpt: card.excerpt,
+        image: card.image,
+        href:
+          typeof card.href === "object" && card.href?.url
+            ? card.href.url
+            : "#",
+      })),
+    },
+
+    cta: {
+      calendar: {
+        title: acf.ac_cta_calendar_title || undefined,
+        description: acf.ac_cta_calendar_description,
+        cta: acf.ac_cta_calendar_label,
+        href: acf.ac_cta_calendar_href?.url ?? "#",
+      },
+      catalogue: {
+        title: acf.ac_cta_catalogue_title || undefined,
+        description: acf.ac_cta_catalogue_description,
+        cta: acf.ac_cta_catalogue_label,
+        href: acf.ac_cta_catalogue_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getDeanPage(): Promise<DeanPageData> {
@@ -3573,7 +3908,81 @@ export async function getAdmissionDataset(
 }
 
 export async function getFinancialSupportPage(): Promise<FinancialSupportPageData> {
-  return financialSupportPageData;
+  const acf = await getPageAcf<WpFinancialSupportAcf>("financial-support");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Financial Support page ACF not found — falling back to mock data.",
+    );
+    return financialSupportPageData;
+  }
+
+  return {
+    hero: {
+      title: "Financial Support",
+      subline: acf.fs_hero_subline || undefined,
+      image: acf.fs_hero_image,
+      breadcrumb: toArray(acf.fs_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.fs_subnav_label || "Financial Support",
+
+    subNav: toArray(acf.fs_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    dauScholarships: {
+      title: acf.fs_dau_title,
+      paragraphs: toArray(acf.fs_dau_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+    },
+
+    otherScholarships: {
+      title: acf.fs_other_title,
+      description: acf.fs_other_description,
+      cards: toArray(acf.fs_other_cards).map((card, i) => ({
+        id: String(i),
+        title: card.title,
+        excerpt: card.excerpt,
+        image: card.image,
+        href: card.href?.url ?? "#",
+      })),
+    },
+
+    faqs: {
+      title: acf.fs_faqs_title,
+      items: toArray(acf.fs_faqs_items).map((f, i) => ({
+        id: `faq-${i + 1}`,
+        question: f.question,
+        answer: f.answer,
+      })),
+    },
+
+    contact: {
+      phone: acf.fs_contact_phone,
+      email: acf.fs_contact_email,
+    },
+
+    cta: {
+      left: {
+        title: acf.fs_cta_left_title || undefined,
+        description: acf.fs_cta_left_description,
+        cta: acf.fs_cta_left_label,
+        href: acf.fs_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.fs_cta_right_title || undefined,
+        description: acf.fs_cta_right_description,
+        cta: acf.fs_cta_right_label,
+        href: acf.fs_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 /**
@@ -3581,5 +3990,372 @@ export async function getFinancialSupportPage(): Promise<FinancialSupportPageDat
  * same template, different content.
  */
 export async function getUgScholarshipsPage(): Promise<FinancialSupportPageData> {
-  return ugScholarshipsPageData;
+  const acf = await getPageAcf<WpUgScholarshipsAcf>("scholarships");
+ 
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] UG Scholarships page ACF not found — falling back to mock data.",
+    );
+    return ugScholarshipsPageData;
+  }
+ 
+  const selectedIds = (acf.us_offered_selected ?? []).join(",");
+ 
+  const scholarshipPosts = selectedIds
+    ? await wpFetch<WpScholarshipSlimPost[]>(
+        `/wp/v2/scholarship?include=${selectedIds}&_embed=wp:featuredmedia&acf_format=standard`,
+      )
+    : [];
+ 
+  // Preserve editor's chosen order
+  const orderedScholarships = (acf.us_offered_selected ?? [])
+    .map((id) => scholarshipPosts.find((p) => p.id === id))
+    .filter((p): p is WpScholarshipSlimPost => p !== undefined);
+ 
+  return {
+    hero: {
+      title: "Scholarships",
+      subline: acf.us_hero_subline || undefined,
+      image: acf.us_hero_image,
+      breadcrumb: toArray(acf.us_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+ 
+    subNavLabel: acf.us_subnav_label || "Undergraduate Admissions",
+ 
+    subNav: toArray(acf.us_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+ 
+    dauScholarships: {
+      title: acf.us_dau_title,
+      paragraphs: toArray(acf.us_dau_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+    },
+ 
+    otherScholarships: {
+      title: acf.us_offered_title,
+      description: acf.us_offered_description,
+      cards: orderedScholarships.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        excerpt: post.acf?.sch_hero_subline ?? "",
+        // ✅ Featured image, not the ACF hero image field
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/scholarship-${post.id}/600/400`,
+        href: `/admission/scholarship/${post.slug}`,
+      })),
+    },
+ 
+    faqs: {
+      title: acf.us_faqs_title,
+      items: toArray(acf.us_faqs_items).map((f, i) => ({
+        id: `faq-${i + 1}`,
+        question: f.question,
+        answer: f.answer,
+      })),
+    },
+ 
+    contact: {
+      phone: acf.us_contact_phone,
+      email: acf.us_contact_email,
+    },
+ 
+    cta: {
+      left: {
+        title: acf.us_cta_left_title || undefined,
+        description: acf.us_cta_left_description,
+        cta: acf.us_cta_left_label,
+        href: acf.us_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.us_cta_right_title || undefined,
+        description: acf.us_cta_right_description,
+        cta: acf.us_cta_right_label,
+        href: acf.us_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+// ============================================================================
+//  REPLACE the temporary mock getScholarshipDetailPage() in lib/wordpress.ts
+//  with this. You can also delete the mockScholarshipData constant now.
+//  Add the interfaces near the other Wp* interfaces at the top of the file.
+// ============================================================================
+
+// ─── Raw WordPress shapes ────────────────────────────────────────────────────
+
+interface WpSchLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpSchSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpSchParagraph {
+  paragraph: string;
+}
+
+interface WpSchEligibilityLine {
+  line: string;
+}
+
+interface WpSchFellowshipRow {
+  count: string;
+  type: string;
+  eligibility_lines: WpSchEligibilityLine[] | false;
+  band: string;
+}
+
+interface WpSchConditionItem {
+  item: string;
+}
+
+interface WpScholarshipAcf {
+  // Hero
+  sch_hero_subline: string;
+  sch_hero_image: string;
+  // Sub Nav
+  sch_subnav_label: string;
+  sch_subnav_links: WpSchSubNavLink[] | false;
+  // Intro
+  sch_intro_title: string;
+  sch_intro_subtitle: string;
+  sch_intro_paragraphs: WpSchParagraph[] | false;
+  // Fellowships table
+  sch_fellowships_title: string;
+  sch_table_header_1: string;
+  sch_table_header_2: string;
+  sch_table_header_3: string;
+  sch_table_header_4: string;
+  sch_fellowship_rows: WpSchFellowshipRow[] | false;
+  sch_fellowship_notes: WpSchParagraph[] | false;
+  // Other Conditions
+  sch_oc_title: string;
+  sch_oc_items: WpSchConditionItem[] | false;
+  // CTA
+  sch_cta_left_title: string;
+  sch_cta_left_description: string;
+  sch_cta_left_label: string;
+  sch_cta_left_href: WpSchLinkField;
+  sch_cta_right_title: string;
+  sch_cta_right_description: string;
+  sch_cta_right_label: string;
+  sch_cta_right_href: WpSchLinkField;
+}
+
+interface WpScholarshipPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: WpScholarshipAcf;
+}
+
+// ─── Accessor ─────────────────────────────────────────────────────────────────
+
+// ============================================================================
+//  ADD BACK to lib/wordpress.ts — place this ABOVE getScholarshipDetailPage()
+//  This is the fallback used when a scholarship slug isn't found in WP.
+// ============================================================================
+
+const mockScholarshipData: ScholarshipDetailPageData = {
+  hero: {
+    title: "UG Scholarships",
+    subline:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation",
+    image: "https://picsum.photos/seed/ug-scholarships-hero/1200/500",
+    breadcrumb: [
+      { label: "Home", href: "/" },
+      { label: "Admission", href: "/admission" },
+      { label: "UG Scholarships", href: "/admission/ug-scholarships" },
+    ],
+  },
+
+  subNavLabel: "Undergraduate Admissions",
+  subNav: [
+    { label: "DAU Scholarships", href: "#dau-scholarships" },
+    { label: "Other Scholarships", href: "#other-scholarships" },
+    { label: "FAQs", href: "#faqs" },
+    { label: "Related Links", href: "#related" },
+  ],
+
+  intro: {
+    title: "UG Institute Fellowships at DAU",
+    subtitle: "(With effect from 2025-26 Batch)",
+    paragraphs: [
+      'From the academic year (2025-26), the Institute has added a new scholarship category, "Institute Fellowship" under which students at the time of admissions will be awarded multiple different fellowships namely rank based (JEE AIR and ACPC), only girl students (JEE AIR and ACPC rank) and out station school board toppers. The amount of the scholarship will be equal to 100% of the tuition fee for the duration of the program. All students in this category will continue to receive the scholarship subject to their satisfying the academic performance criteria in all subsequent semesters.',
+    ],
+  },
+
+  fellowships: {
+    title: "Eligibility and details of Fellowships",
+    tableHeaders: [
+      "No. of Fellowship",
+      "Type of Fellowship",
+      "Eligibility conditions",
+      "Fellowship Band",
+    ],
+    rows: [
+      {
+        id: "f1",
+        count: "Five (5)",
+        type: "Meritorious Fellowship",
+        eligibilityLines: [
+          "Top 3 (Three) students who achieve JEE AIR between 1 to 5000",
+          "Top 2 (Two) students who achieve ACPC Rank between 1 to 25",
+        ],
+        band: "Full semester tuition fee",
+      },
+      {
+        id: "f2",
+        count: "Five (5)",
+        type: "Other State Board Toppers Fellowship",
+        eligibilityLines: [
+          "Top 5 (Five) students from other than Gujarat state and achieve a rank between 1 to 10 as a Board Topper",
+        ],
+        band: "Full semester tuition fee",
+      },
+      {
+        id: "f3",
+        count: "Five (5)",
+        type: "Girls Students Fellowship",
+        eligibilityLines: [
+          "Top 4 (Four) Girls students who achieve JEE AIR between 1 to 10000",
+          "Top 1 (One) Girl student who achieves ACPC Rank between 1 to 50",
+        ],
+        band: "Full semester tuition fee",
+      },
+    ],
+    notes: [
+      "The student has to achieve 8.50/10.00 or above every semester. If the SPI falls below 8.50/10.00 in a particular semester, the fellowship would not be offered in the succeeding semester. However, if the SPI in a semester again is 8.50/10.00 or above, then the fellowship would be restored from the succeeding semester.",
+      "The students have to submit the certificate from their respective board to claim the Other State Board Toppers fellowship.",
+    ],
+  },
+
+  otherConditions: {
+    title: "Other Conditions",
+    items: [
+      "The student should have been registered for the semester subsequent to which the scholarship is awarded and should have paid the tuition and other fees in full by the given due date.",
+      "The student should PASS in all credit courses and should not have any backlog and/or disciplinary case(s) being initiated or recorded against her/him.",
+      "The Scholarship is awarded based on the performance of the student in a semester and the student has to meet the eligibility criteria in each semester to be eligible for the award of the Scholarship.",
+      "If a student withdraws from the program before completion of studies or her/his admission is terminated by the Institute or she/he is imposed any punishment/penalty due to indiscipline, the Institute has the right to recover the total scholarship amount paid to her/him.",
+      "The awardee should not be the recipient of any other financial assistant / fellowship / scholarship from the Govt. of India / State Government / any other private agency.",
+      "The selected student for the award has to submit an undertaking stating that she/he will be bound by the regulations of the Scholarship Scheme.",
+      "If the student submits false document(s)/information, he/she will be liable for disciplinary action.",
+    ],
+  },
+
+  cta: {
+    left: {
+      title: "Academic Calendar",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      cta: "Know More",
+      href: "/academics/calendar",
+    },
+    right: {
+      title: "Academic Areas",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      cta: "Know More",
+      href: "/academics/areas",
+    },
+  },
+};
+
+export async function getScholarshipDetailPage(
+  slug: string,
+): Promise<ScholarshipDetailPageData> {
+  const posts = await wpFetch<WpScholarshipPost[]>(
+    `/wp/v2/scholarship?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
+  );
+
+  if (!posts || posts.length === 0) {
+    console.warn(
+      `[wordpress.ts] Scholarship '${slug}' not found — falling back to mock data.`,
+    );
+    return mockScholarshipData; // keep this constant, or swap to a real fallback
+  }
+
+  const post = posts[0];
+  const acf = post.acf;
+  const title = decodeHtml(post.title.rendered);
+
+  return {
+    hero: {
+      title,
+      subline: acf.sch_hero_subline || undefined,
+      image: acf.sch_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Admission", href: "/admission" },
+        { label: title, href: `/admission/scholarship/${slug}` },
+      ],
+    },
+
+    subNavLabel: acf.sch_subnav_label || "Undergraduate Admissions",
+
+    subNav: toArray(acf.sch_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: {
+      title: acf.sch_intro_title,
+      subtitle: acf.sch_intro_subtitle || undefined,
+      paragraphs: toArray(acf.sch_intro_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+    },
+
+    fellowships: {
+      title: acf.sch_fellowships_title,
+      tableHeaders: [
+        acf.sch_table_header_1,
+        acf.sch_table_header_2,
+        acf.sch_table_header_3,
+        acf.sch_table_header_4,
+      ],
+      rows: toArray(acf.sch_fellowship_rows).map((row, i) => ({
+        id: `row-${i + 1}`,
+        count: row.count,
+        type: row.type,
+        eligibilityLines: toArray(row.eligibility_lines).map((l) => l.line),
+        band: row.band,
+      })),
+      notes: toArray(acf.sch_fellowship_notes).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+    },
+
+    otherConditions: {
+      title: acf.sch_oc_title,
+      items: toArray(acf.sch_oc_items).map((r) => r.item),
+    },
+
+    cta: {
+      left: {
+        title: acf.sch_cta_left_title || undefined,
+        description: acf.sch_cta_left_description,
+        cta: acf.sch_cta_left_label,
+        href: acf.sch_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.sch_cta_right_title || undefined,
+        description: acf.sch_cta_right_description,
+        cta: acf.sch_cta_right_label,
+        href: acf.sch_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }

@@ -1495,3 +1495,46 @@ export interface FinancialSupportPageData {
   contact: { phone: string; email: string };
   cta: { left: CtaPanel; right: CtaPanel };
 }
+
+// ============================================================================
+//  ADD to lib/types.ts — Scholarship Detail page (post_type=scholarship)
+//  Place near the other ADMISSION section types.
+// ============================================================================
+
+/** One row in the Fellowships eligibility table. */
+export interface FellowshipTableRow {
+  id: string;
+  count: string;              // e.g. "Five (5)"
+  type: string;               // e.g. "Meritorious Fellowship"
+  eligibilityLines: string[]; // one or more condition lines, rendered stacked
+  band: string;               // e.g. "Full semester tuition fee"
+}
+
+export interface ScholarshipDetailPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+
+  /** "UG Institute Fellowships at DAU" — title + italic subtitle + prose */
+  intro: {
+    title: string;
+    subtitle?: string; // e.g. "(With effect from 2025-26 Batch)"
+    paragraphs: string[];
+  };
+
+  /** Dark-navy "Eligibility and details of Fellowships" table + trailing notes */
+  fellowships: {
+    title: string;
+    tableHeaders: [string, string, string, string];
+    rows: FellowshipTableRow[];
+    notes: string[];
+  };
+
+  /** "Other Conditions" numbered list, white background */
+  otherConditions: {
+    title: string;
+    items: string[];
+  };
+
+  cta: { left: CtaPanel; right: CtaPanel };
+}

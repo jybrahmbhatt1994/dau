@@ -8,14 +8,14 @@ const CARD_EXCERPT =
 
 export const ugScholarshipsPageData: FinancialSupportPageData = {
   hero: {
-    title: "UG Scholarships",
+    title: "Scholarships",
     subline:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     image: img(1200, 500, "ug-scholarships-hero"),
     breadcrumb: [
       { label: "Home", href: "/" },
       { label: "Admission", href: "/admission" },
-      { label: "UG Scholarships", href: "/admission/scholarships" },
+      { label: "Scholarships", href: "/admission/scholarships" },
     ],
   },
 
@@ -28,7 +28,7 @@ export const ugScholarshipsPageData: FinancialSupportPageData = {
   ],
 
   dauScholarships: {
-    title: "UG Scholarships",
+    title: "Scholarships",
     paragraphs: [
       "A few students admitted to the programs are awarded merit scholarships equivalent to full tuition fees. The Institute shall draw a list of students eligible for merit scholarship based on the admission ranks drawn from Gujarat and All India Categories separately. In addition, few merit-cum-means scholarships are offered to the students with highest ranks subject to a means test.",
     ],
