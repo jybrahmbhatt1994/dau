@@ -4457,9 +4457,9 @@ export async function getFacultyHandbookPage(): Promise<FacultyHandbookPageData>
       ),
       downloadButton: {
         label: acf.fh_download_label,
-        href:
-          acf.fh_download_file?.url ??
-          facultyHandbookPageData.content.downloadButton.href,
+        href: acf.fh_download_file
+          ? acf.fh_download_file.url
+          : facultyHandbookPageData.content.downloadButton.href,
         external: acf.fh_download_new_tab ?? true,
       },
     },
