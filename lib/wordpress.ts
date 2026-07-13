@@ -4624,20 +4624,559 @@ export async function getFacultyDevelopmentPage(): Promise<FacultyDevelopmentPag
 
 // ─── Placements ───────────────────────────────────────────────────────────────
 
+interface WpPtLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpPtBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpPtSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpPtParagraph {
+  paragraph: string;
+}
+
+interface WpPlacementTeamAcf {
+  // Hero
+  pt_hero_subline: string;
+  pt_hero_image: string;
+  pt_breadcrumb: WpPtBreadcrumb[] | false;
+  // Sub Nav
+  pt_subnav_label: string;
+  pt_subnav_links: WpPtSubNavLink[] | false;
+  // Intro
+  pt_intro_paragraphs: WpPtParagraph[] | false;
+  // Team titles
+  pt_placement_cell_title: string;
+  pt_student_cell_title: string;
+  // CTA
+  pt_cta_left_title: string;
+  pt_cta_left_description: string;
+  pt_cta_left_label: string;
+  pt_cta_left_href: WpPtLinkField;
+  pt_cta_right_title: string;
+  pt_cta_right_description: string;
+  pt_cta_right_label: string;
+  pt_cta_right_href: WpPtLinkField;
+}
+
+// placement-cell CPT post shape
+interface WpPlacementCellPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    position?: string;
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+function mapCellPost(post: WpPlacementCellPost, prefix: string, i: number): FacultyMember {
+  return {
+    id: `${prefix}-${i}`,
+    name: decodeHtml(post.title.rendered),
+    position: post.acf?.position ?? "",
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/${prefix}-${i}/290/360`,
+    href: `/placements/team/${post.slug}`,
+  };
+}
+
 export async function getPlacementTeamPage(): Promise<PlacementTeamPageData> {
-  return placementTeamPageData;
+  const acf = await getPageAcf<WpPlacementTeamAcf>("placements-team");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Placement Team page ACF not found — falling back to mock data.",
+    );
+    return placementTeamPageData;
+  }
+
+  // Taxonomy term IDs: main-cell = 33, student-cell = 32
+  const [mainCellPosts, studentCellPosts] = await Promise.all([
+    wpFetch<WpPlacementCellPost[]>(
+      `/wp/v2/placement-cell?cell-type=33&_embed=wp:featuredmedia&acf_format=standard&per_page=50`,
+    ),
+    wpFetch<WpPlacementCellPost[]>(
+      `/wp/v2/placement-cell?cell-type=32&_embed=wp:featuredmedia&acf_format=standard&per_page=50`,
+    ),
+  ]);
+
+  return {
+    hero: {
+      title: "Placement Team",
+      subline: acf.pt_hero_subline || undefined,
+      image: acf.pt_hero_image,
+      breadcrumb: toArray(acf.pt_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.pt_subnav_label || "Placement Team",
+
+    subNav: toArray(acf.pt_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.pt_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    placementCell: {
+      title: acf.pt_placement_cell_title,
+      members: mainCellPosts.map((post, i) => mapCellPost(post, "pct", i)),
+    },
+
+    studentCell: {
+      title: acf.pt_student_cell_title,
+      members: studentCellPosts.map((post, i) => mapCellPost(post, "spc", i)),
+    },
+
+    cta: {
+      left: {
+        title: acf.pt_cta_left_title || undefined,
+        description: acf.pt_cta_left_description,
+        cta: acf.pt_cta_left_label,
+        href: acf.pt_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.pt_cta_right_title || undefined,
+        description: acf.pt_cta_right_description,
+        cta: acf.pt_cta_right_label,
+        href: acf.pt_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+interface WpPsLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpPsBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpPsSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpPsParagraph {
+  paragraph: string;
+}
+
+interface WpPsGalleryImage {
+  image: string;
+}
+
+interface WpPsBucket {
+  label: string;
+  highest: number;
+  average: number;
+}
+
+interface WpPsStory {
+  quote: string;
+  name: string;
+  year: string;
+  image: string;
+}
+
+interface WpPlacementStatsAcf {
+  // Hero
+  ps_hero_subline: string;
+  ps_hero_image: string;
+  ps_breadcrumb: WpPsBreadcrumb[] | false;
+  // Sub Nav
+  ps_subnav_label: string;
+  ps_subnav_links: WpPsSubNavLink[] | false;
+  // Intro
+  ps_intro_paragraphs: WpPsParagraph[] | false;
+  // Gallery
+  ps_gallery_images: WpPsGalleryImage[] | false;
+  // UG Placements
+  ps_ug_title: string;
+  ps_ug_description: string;
+  ps_ug_highest_label: string;
+  ps_ug_average_label: string;
+  ps_ug_buckets: WpPsBucket[] | false;
+  // PG Placements
+  ps_pg_title: string;
+  ps_pg_description: string;
+  ps_pg_highest_label: string;
+  ps_pg_average_label: string;
+  ps_pg_buckets: WpPsBucket[] | false;
+  // Success Stories
+  ps_stories_title: string;
+  ps_stories_items: WpPsStory[] | false;
+  // CTA
+  ps_cta_left_description: string;
+  ps_cta_left_label: string;
+  ps_cta_left_href: WpPsLinkField;
+  ps_cta_right_description: string;
+  ps_cta_right_label: string;
+  ps_cta_right_href: WpPsLinkField;
 }
 
 export async function getPlacementStatsPage(): Promise<PlacementStatsPageData> {
-  return placementStatsPageData;
+  const acf = await getPageAcf<WpPlacementStatsAcf>("placement-stats");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Placement Stats page ACF not found — falling back to mock data.",
+    );
+    return placementStatsPageData;
+  }
+
+  return {
+    hero: {
+      title: "Placement Stats",
+      subline: acf.ps_hero_subline || undefined,
+      image: acf.ps_hero_image,
+      breadcrumb: toArray(acf.ps_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.ps_subnav_label || "Placement Stats",
+
+    subNav: toArray(acf.ps_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.ps_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    gallery: {
+      images: toArray(acf.ps_gallery_images).map((r) => r.image),
+    },
+
+    ugPlacements: {
+      id: "ug-placements",
+      title: acf.ps_ug_title,
+      description: acf.ps_ug_description,
+      legend: {
+        highestLabel: acf.ps_ug_highest_label,
+        averageLabel: acf.ps_ug_average_label,
+      },
+      buckets: toArray(acf.ps_ug_buckets).map((b) => ({
+        label: b.label,
+        highest: Number(b.highest),
+        average: Number(b.average),
+      })),
+    },
+
+    pgPlacements: {
+      id: "pg-placements",
+      title: acf.ps_pg_title,
+      description: acf.ps_pg_description,
+      legend: {
+        highestLabel: acf.ps_pg_highest_label,
+        averageLabel: acf.ps_pg_average_label,
+      },
+      buckets: toArray(acf.ps_pg_buckets).map((b) => ({
+        label: b.label,
+        highest: Number(b.highest),
+        average: Number(b.average),
+      })),
+    },
+
+    successStories: {
+      title: acf.ps_stories_title,
+      items: toArray(acf.ps_stories_items).map((s, i) => ({
+        id: `story-${i + 1}`,
+        quote: s.quote,
+        name: s.name,
+        year: s.year,
+        image: s.image,
+      })),
+    },
+
+    cta: {
+      left: {
+        // title-less per design — CtaPanel.title is optional, simply omitted
+        description: acf.ps_cta_left_description,
+        cta: acf.ps_cta_left_label,
+        href: acf.ps_cta_left_href?.url ?? "#",
+      },
+      right: {
+        description: acf.ps_cta_right_description,
+        cta: acf.ps_cta_right_label,
+        href: acf.ps_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+interface WpTrLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpTrBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpTrSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpTrParagraph {
+  paragraph: string;
+}
+
+interface WpTrStat {
+  value: string;
+  label: string;
+}
+
+interface WpTrRecruiterItem {
+  name: string;
+  logo: string;
+  href: WpTrLinkField | "";
+}
+
+interface WpTrStory {
+  quote: string;
+  name: string;
+  year: string;
+  image: string;
+}
+
+interface WpTopRecruitersAcf {
+  // Hero
+  tr_hero_subline: string;
+  tr_hero_image: string;
+  tr_breadcrumb: WpTrBreadcrumb[] | false;
+  // Sub Nav
+  tr_subnav_label: string;
+  tr_subnav_links: WpTrSubNavLink[] | false;
+  // Intro
+  tr_intro_paragraphs: WpTrParagraph[] | false;
+  // Stats
+  tr_stats: WpTrStat[] | false;
+  // Recruiters
+  tr_recruiters_title: string;
+  tr_recruiters_items: WpTrRecruiterItem[] | false;
+  // Success Stories
+  tr_stories_title: string;
+  tr_stories_items: WpTrStory[] | false;
+  // CTA
+  tr_cta_left_description: string;
+  tr_cta_left_label: string;
+  tr_cta_left_href: WpTrLinkField;
+  tr_cta_right_description: string;
+  tr_cta_right_label: string;
+  tr_cta_right_href: WpTrLinkField;
 }
 
 export async function getTopRecruitersPage(): Promise<TopRecruitersPageData> {
-  return topRecruitersPageData;
+  const acf = await getPageAcf<WpTopRecruitersAcf>("top-recruiters");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Top Recruiters page ACF not found — falling back to mock data.",
+    );
+    return topRecruitersPageData;
+  }
+
+  return {
+    hero: {
+      title: "Top Recruiters",
+      subline: acf.tr_hero_subline || undefined,
+      image: acf.tr_hero_image,
+      breadcrumb: toArray(acf.tr_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.tr_subnav_label || "Top Recruiters",
+
+    subNav: toArray(acf.tr_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.tr_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    stats: toArray(acf.tr_stats).map((s) => ({
+      value: s.value,
+      label: s.label,
+    })),
+
+    recruiters: {
+      title: acf.tr_recruiters_title,
+      items: toArray(acf.tr_recruiters_items).map((item, i) => ({
+        id: `r-${i + 1}`,
+        name: item.name,
+        logo: item.logo,
+        href:
+          typeof item.href === "object" && item.href?.url
+            ? item.href.url
+            : undefined,
+      })),
+    },
+
+    successStories: {
+      title: acf.tr_stories_title,
+      items: toArray(acf.tr_stories_items).map((s, i) => ({
+        id: `story-${i + 1}`,
+        quote: s.quote,
+        name: s.name,
+        year: s.year,
+        image: s.image,
+      })),
+    },
+
+    cta: {
+      left: {
+        description: acf.tr_cta_left_description,
+        cta: acf.tr_cta_left_label,
+        href: acf.tr_cta_left_href?.url ?? "#",
+      },
+      right: {
+        description: acf.tr_cta_right_description,
+        cta: acf.tr_cta_right_label,
+        href: acf.tr_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+interface WpInLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpInBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpInSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpInParagraph {
+  paragraph: string;
+}
+
+interface WpInSlide {
+  image: string;
+  caption: string;
+}
+
+interface WpInternshipsAcf {
+  // Hero
+  in_hero_subline: string;
+  in_hero_image: string;
+  in_breadcrumb: WpInBreadcrumb[] | false;
+  // Sub Nav
+  in_subnav_label: string;
+  in_subnav_links: WpInSubNavLink[] | false;
+  // Apply Banner
+  in_banner_text: string;
+  in_banner_cta: string;
+  in_banner_href: WpInLinkField;
+  // Intro
+  in_intro_paragraphs: WpInParagraph[] | false;
+  // Carousel
+  in_carousel_slides: WpInSlide[] | false;
+  // CTA
+  in_cta_left_description: string;
+  in_cta_left_label: string;
+  in_cta_left_href: WpInLinkField;
+  in_cta_right_description: string;
+  in_cta_right_label: string;
+  in_cta_right_href: WpInLinkField;
 }
 
 export async function getInternshipsPage(): Promise<InternshipsPageData> {
-  return internshipsPageData;
+  const acf = await getPageAcf<WpInternshipsAcf>("placement-internship");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Internships page ACF not found — falling back to mock data.",
+    );
+    return internshipsPageData;
+  }
+
+  return {
+    hero: {
+      title: "Internships",
+      subline: acf.in_hero_subline || undefined,
+      image: acf.in_hero_image,
+      breadcrumb: toArray(acf.in_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.in_subnav_label || "Internships",
+
+    subNav: toArray(acf.in_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    applyBanner: {
+      text: acf.in_banner_text,
+      cta: acf.in_banner_cta,
+      href: acf.in_banner_href?.url ?? "#",
+    },
+
+    intro: toArray(acf.in_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    carousel: {
+      slides: toArray(acf.in_carousel_slides).map((s) => ({
+        image: s.image,
+        caption: s.caption || "",
+      })),
+    },
+
+    cta: {
+      left: {
+        description: acf.in_cta_left_description,
+        cta: acf.in_cta_left_label,
+        href: acf.in_cta_left_href?.url ?? "#",
+      },
+      right: {
+        description: acf.in_cta_right_description,
+        cta: acf.in_cta_right_label,
+        href: acf.in_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 // ─── Admission ────────────────────────────────────────────────────────────────
