@@ -107,6 +107,7 @@ import type {
   AdmissionDataset,
   ScholarshipDetailPageData,
   FacultyTabData,
+  TitledSubBlock,
 } from "@/lib/types";
 
 // ============================================================================
