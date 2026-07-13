@@ -2248,7 +2248,7 @@ function formatScfDate(ddmmyyyy: string): string {
 }
 
 /** SCF returns false for empty repeaters — normalise to [] */
-function toArray<T>(val: T[] | false): T[] {
+function toArray<T>(val: T[] | false | undefined | null): T[] {
   return Array.isArray(val) ? val : [];
 }
 
