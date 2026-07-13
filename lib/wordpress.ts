@@ -1472,6 +1472,377 @@ interface WpScholarshipSlimPost {
   };
 }
 
+interface WpDfLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpDfBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpDfSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpDfParagraph {
+  paragraph: string; // HTML string (WYSIWYG row — may contain multiple <p>)
+}
+
+interface WpDeanFacultyAcf {
+  // Hero
+  df_hero_title: string;
+  df_hero_subline: string;
+  df_hero_image: string;
+  df_breadcrumb: WpDfBreadcrumb[] | false;
+  // Sub Nav
+  df_subnav_label: string;
+  df_subnav_links: WpDfSubNavLink[] | false;
+  // Dean's Desk
+  df_desk_title: string;
+  df_desk_paragraphs: WpDfParagraph[] | false;
+  df_desk_name: string;
+  df_desk_role: string;
+  df_desk_image: string;
+  df_desk_email: string;
+  // CTA
+  df_cta_left_title: string;
+  df_cta_left_description: string;
+  df_cta_left_label: string;
+  df_cta_left_href: WpDfLinkField;
+  df_cta_right_title: string;
+  df_cta_right_description: string;
+  df_cta_right_label: string;
+  df_cta_right_href: WpDfLinkField;
+}
+
+interface WpFacultyPostWithType extends WpFacultyPost {
+  faculty_type_slug: string | null;
+}
+
+/** One `faculty-type` taxonomy term, with its ACF term meta. */
+interface WpFacultyTypeTerm {
+  id: number;
+  slug: string;
+  name: string;
+  /** Native WP taxonomy field — reused as the tab's intro paragraph so no
+   *  extra ACF field is needed. Fill in per-term under Faculty → Faculty
+   *  Types → (term) → Description. */
+  description: string;
+  acf?: { order?: number };
+}
+
+interface WpFtLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpFtBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpFtSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFacultyPageAcf {
+  // Hero
+  ft_hero_title: string;
+  ft_hero_subline: string;
+  ft_hero_image: string;
+  ft_breadcrumb: WpFtBreadcrumb[] | false;
+  // Sub Nav
+  ft_subnav_label: string;
+  ft_subnav_links: WpFtSubNavLink[] | false;
+  // Apply banner
+  ft_apply_banner_text: string;
+  ft_apply_banner_cta: string;
+  ft_apply_banner_href: WpFtLinkField;
+  // CTA
+  ft_cta_left_title: string;
+  ft_cta_left_description: string;
+  ft_cta_left_label: string;
+  ft_cta_left_href: WpFtLinkField;
+  ft_cta_right_title: string;
+  ft_cta_right_description: string;
+  ft_cta_right_label: string;
+  ft_cta_right_href: WpFtLinkField;
+}
+
+interface WpFrLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpFrBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpFrSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFrParagraphRow {
+  paragraph: string;
+}
+
+interface WpFrBulletRow {
+  bullet: string;
+}
+
+interface WpFrOpeningCard {
+  title: string;
+  image: string;
+  href: string;
+}
+
+interface WpFrEligibilityTab {
+  label: string;
+  paragraphs?: WpFrParagraphRow[] | false;
+  bullets?: WpFrBulletRow[] | false;
+}
+
+interface WpFrProseBlock {
+  heading?: string;
+  paragraphs?: WpFrParagraphRow[] | false;
+  bullets_lead?: string;
+  bullets?: WpFrBulletRow[] | false;
+}
+
+/** ACF native Gallery field, return_format: "array" */
+interface WpFrGalleryImage {
+  url: string;
+}
+
+interface WpFacultyRecruitmentAcf {
+  // Hero
+  fr_hero_title: string;
+  fr_hero_subline: string;
+  fr_hero_image: string;
+  fr_breadcrumb: WpFrBreadcrumb[] | false;
+  // Sub Nav
+  fr_subnav_label: string;
+  fr_subnav_links: WpFrSubNavLink[] | false;
+  // Apply banner
+  fr_apply_banner_text: string;
+  fr_apply_banner_cta: string;
+  fr_apply_banner_href: WpFrLinkField;
+  // Intro
+  fr_intro_paragraphs: WpFrParagraphRow[] | false;
+  // Openings
+  fr_openings_title: string;
+  fr_openings_description: string;
+  fr_openings_cards: WpFrOpeningCard[] | false;
+  // Eligibility
+  fr_eligibility_title: string;
+  fr_eligibility_tabs: WpFrEligibilityTab[] | false;
+  // Prospective
+  fr_prospective_title: string;
+  fr_prospective_intro: string;
+  fr_prospective_blocks: WpFrProseBlock[] | false;
+  // Gallery
+  fr_gallery_images: WpFrGalleryImage[] | false;
+  // Compensation
+  fr_compensation_title: string;
+  fr_compensation_intro: string;
+  fr_compensation_blocks: WpFrProseBlock[] | false;
+  // CTA
+  fr_cta_left_title: string;
+  fr_cta_left_description: string;
+  fr_cta_left_label: string;
+  fr_cta_left_href: WpFrLinkField;
+  fr_cta_right_title: string;
+  fr_cta_right_description: string;
+  fr_cta_right_label: string;
+  fr_cta_right_href: WpFrLinkField;
+}
+
+interface WpFhLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpFhBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpFhSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFhParagraphRow {
+  paragraph: string;
+}
+
+/** ACF native File field, return_format: "array" */
+interface WpFhFileField {
+  url: string;
+  filename: string;
+  mime_type: string;
+}
+
+interface WpFacultyHandbookAcf {
+  // Hero
+  fh_hero_title: string;
+  fh_hero_subline: string;
+  fh_hero_image: string;
+  fh_breadcrumb: WpFhBreadcrumb[] | false;
+  // Sub Nav
+  fh_subnav_label: string;
+  fh_subnav_links: WpFhSubNavLink[] | false;
+  // Apply banner
+  fh_apply_banner_text: string;
+  fh_apply_banner_cta: string;
+  fh_apply_banner_href: WpFhLinkField;
+  // Handbook content
+  fh_content_paragraphs: WpFhParagraphRow[] | false;
+  fh_download_label: string;
+  fh_download_file: WpFhFileField | false;
+  fh_download_new_tab: boolean;
+  // CTA
+  fh_cta_left_title: string;
+  fh_cta_left_description: string;
+  fh_cta_left_label: string;
+  fh_cta_left_href: WpFhLinkField;
+  fh_cta_right_title: string;
+  fh_cta_right_description: string;
+  fh_cta_right_label: string;
+  fh_cta_right_href: WpFhLinkField;
+}
+
+interface WpFdBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpFdSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFdParagraphRow {
+  paragraph: string;
+}
+
+interface WpFdBulletRow {
+  bullet: string;
+}
+
+interface WpFdBulletGroup {
+  lead?: string;
+  items?: { item: string }[] | false;
+}
+
+interface WpFdButton {
+  label: string;
+  href: WpFdLinkField;
+}
+
+interface WpFdLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpFdEnhancementCard {
+  title: string;
+  image: string;
+  href: string;
+}
+
+interface WpFdSlide {
+  image: string;
+  caption: string;
+}
+
+interface WpFdProseBlock {
+  heading?: string;
+  paragraphs?: WpFdParagraphRow[] | false;
+  bullets_lead?: string;
+  bullets?: WpFdBulletRow[] | false;
+}
+
+interface WpFdEffectivenessCard {
+  label: string;
+  image: string;
+}
+
+interface WpFdPolicyCard {
+  title: string;
+  description: string;
+  cta_label: string;
+  cta_href: string;
+}
+
+interface WpFdHighlightItem {
+  image: string;
+  date: string; // "Y-m-d"
+  excerpt: string;
+  href: string;
+}
+
+interface WpFacultyDevelopmentAcf {
+  // Hero
+  fd_hero_title: string;
+  fd_hero_subline: string;
+  fd_hero_image: string;
+  fd_breadcrumb: WpFdBreadcrumb[] | false;
+  // Sub Nav
+  fd_subnav_label: string;
+  fd_subnav_links: WpFdSubNavLink[] | false;
+  // Intro
+  fd_intro_paragraphs: WpFdParagraphRow[] | false;
+  // FDPs
+  fd_fdps_title: string;
+  fd_fdps_intro_paragraphs: WpFdParagraphRow[] | false;
+  fd_fdps_bullet_groups: WpFdBulletGroup[] | false;
+  fd_fdps_outro_paragraphs: WpFdParagraphRow[] | false;
+  fd_fdps_button?: WpFdButton;
+  // Enhancement
+  fd_enhancement_title: string;
+  fd_enhancement_description: string;
+  fd_enhancement_cards: WpFdEnhancementCard[] | false;
+  // Industry
+  fd_industry_title: string;
+  fd_industry_intro_paragraphs: WpFdParagraphRow[] | false;
+  fd_industry_bullets: WpFdBulletRow[] | false;
+  fd_industry_outro_paragraphs: WpFdParagraphRow[] | false;
+  fd_industry_slides: WpFdSlide[] | false;
+  // Evaluation
+  fd_evaluation_title: string;
+  fd_evaluation_intro: string;
+  fd_evaluation_blocks: WpFdProseBlock[] | false;
+  // Teaching Effectiveness
+  fd_te_title: string;
+  fd_te_intro: string;
+  fd_te_cards: WpFdEffectivenessCard[] | false;
+  // Continuous Improvement
+  fd_ci_title: string;
+  fd_ci_intro: string;
+  fd_ci_blocks: WpFdProseBlock[] | false;
+  // Policy & Guidelines
+  fd_policy_title: string;
+  fd_policy_cards: WpFdPolicyCard[] | false;
+  // Highlights
+  fd_highlights_title: string;
+  fd_highlights_items: WpFdHighlightItem[] | false;
+  // Diversity
+  fd_diversity_title: string;
+  fd_diversity_description: string;
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 
@@ -3790,23 +4161,463 @@ export async function getAwardsPage(): Promise<AwardsPageData> {
 // ─── Faculty ──────────────────────────────────────────────────────────────────
 
 export async function getFacultyPage(): Promise<FacultyPageData> {
-  return facultyPageData;
+  const [acf, terms, posts] = await Promise.all([
+    getPageAcf<WpFacultyPageAcf>("faculty"),
+    wpFetch<WpFacultyTypeTerm[]>(
+      `/wp/v2/faculty-type?per_page=100&acf_format=standard`,
+    ),
+    wpFetch<WpFacultyPostWithType[]>(
+      `/wp/v2/faculty?per_page=100&_embed=wp:featuredmedia&acf_format=standard`,
+    ),
+  ]);
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Faculty page ACF not found — falling back to mock data.",
+    );
+    return facultyPageData;
+  }
+
+  // Tab order comes from each term's ACF "order" field (ties fall back to
+  // whatever order the REST API returned them in).
+  const orderedTerms = [...terms].sort(
+    (a, b) => (a.acf?.order ?? 0) - (b.acf?.order ?? 0),
+  );
+
+  const tabs: FacultyTabData[] = orderedTerms.map((term) => ({
+    slug: term.slug,
+    label: term.name,
+    intro: decodeHtml(term.description || ""),
+    members: posts
+      .filter((post) => post.faculty_type_slug === term.slug)
+      .map((post) => ({
+        id: String(post.id),
+        name: decodeHtml(post.title.rendered),
+        // Same field names as the existing mapFaculty() — position +
+        // department combined here since FacultyMember has one string field.
+        position: [post.acf?.position, post.acf?.department]
+          .filter(Boolean)
+          .join(", "),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/faculty-${post.id}/290/360`,
+        href: `/faculty/${post.slug}`,
+      })),
+  }));
+
+  return {
+    hero: {
+      title: acf.ft_hero_title,
+      subline: acf.ft_hero_subline || undefined,
+      image: acf.ft_hero_image,
+      breadcrumb: toArray(acf.ft_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.ft_subnav_label,
+
+    subNav: toArray(acf.ft_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    applyBanner: {
+      text: acf.ft_apply_banner_text,
+      cta: acf.ft_apply_banner_cta,
+      href: acf.ft_apply_banner_href?.url ?? "#",
+    },
+
+    tabs,
+
+    cta: {
+      left: {
+        title: acf.ft_cta_left_title || undefined,
+        description: acf.ft_cta_left_description,
+        cta: acf.ft_cta_left_label,
+        href: acf.ft_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.ft_cta_right_title || undefined,
+        description: acf.ft_cta_right_description,
+        cta: acf.ft_cta_right_label,
+        href: acf.ft_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getDeanFacultyPage(): Promise<DeanFacultyPageData> {
-  return deanFacultyPageData;
+  const acf = await getPageAcf<WpDeanFacultyAcf>("dean-faculty");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Dean (Faculty) page ACF not found — falling back to mock data.",
+    );
+    return deanFacultyPageData;
+  }
+
+  // Desk paragraphs: each row is a WYSIWYG that may contain multiple <p>
+  // tags — flatten every <p> across every row into one paragraph list,
+  // exactly like getDeanResearchPage does for dr_desk_paragraphs.
+  const deskParagraphs = toArray(acf.df_desk_paragraphs).flatMap((row) =>
+    extractParagraphs(row.paragraph),
+  );
+
+  return {
+    hero: {
+      title: acf.df_hero_title,
+      subline: acf.df_hero_subline || undefined,
+      image: acf.df_hero_image,
+      breadcrumb: toArray(acf.df_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.df_subnav_label,
+
+    subNav: toArray(acf.df_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    desk: {
+      title: acf.df_desk_title,
+      paragraphs: deskParagraphs,
+      name: acf.df_desk_name,
+      role: acf.df_desk_role,
+      image: acf.df_desk_image,
+      email: acf.df_desk_email,
+    },
+
+    cta: {
+      left: {
+        title: acf.df_cta_left_title || undefined,
+        description: acf.df_cta_left_description,
+        cta: acf.df_cta_left_label,
+        href: acf.df_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.df_cta_right_title || undefined,
+        description: acf.df_cta_right_description,
+        cta: acf.df_cta_right_label,
+        href: acf.df_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getFacultyRecruitmentPage(): Promise<FacultyRecruitmentPageData> {
-  return facultyRecruitmentPageData;
+  const acf = await getPageAcf<WpFacultyRecruitmentAcf>("faculty-recruitment");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Faculty Recruitment page ACF not found — falling back to mock data.",
+    );
+    return facultyRecruitmentPageData;
+  }
+
+  const mapProseBlocks = (blocks: WpFrProseBlock[] | false): TitledSubBlock[] =>
+    toArray(blocks).map((b) => ({
+      heading: b.heading || undefined,
+      paragraphs: toArray(b.paragraphs).map((p) => p.paragraph),
+      bulletsLead: b.bullets_lead || undefined,
+      bullets: toArray(b.bullets).map((x) => x.bullet),
+    }));
+
+  return {
+    hero: {
+      title: acf.fr_hero_title,
+      subline: acf.fr_hero_subline || undefined,
+      image: acf.fr_hero_image,
+      breadcrumb: toArray(acf.fr_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.fr_subnav_label,
+
+    subNav: toArray(acf.fr_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    applyBanner: {
+      text: acf.fr_apply_banner_text,
+      cta: acf.fr_apply_banner_cta,
+      href: acf.fr_apply_banner_href?.url ?? "#",
+    },
+
+    intro: toArray(acf.fr_intro_paragraphs).map((p) => p.paragraph),
+
+    openings: {
+      title: acf.fr_openings_title,
+      description: acf.fr_openings_description,
+      cards: toArray(acf.fr_openings_cards).map((c, i) => ({
+        id: `o${i + 1}`,
+        title: c.title,
+        image: c.image,
+        href: c.href,
+      })),
+    },
+
+    eligibility: {
+      title: acf.fr_eligibility_title,
+      tabs: toArray(acf.fr_eligibility_tabs).map((t) => ({
+        slug: slugify(t.label),
+        label: t.label,
+        paragraphs: toArray(t.paragraphs).map((p) => p.paragraph),
+        bullets: toArray(t.bullets).length
+          ? toArray(t.bullets).map((b) => b.bullet)
+          : undefined,
+      })),
+    },
+
+    prospective: {
+      title: acf.fr_prospective_title,
+      intro: acf.fr_prospective_intro || undefined,
+      blocks: mapProseBlocks(acf.fr_prospective_blocks),
+    },
+
+    gallery: {
+      images: toArray(acf.fr_gallery_images).map((img) => img.url),
+    },
+
+    compensation: {
+      title: acf.fr_compensation_title,
+      intro: acf.fr_compensation_intro || undefined,
+      blocks: mapProseBlocks(acf.fr_compensation_blocks),
+    },
+
+    cta: {
+      left: {
+        title: acf.fr_cta_left_title || undefined,
+        description: acf.fr_cta_left_description,
+        cta: acf.fr_cta_left_label,
+        href: acf.fr_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.fr_cta_right_title || undefined,
+        description: acf.fr_cta_right_description,
+        cta: acf.fr_cta_right_label,
+        href: acf.fr_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getFacultyHandbookPage(): Promise<FacultyHandbookPageData> {
-  return facultyHandbookPageData;
+  const acf = await getPageAcf<WpFacultyHandbookAcf>("faculty-handbook");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Faculty Handbook page ACF not found — falling back to mock data.",
+    );
+    return facultyHandbookPageData;
+  }
+
+  if (!acf.fh_download_file) {
+    console.warn(
+      "[wordpress.ts] Faculty Handbook PDF not uploaded yet — falling back to mock download link.",
+    );
+  }
+
+  return {
+    hero: {
+      title: acf.fh_hero_title,
+      subline: acf.fh_hero_subline || undefined,
+      image: acf.fh_hero_image,
+      breadcrumb: toArray(acf.fh_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.fh_subnav_label,
+
+    subNav: toArray(acf.fh_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    applyBanner: {
+      text: acf.fh_apply_banner_text,
+      cta: acf.fh_apply_banner_cta,
+      href: acf.fh_apply_banner_href?.url ?? "#",
+    },
+
+    content: {
+      paragraphs: toArray(acf.fh_content_paragraphs).flatMap((row) =>
+        extractParagraphs(row.paragraph),
+      ),
+      downloadButton: {
+        label: acf.fh_download_label,
+        href:
+          acf.fh_download_file?.url ??
+          facultyHandbookPageData.content.downloadButton.href,
+        external: acf.fh_download_new_tab ?? true,
+      },
+    },
+
+    cta: {
+      left: {
+        title: acf.fh_cta_left_title || undefined,
+        description: acf.fh_cta_left_description,
+        cta: acf.fh_cta_left_label,
+        href: acf.fh_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.fh_cta_right_title || undefined,
+        description: acf.fh_cta_right_description,
+        cta: acf.fh_cta_right_label,
+        href: acf.fh_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getFacultyDevelopmentPage(): Promise<FacultyDevelopmentPageData> {
-  return facultyDevelopmentPageData;
+  const [acf, contact] = await Promise.all([
+    getPageAcf<WpFacultyDevelopmentAcf>("faculty-development-evaluation"),
+    getSiteSettings(),
+  ]);
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Faculty Development page ACF not found — falling back to mock data.",
+    );
+    return facultyDevelopmentPageData;
+  }
+
+  const mapProseBlocks = (blocks: WpFdProseBlock[] | false): TitledSubBlock[] =>
+    toArray(blocks).map((b) => ({
+      heading: b.heading || undefined,
+      paragraphs: toArray(b.paragraphs).map((p) => p.paragraph),
+      bulletsLead: b.bullets_lead || undefined,
+      bullets: toArray(b.bullets).map((x) => x.bullet),
+    }));
+
+  return {
+    hero: {
+      title: acf.fd_hero_title,
+      subline: acf.fd_hero_subline || undefined,
+      image: acf.fd_hero_image,
+      breadcrumb: toArray(acf.fd_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.fd_subnav_label,
+
+    subNav: toArray(acf.fd_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.fd_intro_paragraphs).map((p) => p.paragraph),
+
+    fdps: {
+      title: acf.fd_fdps_title,
+      introParagraphs: toArray(acf.fd_fdps_intro_paragraphs).map(
+        (p) => p.paragraph,
+      ),
+      bulletGroups: toArray(acf.fd_fdps_bullet_groups).map((g) => ({
+        lead: g.lead || undefined,
+        items: toArray(g.items).map((i) => i.item),
+      })),
+      outroParagraphs: toArray(acf.fd_fdps_outro_paragraphs).map(
+        (p) => p.paragraph,
+      ),
+      button: acf.fd_fdps_button?.href?.url
+        ? {
+            label: acf.fd_fdps_button.label,
+            href: acf.fd_fdps_button.href.url,
+            external: acf.fd_fdps_button.href.target === "_blank",
+          }
+        : undefined,
+    },
+
+    enhancement: {
+      title: acf.fd_enhancement_title,
+      description: acf.fd_enhancement_description,
+      cards: toArray(acf.fd_enhancement_cards).map((c, i) => ({
+        id: `e${i + 1}`,
+        title: c.title,
+        image: c.image,
+        href: c.href,
+      })),
+    },
+
+    industry: {
+      title: acf.fd_industry_title,
+      introParagraphs: toArray(acf.fd_industry_intro_paragraphs).map(
+        (p) => p.paragraph,
+      ),
+      bullets: toArray(acf.fd_industry_bullets).map((b) => b.bullet),
+      outroParagraphs: toArray(acf.fd_industry_outro_paragraphs).map(
+        (p) => p.paragraph,
+      ),
+      slides: toArray(acf.fd_industry_slides).map((s) => ({
+        image: s.image,
+        caption: s.caption,
+      })),
+    },
+
+    evaluation: {
+      title: acf.fd_evaluation_title,
+      intro: acf.fd_evaluation_intro || undefined,
+      blocks: mapProseBlocks(acf.fd_evaluation_blocks),
+    },
+
+    teachingEffectiveness: {
+      title: acf.fd_te_title,
+      intro: acf.fd_te_intro || undefined,
+      cards: toArray(acf.fd_te_cards).map((c, i) => ({
+        id: `te${i + 1}`,
+        label: c.label,
+        image: c.image,
+      })),
+    },
+
+    continuousImprovement: {
+      title: acf.fd_ci_title,
+      intro: acf.fd_ci_intro || undefined,
+      blocks: mapProseBlocks(acf.fd_ci_blocks),
+    },
+
+    policyGuidelines: {
+      title: acf.fd_policy_title,
+      cards: toArray(acf.fd_policy_cards).map((c, i) => ({
+        id: `p${i + 1}`,
+        title: c.title,
+        description: c.description,
+        ctaLabel: c.cta_label,
+        ctaHref: c.cta_href,
+      })),
+    },
+
+    highlights: {
+      title: acf.fd_highlights_title,
+      items: toArray(acf.fd_highlights_items).map((h, i) => ({
+        id: `h${i + 1}`,
+        image: h.image,
+        date: formatIsoDate(h.date),
+        excerpt: h.excerpt,
+        href: h.href,
+      })),
+    },
+
+    diversity: {
+      title: acf.fd_diversity_title,
+      description: acf.fd_diversity_description,
+    },
+
+    contact,
+  };
 }
 
 // ─── Placements ───────────────────────────────────────────────────────────────
