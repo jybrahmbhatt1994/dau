@@ -566,7 +566,7 @@ export interface CampusLifePageData {
   residenceLife: FeatureSection; // captioned single-image carousel
   sportsFacilities: FeatureSection; // two-up images
   /** "Student Clubs" — reuses ProgramSlider (pass description "" for title-only). */
-  clubs: SectionIntro & { cards: ProgramCard[] };
+  clubs: StudentClubsData;
   studentBody: { title: string; members: FacultyMember[] };
   ieee: FeatureSection; // single-image carousel (no caption)
   successStories: SectionIntro & { items: SuccessStory[] };
@@ -1687,7 +1687,11 @@ export interface ClubTab {
 
 export interface StudentClubsData {
   title: string;
-  tabs: ClubTab[];
+  tabs: Array<{
+    id: string;
+    label: string;
+    clubs: ClubEntry[];
+  }>;
 }
 
 // ============================================================================
