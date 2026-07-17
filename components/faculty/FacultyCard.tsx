@@ -1,7 +1,39 @@
 import Image from "next/image";
-import type { FacultyCardData } from "@/lib/types";
+import Link from "next/link";
+import type { FacultyMember, FacultyCardData } from "@/lib/types";
 
-// ─── Small inline icons ─────────────────────────────────────────────────────
+// ============================================================================
+//  SIMPLE CARD — for FacultyMember (id, name, position, image, href)
+//  Used by FacultyMembersGrid.tsx (Placement Team, Dean pages, etc.)
+//  4-column portrait grid — image on top, name + position below, wrapped
+//  in a Link since FacultyMember always has an href.
+// ============================================================================
+
+export function FacultyCard({ member }: { member: FacultyMember }) {
+  return (
+    <Link href={member.href} className="group block">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-line">
+        <Image
+          src={member.image}
+          alt={member.name}
+          fill
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <h3 className="mt-4 font-display text-base font-bold text-navy">
+        {member.name}
+      </h3>
+      <p className="mt-1 text-sm text-ash">{member.position}</p>
+    </Link>
+  );
+}
+
+// ============================================================================
+//  RICH CARD — for FacultyCardData (department, interests, phone, address,
+//  email). Used by FacultyExplorer.tsx (Faculty directory page).
+//  Non-interactive — no individual faculty detail page exists.
+// ============================================================================
 
 function PhoneIcon() {
   return (
@@ -56,16 +88,9 @@ function MailIcon() {
   );
 }
 
-/**
- * DESTINATION: components/faculty/FacultyCard.tsx
- *
- * Non-interactive card — no individual faculty detail page exists, so this
- * is a plain <div>, not a <Link>. No hover/click affordance.
- */
-export function FacultyCard({ member }: { member: FacultyCardData }) {
+export function FacultyDirectoryCard({ member }: { member: FacultyCardData }) {
   return (
     <div className="flex bg-surface">
-      {/* Photo */}
       <div className="relative w-[180px] shrink-0 overflow-hidden sm:w-[220px]">
         <Image
           src={member.image}
@@ -76,9 +101,7 @@ export function FacultyCard({ member }: { member: FacultyCardData }) {
         />
       </div>
 
-      {/* Details */}
       <div className="flex flex-1 flex-col justify-center gap-5 p-6">
-        {/* Name + position */}
         <div className="space-y-1">
           <h3 className="font-display text-lg font-bold text-navy">
             {member.name}
@@ -89,14 +112,12 @@ export function FacultyCard({ member }: { member: FacultyCardData }) {
           </p>
         </div>
 
-        {/* Research interests */}
         {member.interests && (
           <p className="text-sm leading-relaxed text-black/70">
             {member.interests}
           </p>
         )}
 
-        {/* Contact block */}
         {(member.phone || member.address || member.email) && (
           <div className="space-y-2 text-sm text-black/70">
             {member.phone && (

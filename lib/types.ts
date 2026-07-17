@@ -1819,6 +1819,7 @@ export interface ConvocationCard {
   title: string;
   date: string; // full display date, e.g. "17 January, 2026"
   image: string;
+  href: string;
 }
  
 export interface ConvocationPageData {

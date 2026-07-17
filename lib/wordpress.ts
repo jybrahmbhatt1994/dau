@@ -112,6 +112,20 @@ import type {
   TeachingFellowCardData,
   TeachingFellowsPageData,
   TeachingFellowsTabData,
+  DoctoralScholarCardData,
+  RecentGraduateCardData,
+  DoctoralScholarsPageData,
+  AcademicSupportDetailPageData,
+  ComputationalResourcesPageData,
+  AlumniPageData,
+  ResourcesPageData,
+  PoliciesPageData,
+  AnnualReportPageData,
+  ConvocationPageData,
+  ConvocationDetailPageData,
+  FacultyOnTenurePageData,
+  StaffPageData,
+  StaffCardData,
 } from "@/lib/types";
 
 // ============================================================================

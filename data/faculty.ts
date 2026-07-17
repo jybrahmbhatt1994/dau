@@ -1,20 +1,23 @@
-import type { FacultyPageData } from "@/lib/types";
+import type { FacultyPageData, FacultyCardData } from "@/lib/types";
 
 const img = (w: number, h: number, seed: string) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`;
 
 /** Generate N faculty members with a unique seed per card for picsum images */
-const makeFaculty = (slug: string, count: number) =>
+const makeFaculty = (slug: string, count: number): FacultyCardData[] =>
   Array.from({ length: count }, (_, i) => ({
     id: `${slug}-${i + 1}`,
     name: "Faculty Name",
-    position: "Position, Department",
+    position: "Assistant Professor",
+    department: "Computer Science",
+    interests:
+      "Machine Learning, Statistical Signal Processing, RF Communications, Computer Vision, Autonomous Vehicles",
+    phone: "079-68261598",
+    address: "# 3208, FB-3, DAU, Gandhinagar, Gujarat, India – 382007",
+    email: `faculty_${i + 1}@dau.ac.in`,
     image: img(290, 360, `${slug}-${i + 1}`),
     href: `/faculty/${slug}/${i + 1}`,
   }));
-
-const INTRO =
-  "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs in Information and Communication Technology (ICT) in India since 2001. The pedagogy of ICT discipline should make a well-integration of Information Technology, Communication Technology, Electronics Engineering and Social Sciences courses with a solid grounding in Mathematics and Science, Humanities and Social Sciences, which a student cannot be trained in conventional Computer Science & Engineering or Electronics and Communication Engineering alone.";
 
 export const facultyPageData: FacultyPageData = {
   hero: {
@@ -37,43 +40,34 @@ export const facultyPageData: FacultyPageData = {
     { label: "Link 5", href: "/faculty/handbook" },
   ],
 
-  applyBanner: {
-    text: "Interested in becoming a faculty@DAU",
-    cta: "Apply Now",
-    href: "/faculty/recruitment/apply",
-  },
-
   // Faculty categorised by type — one tab per category.
-  // Data shape is keyed by `slug` so CMS can fetch each category separately.
+  // NOTE: no `intro` field here — the redesigned FacultyTabData is just
+  // { slug, label, members }. The old cream "Apply Banner" and per-tab
+  // intro paragraph were both dropped in the Faculty page redesign.
   tabs: [
     {
       slug: "regular-faculty",
       label: "Regular Faculty",
-      intro: INTRO,
       members: makeFaculty("regular", 28),
     },
     {
       slug: "visiting-faculty",
       label: "Visiting Faculty",
-      intro: INTRO,
       members: makeFaculty("visiting", 8),
     },
     {
       slug: "distinguished-profs",
       label: "Distinguished Profs.",
-      intro: INTRO,
       members: makeFaculty("distinguished", 6),
     },
     {
       slug: "professor-of-practice",
       label: "Professor of Practice",
-      intro: INTRO,
       members: makeFaculty("practice", 5),
     },
     {
       slug: "international-faculty",
       label: "International Faculty",
-      intro: INTRO,
       members: makeFaculty("international", 4),
     },
   ],

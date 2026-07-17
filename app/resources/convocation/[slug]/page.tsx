@@ -25,7 +25,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const data = await getConvocationDetailPage(slug);
   return {
-    title: `${data.title} — Dhirubhai Ambani University`,
+    title: `${data.hero.title} — Dhirubhai Ambani University`,
   };
 }
 

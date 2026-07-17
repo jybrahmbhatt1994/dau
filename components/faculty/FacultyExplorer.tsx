@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Container } from "@/components/ui/Container";
-import { FacultyCard } from "@/components/faculty/FacultyCard";
+import { FacultyDirectoryCard  } from "@/components/faculty/FacultyCard";
 import { ChevronRight } from "@/components/ui/icons";
 import type { FacultyTabData } from "@/lib/types";
 
@@ -135,7 +135,7 @@ export function FacultyExplorer({ tabs }: { tabs: FacultyTabData[] }) {
         {pageItems.length > 0 ? (
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
             {pageItems.map((member) => (
-              <FacultyCard key={member.id} member={member} />
+              <FacultyDirectoryCard key={member.id} member={member} />
             ))}
           </div>
         ) : (
