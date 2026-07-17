@@ -1,22 +1,16 @@
+// components/doctoral-scholars/DoctoralScholarsPage.tsx — REPLACE existing
+
 import { PageHero } from "@/components/layout/PageHero";
 import { PageSubNav } from "@/components/layout/PageSubNav";
-import { FacultyExplorer } from "@/components/faculty/FacultyExplorer";
+import { DoctoralScholarsExplorer } from "@/components/doctoral-scholars/DoctoralScholarsExplorer";
 import { SplitCta } from "@/components/academics/SplitCta";
-import { getFacultyPage } from "@/lib/wordpress";
+import type { DoctoralScholarsPageData } from "@/lib/types";
 
-export const revalidate = 60;
-
-export async function generateMetadata() {
-  const data = await getFacultyPage();
-  return {
-    title: `${data.hero.title} — Dhirubhai Ambani University`,
-    description: data.hero.subline?.slice(0, 160) ?? undefined,
-  };
-}
-
-export default async function FacultyPage() {
-  const data = await getFacultyPage();
-
+export function DoctoralScholarsPage({
+  data,
+}: {
+  data: DoctoralScholarsPageData;
+}) {
   return (
     <>
       <PageHero
@@ -28,7 +22,10 @@ export default async function FacultyPage() {
 
       <PageSubNav label={data.subNavLabel} links={data.subNav} />
 
-      <FacultyExplorer tabs={data.tabs} />
+      <DoctoralScholarsExplorer
+        doctoralScholars={data.doctoralScholars}
+        recentGraduates={data.recentGraduates}
+      />
 
       <SplitCta calendar={data.cta.left} catalogue={data.cta.right} />
     </>

@@ -1,22 +1,13 @@
+// components/staff/StaffPage.tsx
+// ============================================================================
+
 import { PageHero } from "@/components/layout/PageHero";
 import { PageSubNav } from "@/components/layout/PageSubNav";
-import { FacultyExplorer } from "@/components/faculty/FacultyExplorer";
+import { StaffExplorer } from "@/components/staff/StaffExplorer";
 import { SplitCta } from "@/components/academics/SplitCta";
-import { getFacultyPage } from "@/lib/wordpress";
+import type { StaffPageData } from "@/lib/types";
 
-export const revalidate = 60;
-
-export async function generateMetadata() {
-  const data = await getFacultyPage();
-  return {
-    title: `${data.hero.title} — Dhirubhai Ambani University`,
-    description: data.hero.subline?.slice(0, 160) ?? undefined,
-  };
-}
-
-export default async function FacultyPage() {
-  const data = await getFacultyPage();
-
+export function StaffPage({ data }: { data: StaffPageData }) {
   return (
     <>
       <PageHero
@@ -28,7 +19,7 @@ export default async function FacultyPage() {
 
       <PageSubNav label={data.subNavLabel} links={data.subNav} />
 
-      <FacultyExplorer tabs={data.tabs} />
+      <StaffExplorer members={data.members} />
 
       <SplitCta calendar={data.cta.left} catalogue={data.cta.right} />
     </>

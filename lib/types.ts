@@ -874,23 +874,33 @@ export interface AwardsPageData {
  * One faculty category (= one tab on the explorer).
  * Keyed by `slug` so CMS can fetch each category's faculty independently.
  */
+
+export interface FacultyCardData {
+  id: string;
+  name: string;
+  position: string;
+  department: string;
+  /** Research interests / specialisation line shown under position. */
+  interests?: string;
+  phone?: string;
+  address?: string;
+  email?: string;
+  image: string;
+  href: string;
+}
+
 export interface FacultyTabData {
-  /** Stable slug used for data lookups and any future routing */
   slug: string;
-  /** Pill label shown in the tab row (e.g. "Regular Faculty") */
   label: string;
-  /** Intro paragraph shown below the tabs when this tab is active */
-  intro: string;
-  members: FacultyMember[];
+  members: FacultyCardData[];
 }
 
 export interface FacultyPageData {
   hero: PageHeroContent;
   subNavLabel: string;
   subNav: SubNavLink[];
-  /** Cream banner near the top — "Interested in becoming a faculty" + CTA */
-  applyBanner: { text: string; cta: string; href: string };
   tabs: FacultyTabData[];
+  /** left = gold ("Dean (Faculty)"), right = red ("Faculty Recruitment") */
   cta: { left: CtaPanel; right: CtaPanel };
 }
 
@@ -1537,4 +1547,279 @@ export interface ScholarshipDetailPageData {
   };
 
   cta: { left: CtaPanel; right: CtaPanel };
+}
+
+export interface AcademicSupportDetailPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Raw HTML from a WP wysiwyg field — may contain inline links. Rendered
+   *  with dangerouslySetInnerHTML. Surface background. */
+  introHtml: string;
+  /** Timing/schedule grid — e.g. "During the semester" / "9.30 a.m. to..." */
+  schedule: ScheduleCell[];
+  /** Raw HTML from a WP wysiwyg field — may contain inline links. Surface
+   *  background, same styling as intro. */
+  outroHtml: string;
+}
+
+export interface ComputationalResourcesPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  /** Paragraphs on the left, single image on the right. No CTA on this page. */
+  content: {
+    paragraphs: string[];
+    image: string;
+  };
+}
+
+export interface StaffCardData {
+  id: string;
+  name: string;
+  position: string;
+  department: string;
+  phone?: string;
+  email?: string;
+  image: string;
+}
+ 
+export interface StaffPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  members: StaffCardData[];
+  /** left = gold ("Dean (Faculty)"), right = red ("Faculty Recruitment") */
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  REPLACE the Doctoral Scholars types in lib/types.ts with these.
+//  Key change: the two tabs now have genuinely different card shapes, so
+//  the page data holds two explicit named lists instead of a generic
+//  tabs[] array.
+// ============================================================================
+
+export interface DoctoralScholarCardData {
+  id: string;
+  name: string;
+  advisor?: string;
+  yearOfJoiningDisplay: string;
+  yearOfJoiningYear: number;
+  image: string;
+}
+
+/** Much richer card — only used for the "Recent Graduates" tab. */
+export interface RecentGraduateCardData {
+  id: string;
+  name: string;
+  advisor?: string;
+  yearOfJoiningDisplay: string;
+  yearOfJoiningYear: number;
+  yearOfGraduationDisplay: string;
+  /** Used to group recent graduates by graduation year instead of joining year. */
+  yearOfGraduationYear: number;
+  thesisTopic?: string;
+  /** "---" shown when empty, per the reference design. */
+  postPhdEmployment?: string;
+  journalsContent?: string;
+  awardsContent?: string;
+  personalWebpage?: string;
+  image: string;
+}
+
+export interface DoctoralScholarsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  doctoralScholars: { label: string; members: DoctoralScholarCardData[] };
+  recentGraduates: { label: string; members: RecentGraduateCardData[] };
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  ADD to lib/types.ts — Teaching Fellows page (post_type=teaching-fellows)
+// ============================================================================
+
+export interface TeachingFellowCardData {
+  id: string;
+  name: string;
+  position: string;
+  dateOfJoining: string; // display string, e.g. "July, 2024"
+  office?: string;
+  image: string;
+}
+
+export interface TeachingFellowsTabData {
+  slug: string;
+  label: string;
+  members: TeachingFellowCardData[];
+}
+
+export interface TeachingFellowsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  tabs: TeachingFellowsTabData[];
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+export interface ClubContact {
+  name: string;
+  role: string;
+}
+
+export interface ClubEntry {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  contacts: ClubContact[];
+  email: string;
+  instagram?: string;
+}
+
+export interface ClubTab {
+  id: string;
+  label: string;
+  clubs: ClubEntry[];
+}
+
+export interface StudentClubsData {
+  title: string;
+  tabs: ClubTab[];
+}
+
+// ============================================================================
+//  ADD to lib/types.ts — Alumni page
+//  Reuses LeaderProfileContent (already declared for Leadership page) and
+//  HomeData["contact"] (ConnectContact shape) — do not redeclare either.
+// ============================================================================
+
+export interface AlumniIntroData {
+  title: string;
+  image: string;
+  email: string;
+  paragraphs: string[];
+}
+
+export interface AlumniMediaTextRow {
+  id: string;
+  image: string;
+  paragraphs: string[];
+  button?: { label: string; href: string };
+  /** Which side the image sits on for this row (alternating zigzag layout). */
+  imageSide: "left" | "right";
+}
+
+export interface AlumniEventsSectionData {
+  title: string;
+  rows: AlumniMediaTextRow[];
+}
+
+export interface AlumniMemoryCard {
+  id: string;
+  image: string;
+  caption: string;
+  button: { label: string; href: string };
+}
+
+export interface AlumniMemoriesSectionData {
+  title: string;
+  cards: AlumniMemoryCard[];
+}
+
+export interface AlumniNewsletterItem {
+  id: string;
+  image: string;
+  caption: string;
+  href?: string;
+}
+
+export interface AlumniNewsletterSectionData {
+  title: string;
+  items: AlumniNewsletterItem[];
+}
+
+export interface AlumniUsefulLink {
+  label: string;
+  href: string;
+}
+
+export interface AlumniUsefulLinksData {
+  title: string;
+  links: AlumniUsefulLink[];
+}
+
+export interface AlumniPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  directorMessage: LeaderProfileContent;
+  intro: AlumniIntroData;
+  events: AlumniEventsSectionData;
+  memories: AlumniMemoriesSectionData;
+  newsletter: AlumniNewsletterSectionData;
+  usefulLinks: AlumniUsefulLinksData;
+  /** Reuses the homepage ConnectContact data shape (from Site Settings). */
+  contact: HomeData["contact"];
+}
+
+// ============================================================================
+//  ADD to lib/types.ts — Resources page
+// ============================================================================
+
+export interface ResourceLinkCard {
+  id: string;
+  label: string;
+  icon: string; // uploaded SVG/image URL from WordPress
+  href: string;
+}
+
+export interface ResourcesPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  cards: ResourceLinkCard[];
+}
+
+export interface PolicyLinkItem {
+  id: string;
+  title: string;
+  fileUrl: string;
+}
+ 
+export interface PoliciesPageData {
+  hero: PageHeroContent;
+  sectionTitle: string;
+  sectionSubtitle: string;
+  items: PolicyLinkItem[];
+}
+
+export interface AnnualReportItem {
+  id: string;
+  coverImage: string;
+  year: string; // e.g. "2024-25"
+  fileUrl: string;
+}
+ 
+export interface AnnualReportPageData {
+  hero: PageHeroContent;
+  sectionTitle: string;
+  sectionSubtitle: string;
+  items: AnnualReportItem[];
+}
+
+export interface ConvocationCard {
+  id: string;
+  title: string;
+  date: string; // full display date, e.g. "17 January, 2026"
+  image: string;
+}
+ 
+export interface ConvocationPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  cards: ConvocationCard[];
 }

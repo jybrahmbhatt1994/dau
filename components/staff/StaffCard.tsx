@@ -1,7 +1,5 @@
 import Image from "next/image";
-import type { FacultyCardData } from "@/lib/types";
-
-// ─── Small inline icons ─────────────────────────────────────────────────────
+import type { StaffCardData } from "@/lib/types";
 
 function PhoneIcon() {
   return (
@@ -16,24 +14,6 @@ function PhoneIcon() {
       className="h-4 w-4 shrink-0 text-ash"
     >
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z" />
-    </svg>
-  );
-}
-
-function MapPinIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      className="h-4 w-4 shrink-0 text-ash"
-    >
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" />
-      <circle cx="12" cy="10" r="3" />
     </svg>
   );
 }
@@ -57,16 +37,19 @@ function MailIcon() {
 }
 
 /**
- * DESTINATION: components/faculty/FacultyCard.tsx
+ * DESTINATION: components/staff/StaffCard.tsx
  *
- * Non-interactive card — no individual faculty detail page exists, so this
- * is a plain <div>, not a <Link>. No hover/click affordance.
+ * Uses CSS Grid (not flex) for the outer layout — grid items stretch to
+ * fill the row height by default, and `h-full` on the image wrapper makes
+ * this explicit rather than relying on flex stretch behavior. Combined
+ * with min-h-[240px] on the card, the photo always renders at full size
+ * regardless of how little text sits beside it.
  */
-export function FacultyCard({ member }: { member: FacultyCardData }) {
+export function StaffCard({ member }: { member: StaffCardData }) {
   return (
-    <div className="flex bg-surface">
-      {/* Photo */}
-      <div className="relative w-[180px] shrink-0 overflow-hidden sm:w-[220px]">
+    <div className="grid min-h-[240px] grid-cols-[180px_1fr] bg-surface sm:grid-cols-[220px_1fr]">
+      {/* Photo — h-full guarantees it fills the row exactly */}
+      <div className="relative h-full w-full overflow-hidden">
         <Image
           src={member.image}
           alt={member.name}
@@ -77,8 +60,7 @@ export function FacultyCard({ member }: { member: FacultyCardData }) {
       </div>
 
       {/* Details */}
-      <div className="flex flex-1 flex-col justify-center gap-5 p-6">
-        {/* Name + position */}
+      <div className="flex flex-col justify-center gap-5 p-6">
         <div className="space-y-1">
           <h3 className="font-display text-lg font-bold text-navy">
             {member.name}
@@ -89,28 +71,12 @@ export function FacultyCard({ member }: { member: FacultyCardData }) {
           </p>
         </div>
 
-        {/* Research interests */}
-        {member.interests && (
-          <p className="text-sm leading-relaxed text-black/70">
-            {member.interests}
-          </p>
-        )}
-
-        {/* Contact block */}
-        {(member.phone || member.address || member.email) && (
+        {(member.phone || member.email) && (
           <div className="space-y-2 text-sm text-black/70">
             {member.phone && (
               <div className="flex items-center gap-2">
                 <PhoneIcon />
                 <span>{member.phone}</span>
-              </div>
-            )}
-            {member.address && (
-              <div className="flex items-start gap-2">
-                <span className="mt-0.5">
-                  <MapPinIcon />
-                </span>
-                <span>{member.address}</span>
               </div>
             )}
             {member.email && (

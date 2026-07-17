@@ -78,15 +78,117 @@ export const campusLifePageData: CampusLifePageData = {
 
   clubs: {
     title: "Student Clubs",
-    description: "", // title-only heading
-    cards: Array.from({ length: 6 }, (_, n) => ({
-      id: `club-${n + 1}`,
-      title: "Club Name",
-      excerpt:
-        "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs",
-      image: img(600, 400, `club-${n + 1}`),
-      href: "#",
-    })),
+    tabs: [
+      {
+        id: "clubs",
+        label: "Studen Clubs",
+        clubs: [
+          {
+            id: "ai",
+            name: "AI Club",
+            image: img(760, 620, "club-ai"),
+            description:
+              "The AI Club at DAU (Formerly DA-IICT) serves as a hub for hands-on learning, research collaboration, and community-driven projects. Through workshops, hackathons, speaker sessions, and mentorship programs, we create opportunities for students to deepen their understanding of AI fundamentals and engage in advanced topics. Our club members work on diverse projects, from building intelligent systems and predictive models to exploring computer vision, natural language processing, and deep learning.",
+            contacts: [
+              { name: "Jash Shah", role: "Convener" },
+              { name: "Sharvil Oza", role: "Deputy Convener" },
+            ],
+            email: "ai_club[at]dau[dot]ac[dot]in",
+            instagram: "#",
+          },
+          {
+            id: "press",
+            name: "Press Club",
+            image: img(760, 620, "club-press"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "press_club[at]dau[dot]ac[dot]in",
+            instagram: "#",
+          },
+          {
+            id: "debating",
+            name: "The Debating Society",
+            image: img(760, 620, "club-debate"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "debsoc[at]dau[dot]ac[dot]in",
+            instagram: "#",
+          },
+          {
+            id: "electronics",
+            name: "Electronics Hobby Club",
+            image: img(760, 620, "club-electronics"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "ehc[at]dau[dot]ac[dot]in",
+          },
+          {
+            id: "music",
+            name: "Music Club",
+            image: img(760, 620, "club-music"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "music_club[at]dau[dot]ac[dot]in",
+          },
+          {
+            id: "robotics",
+            name: "Robotics Club",
+            image: img(760, 620, "club-robotics"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "robotics[at]dau[dot]ac[dot]in",
+          },
+        ],
+      },
+      {
+        id: "committees",
+        label: "Student Committees",
+        clubs: [
+          {
+            id: "cultural",
+            name: "Cultural Committee",
+            image: img(760, 620, "comm-cultural"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "cultural[at]dau[dot]ac[dot]in",
+            instagram: "#",
+          },
+          {
+            id: "sports-comm",
+            name: "Sports Committee",
+            image: img(760, 620, "comm-sports"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "sports[at]dau[dot]ac[dot]in",
+          },
+          {
+            id: "placement-comm",
+            name: "Placement Committee",
+            image: img(760, 620, "comm-placement"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "placement[at]dau[dot]ac[dot]in",
+          },
+          {
+            id: "alumni-comm",
+            name: "Alumni Committee",
+            image: img(760, 620, "comm-alumni"),
+            description:
+              "Dhirubhai Ambani University (Formerly DA-IICT) has played a pioneering role in developing innovative undergraduate programs.",
+            contacts: [{ name: "Student Name", role: "Convener" }],
+            email: "alumni[at]dau[dot]ac[dot]in",
+          },
+        ],
+      },
+    ],
   },
 
   studentBody: {

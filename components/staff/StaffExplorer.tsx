@@ -2,36 +2,27 @@
 
 import { useMemo, useState } from "react";
 import { Container } from "@/components/ui/Container";
-import { FacultyCard } from "@/components/faculty/FacultyCard";
+import { StaffCard } from "@/components/staff/StaffCard";
 import { ChevronRight } from "@/components/ui/icons";
-import type { FacultyTabData } from "@/lib/types";
+import type { StaffCardData } from "@/lib/types";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const PAGE_SIZE = 10; // 2 columns x 5 rows, matches Figma
+const PAGE_SIZE = 10;
 
 /**
- * DESTINATION: components/faculty/FacultyExplorer.tsx
+ * DESTINATION: components/staff/StaffExplorer.tsx
  *
- * Fully client-side interactive explorer:
- *   - Tab pills switch between pre-fetched faculty-type groups
- *   - Search filters by name / position / department (substring match)
- *   - Alphabet strip filters by first letter of name
- *   - Pagination slices the filtered result, 10 per page
- *
- * All data is passed in already fetched from WordPress (per tab, up to 100
- * members) — no network calls happen during interaction, so filtering is
- * instant regardless of dataset size for a university faculty directory.
+ * Same interaction pattern as FacultyExplorer, minus the tab pills — Staff
+ * has no taxonomy grouping, just one flat searchable/filterable list.
+ * Search bar is centered above the alphabet row (not beside tabs).
  */
-export function FacultyExplorer({ tabs }: { tabs: FacultyTabData[] }) {
-  const [activeTab, setActiveTab] = useState(tabs[0]?.slug ?? "");
+export function StaffExplorer({ members }: { members: StaffCardData[] }) {
   const [search, setSearch] = useState("");
-  const [letter, setLetter] = useState<string>("ALL");
+  const [letter, setLetter] = useState("ALL");
   const [page, setPage] = useState(1);
 
-  const activeMembers = tabs.find((t) => t.slug === activeTab)?.members ?? [];
-
   const filtered = useMemo(() => {
-    let result = activeMembers;
+    let result = members;
 
     if (search.trim()) {
       const q = search.trim().toLowerCase();
@@ -50,7 +41,7 @@ export function FacultyExplorer({ tabs }: { tabs: FacultyTabData[] }) {
     }
 
     return result;
-  }, [activeMembers, search, letter]);
+  }, [members, search, letter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const clampedPage = Math.min(page, totalPages);
@@ -59,35 +50,11 @@ export function FacultyExplorer({ tabs }: { tabs: FacultyTabData[] }) {
     clampedPage * PAGE_SIZE,
   );
 
-  function handleTabChange(slug: string) {
-    setActiveTab(slug);
-    setSearch("");
-    setLetter("ALL");
-    setPage(1);
-  }
-
   return (
-    <section className="bg-white py-16 lg:py-20">
+    <section className="bg-surface py-16 lg:py-20">
       <Container>
-        {/* Tabs + Search */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap gap-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.slug}
-                type="button"
-                onClick={() => handleTabChange(tab.slug)}
-                className={`px-5 py-2.5 text-sm font-semibold transition-colors ${
-                  activeTab === tab.slug
-                    ? "bg-brand text-white"
-                    : "bg-surface text-navy hover:bg-line"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
+        {/* Search — centered, full width */}
+        <div className="mx-auto max-w-2xl">
           <input
             type="text"
             value={search}
@@ -95,13 +62,13 @@ export function FacultyExplorer({ tabs }: { tabs: FacultyTabData[] }) {
               setSearch(e.target.value);
               setPage(1);
             }}
-            placeholder="Search Faculty..."
-            className="w-full border border-line px-4 py-2.5 text-sm focus:border-brand focus:outline-none sm:w-72"
+            placeholder="Search Staff..."
+            className="w-full border border-line bg-white px-4 py-3 text-sm focus:border-brand focus:outline-none"
           />
         </div>
 
-        {/* Alphabet filter — every letter underlined; active = brand red, rest = ash */}
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-y-2 border-b border-line pb-4 text-sm">
+        {/* Alphabet filter — full width */}
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-y-2 border-b border-line pb-4 text-sm">
           <button
             type="button"
             onClick={() => {
@@ -135,12 +102,12 @@ export function FacultyExplorer({ tabs }: { tabs: FacultyTabData[] }) {
         {pageItems.length > 0 ? (
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
             {pageItems.map((member) => (
-              <FacultyCard key={member.id} member={member} />
+              <StaffCard key={member.id} member={member} />
             ))}
           </div>
         ) : (
           <p className="mt-10 text-center text-sm text-ash">
-            No faculty members found.
+            No staff members found.
           </p>
         )}
 

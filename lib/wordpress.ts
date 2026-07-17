@@ -107,7 +107,11 @@ import type {
   AdmissionDataset,
   ScholarshipDetailPageData,
   FacultyTabData,
+  FacultyCardData,
   TitledSubBlock,
+  TeachingFellowCardData,
+  TeachingFellowsPageData,
+  TeachingFellowsTabData,
 } from "@/lib/types";
 
 // ============================================================================
@@ -1845,7 +1849,696 @@ interface WpFacultyDevelopmentAcf {
   fd_diversity_description: string;
 }
 
+interface WpRcBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpRcSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpRcScheduleCell {
+  name: string;
+  time: string;
+}
+
+interface WpResourceCentreAcf {
+  // Hero
+  rc_hero_subline: string;
+  rc_hero_image: string;
+  rc_breadcrumb: WpRcBreadcrumb[] | false;
+  // Sub Nav
+  rc_subnav_label: string;
+  rc_subnav_links: WpRcSubNavLink[] | false;
+  // Intro
+  rc_intro_html: string;
+  // Schedule
+  rc_schedule_cells: WpRcScheduleCell[] | false;
+  // Outro
+  rc_outro_html: string;
+}
+
+interface WpCrBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpCrSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpCrParagraph {
+  paragraph: string;
+}
+
+interface WpComputationalResourcesAcf {
+  // Hero
+  cr_hero_subline: string;
+  cr_hero_image: string;
+  cr_breadcrumb: WpCrBreadcrumb[] | false;
+  // Sub Nav
+  cr_subnav_label: string;
+  cr_subnav_links: WpCrSubNavLink[] | false;
+  // Content
+  cr_content_paragraphs: WpCrParagraph[] | false;
+  cr_content_image: string;
+}
+
+interface WpStpLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpStpBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpStpSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpStaffLandingAcf {
+  // Hero
+  stp_hero_subline: string;
+  stp_hero_image: string;
+  stp_breadcrumb: WpStpBreadcrumb[] | false;
+  // Sub Nav
+  stp_subnav_label: string;
+  stp_subnav_links: WpStpSubNavLink[] | false;
+  // CTA
+  stp_cta_left_title: string;
+  stp_cta_left_description: string;
+  stp_cta_left_label: string;
+  stp_cta_left_href: WpStpLinkField;
+  stp_cta_right_title: string;
+  stp_cta_right_description: string;
+  stp_cta_right_label: string;
+  stp_cta_right_href: WpStpLinkField;
+}
+
+interface WpStaffPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    position?: string;
+    department?: string;
+    phone?: string;
+    email?: string;
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{
+      source_url: string;
+      alt_text: string;
+    }>;
+  };
+}
+
+interface WpDspLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpDspBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpDspSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpDoctoralScholarsLandingAcf {
+  dsp_hero_subline: string;
+  dsp_hero_image: string;
+  dsp_breadcrumb: WpDspBreadcrumb[] | false;
+  dsp_subnav_label: string;
+  dsp_subnav_links: WpDspSubNavLink[] | false;
+  dsp_cta_left_title: string;
+  dsp_cta_left_description: string;
+  dsp_cta_left_label: string;
+  dsp_cta_left_href: WpDspLinkField;
+  dsp_cta_right_title: string;
+  dsp_cta_right_description: string;
+  dsp_cta_right_label: string;
+  dsp_cta_right_href: WpDspLinkField;
+}
+
+// Base fields — present on every doctoral-scholars post
+interface WpDoctoralScholarPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    advisor?: string;
+    year_of_joining?: string; // "Ymd"
+    // Extended fields — only populated on recent-graduates posts
+    year_of_graduation?: string; // "Ymd"
+    thesis_topic?: string;
+    post_phd_employment?: string;
+    journals_content?: string;
+    awards_content?: string;
+    personal_webpage?: string;
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+interface WpDsLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpDsSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpDsParagraph {
+  paragraph: string;
+}
+
+interface WpDsOfficial {
+  name: string;
+  position: string;
+  email: string;
+  phone: string;
+  image: string;
+}
+
+interface WpDeanStudentAcf {
+  // Hero
+  ds_hero_title: string;
+  ds_hero_subline: string;
+  ds_hero_image: string;
+  // Sub Nav
+  ds_subnav_label: string;
+  ds_subnav_links: WpDsSubNavLink[] | false;
+  // Dean's Desk
+  ds_desk_title: string;
+  ds_desk_paragraphs: WpDsParagraph[] | false;
+  ds_desk_name: string;
+  ds_desk_role: string;
+  ds_desk_image: string;
+  // Contact
+  ds_contact_phone: string;
+  ds_contact_email: string;
+  // Officials
+  ds_officials_title: string;
+  ds_officials: WpDsOfficial[] | false;
+  // CTA
+  ds_cta_left_title: string;
+  ds_cta_left_description: string;
+  ds_cta_left_label: string;
+  ds_cta_left_href: WpDsLinkField;
+  ds_cta_right_title: string;
+  ds_cta_right_description: string;
+  ds_cta_right_label: string;
+  ds_cta_right_href: WpDsLinkField;
+}
+
+interface WpClLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpClSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpClParagraph {
+  paragraph: string;
+}
+
+interface WpClGalleryImage {
+  image: string;
+}
+
+interface WpClCarouselSlide {
+  image: string;
+  caption?: string;
+}
+
+interface WpClContact {
+  name: string;
+  role: string;
+}
+
+interface WpClClub {
+  name: string;
+  image: string;
+  description: string;
+  contacts: WpClContact[] | false;
+  email: string;
+  instagram: WpClLinkField | "";
+}
+
+interface WpClClubsTab {
+  label: string;
+  clubs: WpClClub[] | false;
+}
+
+interface WpClStudentBodyMember {
+  name: string;
+  position: string;
+  image: string;
+  href: WpClLinkField | "";
+}
+
+interface WpClStory {
+  quote: string;
+  name: string;
+  year: string;
+  image: string;
+}
+
+interface WpCampusLifeAcf {
+  // Hero
+  cl_hero_title: string;
+  cl_hero_subline: string;
+  cl_hero_image: string;
+  // Sub Nav
+  cl_subnav_label: string;
+  cl_subnav_links: WpClSubNavLink[] | false;
+  // Intro
+  cl_intro_paragraphs: WpClParagraph[] | false;
+  // Student Life
+  cl_sl_title: string;
+  cl_sl_paragraphs: WpClParagraph[] | false;
+  cl_sl_after_paragraphs: WpClParagraph[] | false;
+  cl_sl_gallery: WpClGalleryImage[] | false;
+  // Virtual Tour
+  cl_vt_image: string;
+  cl_vt_label: string;
+  cl_vt_href: WpClLinkField | "";
+  // Residence Life
+  cl_rl_title: string;
+  cl_rl_paragraphs: WpClParagraph[] | false;
+  cl_rl_slides: WpClCarouselSlide[] | false;
+  // Sports Facilities
+  cl_sf_title: string;
+  cl_sf_paragraphs: WpClParagraph[] | false;
+  cl_sf_image_1: string;
+  cl_sf_image_2: string;
+  // Clubs
+  cl_clubs_title: string;
+  cl_clubs_tabs: WpClClubsTab[] | false;
+  // Student Body
+  cl_sb_title: string;
+  cl_sb_members: WpClStudentBodyMember[] | false;
+  // IEEE
+  cl_ieee_title: string;
+  cl_ieee_paragraphs: WpClParagraph[] | false;
+  cl_ieee_slides: WpClGalleryImage[] | false;
+  // Success Stories
+  cl_stories_title: string;
+  cl_stories_description: string;
+  cl_stories_items: WpClStory[] | false;
+  // CTA
+  cl_cta_left_description: string;
+  cl_cta_left_label: string;
+  cl_cta_left_href: WpClLinkField;
+  cl_cta_right_description: string;
+  cl_cta_right_label: string;
+  cl_cta_right_href: WpClLinkField;
+}
+
+interface WpSsLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpSsSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpSsParagraph {
+  paragraph: string;
+}
+
+interface WpSsRaggingItem {
+  title: string;
+  paragraphs: WpSsParagraph[] | false;
+  link_label: string;
+  link_href: WpSsLinkField | "";
+  image: string | false;
+  button_label: string;
+  button_href: WpSsLinkField | "";
+}
+
+interface WpSsScheduleCell {
+  name: string;
+  time: string;
+}
+
+interface WpStudentSupportAcf {
+  // Hero
+  ss_hero_title: string;
+  ss_hero_subline: string;
+  ss_hero_image: string;
+  // Sub Nav
+  ss_subnav_label: string;
+  ss_subnav_links: WpSsSubNavLink[] | false;
+  // Intro
+  ss_intro_paragraphs: WpSsParagraph[] | false;
+  // Wellbeing
+  ss_wb_title: string;
+  ss_wb_paragraphs: WpSsParagraph[] | false;
+  ss_wb_phone: string;
+  ss_wb_email: string;
+  // Anti-Ragging
+  ss_ragging_items: WpSsRaggingItem[] | false;
+  // Medical
+  ss_medical_title: string;
+  ss_medical_intro: WpSsParagraph[] | false;
+  ss_medical_cells: WpSsScheduleCell[] | false;
+  ss_medical_outro: WpSsParagraph[] | false;
+  // CTA
+  ss_cta_left_description: string;
+  ss_cta_left_label: string;
+  ss_cta_left_href: WpSsLinkField;
+  ss_cta_right_description: string;
+  ss_cta_right_label: string;
+  ss_cta_right_href: WpSsLinkField;
+}
+
+interface WpFeLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpFeSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFeParagraph {
+  paragraph: string;
+}
+
+interface WpFestEventsAcf {
+  // Hero
+  fe_hero_title: string;
+  fe_hero_subline: string;
+  fe_hero_image: string;
+  // Sub Nav
+  fe_subnav_label: string;
+  fe_subnav_links: WpFeSubNavLink[] | false;
+  // Intro
+  fe_intro_paragraphs: WpFeParagraph[] | false;
+  // Section titles
+  fe_fest_title: string;
+  fe_events_title: string;
+  // CTA
+  fe_cta_left_description: string;
+  fe_cta_left_label: string;
+  fe_cta_left_href: WpFeLinkField;
+  fe_cta_right_description: string;
+  fe_cta_right_label: string;
+  fe_cta_right_href: WpFeLinkField;
+}
+
+// fest CPT post shape — same conventions as event (title, featured image,
+// published date), just a different post type
+interface WpFestPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  acf?: {
+    event_date?: string;
+    event_time?: string;
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+interface WpAlLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpAlSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpAlParagraph {
+  paragraph: string;
+}
+
+interface WpAlEventsRow {
+  image: string;
+  paragraphs: WpAlParagraph[] | false;
+  button_label: string;
+  button_href: WpAlLinkField | "";
+  image_side: "left" | "right";
+}
+
+interface WpAlMemoryCard {
+  image: string;
+  caption: string;
+  button_label: string;
+  button_href: WpAlLinkField;
+}
+
+interface WpAlNewsletterItem {
+  image: string;
+  caption: string;
+  href: WpAlLinkField | "";
+}
+
+interface WpAlUsefulLink {
+  label: string;
+  href: WpAlLinkField;
+}
+
+interface WpAlumniAcf {
+  // Hero
+  al_hero_title: string;
+  al_hero_subline: string;
+  al_hero_image: string;
+  // Sub Nav
+  al_subnav_label: string;
+  al_subnav_links: WpAlSubNavLink[] | false;
+  // Director Message
+  al_dir_title: string;
+  al_dir_paragraphs: WpAlParagraph[] | false;
+  al_dir_name: string;
+  al_dir_role: string;
+  al_dir_image: string;
+  // Alumni Intro
+  al_intro_title: string;
+  al_intro_image: string;
+  al_intro_email: string;
+  al_intro_paragraphs: WpAlParagraph[] | false;
+  // Events on Campus
+  al_events_title: string;
+  al_events_rows: WpAlEventsRow[] | false;
+  // Campus Memories
+  al_mem_title: string;
+  al_mem_cards: WpAlMemoryCard[] | false;
+  // Newsletter
+  al_news_title: string;
+  al_news_items: WpAlNewsletterItem[] | false;
+  // Useful Links
+  al_links_title: string;
+  al_links_items: WpAlUsefulLink[] | false;
+}
+
+interface WpReLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpReSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpReCard {
+  label: string;
+  icon: string;
+  href: WpReLinkField;
+}
+
+interface WpResourcesAcf {
+  // Hero
+  re_hero_title: string;
+  re_hero_subline: string;
+  re_hero_image: string;
+  // Sub Nav
+  re_subnav_label: string;
+  re_subnav_links: WpReSubNavLink[] | false;
+  // Cards
+  re_cards: WpReCard[] | false;
+}
+
+interface WpPlItem {
+  title: string;
+  file: string; // File field returns the direct URL
+}
+
+interface WpPoliciesAcf {
+  // Hero
+  pl_hero_title: string;
+  pl_hero_subline: string;
+  pl_hero_image: string;
+  // List
+  pl_section_title: string;
+  pl_section_subtitle: string;
+  pl_items: WpPlItem[] | false;
+}
+
+interface WpArItem {
+  cover_image: string;
+  year: string;
+  file: string;
+}
+ 
+interface WpAnnualReportAcf {
+  // Hero
+  ar_hero_title: string;
+  ar_hero_subline: string;
+  ar_hero_image: string;
+  // List
+  ar_section_title: string;
+  ar_section_subtitle: string;
+  ar_items: WpArItem[] | false;
+}
+
+interface WpCvSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpConvocationPageAcf {
+  // Hero
+  cv_hero_title: string;
+  cv_hero_subline: string;
+  cv_hero_image: string;
+  // Sub Nav
+  cv_subnav_label: string;
+  cv_subnav_links: WpCvSubNavLink[] | false;
+}
+
+// convocation CPT post shape
+interface WpConvocationPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    convocation_date?: string; // "Ymd"
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+const DOCTORAL_SCHOLARS_TERM_ID = 34;
+const RECENT_GRADUATES_TERM_ID = 35;
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function formatEventDateTime(
+  dateYmd: string | undefined,
+  timeHi: string | undefined,
+): string {
+  if (!dateYmd || dateYmd.length < 8) return "";
+
+  const year = Number(dateYmd.slice(0, 4));
+  const month = Number(dateYmd.slice(4, 6)) - 1;
+  const day = Number(dateYmd.slice(6, 8));
+
+  const datePart = new Date(year, month, day).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+  });
+
+  if (!timeHi) return datePart;
+
+  const [hh, mm] = timeHi.split(":").map(Number);
+  const period = hh >= 12 ? "PM" : "AM";
+  const hour12 = hh % 12 === 0 ? 12 : hh % 12;
+  const timePart = `${hour12}:${String(mm).padStart(2, "0")}${period}`;
+
+  return `${datePart}, ${timePart}`;
+}
+
+/** "Ymd" e.g. "20260115" → { display: "January, 2026", year: 2026 } */
+function parseYmdToMonthYear(ymd: string | undefined): {
+  display: string;
+  year: number;
+} {
+  if (!ymd || ymd.length < 6) return { display: "", year: 0 };
+  const year = Number(ymd.slice(0, 4));
+  const month = Number(ymd.slice(4, 6)) - 1;
+  const date = new Date(year, month, 1);
+  const display = date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+  return { display, year };
+}
+
+function mapDoctoralScholarPost(
+  post: WpDoctoralScholarPost,
+): DoctoralScholarCardData {
+  const { display, year } = parseYmdToMonthYear(post.acf?.year_of_joining);
+  return {
+    id: String(post.id),
+    name: decodeHtml(post.title.rendered),
+    advisor: post.acf?.advisor || undefined,
+    yearOfJoiningDisplay: display,
+    yearOfJoiningYear: year,
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/scholar-${post.id}/128/128`,
+  };
+}
+
+function mapRecentGraduatePost(
+  post: WpDoctoralScholarPost,
+): RecentGraduateCardData {
+  const joining = parseYmdToMonthYear(post.acf?.year_of_joining);
+  const graduation = parseYmdToMonthYear(post.acf?.year_of_graduation);
+
+  return {
+    id: String(post.id),
+    name: decodeHtml(post.title.rendered),
+    advisor: post.acf?.advisor || undefined,
+    yearOfJoiningDisplay: joining.display,
+    yearOfJoiningYear: joining.year,
+    yearOfGraduationDisplay: graduation.display,
+    yearOfGraduationYear: graduation.year,
+    thesisTopic: post.acf?.thesis_topic || undefined,
+    postPhdEmployment: post.acf?.post_phd_employment || undefined,
+    journalsContent: post.acf?.journals_content || undefined,
+    awardsContent: post.acf?.awards_content || undefined,
+    personalWebpage: post.acf?.personal_webpage || undefined,
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/grad-${post.id}/128/128`,
+  };
+}
 
 
 
@@ -3586,19 +4279,400 @@ export async function getStudentStoriesPage(): Promise<CardGridPageData> {
 // ─── Life @ DAU ───────────────────────────────────────────────────────────────
 
 export async function getDeanStudentPage(): Promise<DeanStudentPageData> {
-  return deanStudentPageData;
+  const acf = await getPageAcf<WpDeanStudentAcf>("dean-student");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Dean (Student) page ACF not found — falling back to mock data.",
+    );
+    return deanStudentPageData;
+  }
+
+  return {
+    hero: {
+      title: acf.ds_hero_title,
+      subline: acf.ds_hero_subline || undefined,
+      image: acf.ds_hero_image,
+    },
+
+    subNavLabel: acf.ds_subnav_label || "Dean (Student)",
+
+    subNav: toArray(acf.ds_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    desk: {
+      title: acf.ds_desk_title,
+      paragraphs: toArray(acf.ds_desk_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+      name: acf.ds_desk_name,
+      role: acf.ds_desk_role,
+      image: acf.ds_desk_image,
+    },
+
+    contact: {
+      phone: acf.ds_contact_phone,
+      email: acf.ds_contact_email,
+    },
+
+    officials: {
+      title: acf.ds_officials_title,
+      people: toArray(acf.ds_officials).map((o, i) => ({
+        id: String(i),
+        name: o.name,
+        position: o.position,
+        email: o.email || "",
+        phone: o.phone || "",
+        image:
+          o.image || `https://picsum.photos/seed/official-${i}/290/338`,
+      })),
+    },
+
+    cta: {
+      left: {
+        title: acf.ds_cta_left_title || undefined,
+        description: acf.ds_cta_left_description,
+        cta: acf.ds_cta_left_label,
+        href: acf.ds_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.ds_cta_right_title || undefined,
+        description: acf.ds_cta_right_description,
+        cta: acf.ds_cta_right_label,
+        href: acf.ds_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getCampusLifePage(): Promise<CampusLifePageData> {
-  return campusLifePageData;
+  const acf = await getPageAcf<WpCampusLifeAcf>("campus-life");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Campus Life page ACF not found — falling back to mock data.",
+    );
+    return campusLifePageData;
+  }
+
+  const normalize = (s: string) =>
+    s.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  return {
+    hero: {
+      title: acf.cl_hero_title,
+      subline: acf.cl_hero_subline || undefined,
+      image: acf.cl_hero_image,
+    },
+
+    subNavLabel: acf.cl_subnav_label || "Campus Life",
+
+    subNav: toArray(acf.cl_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.cl_intro_paragraphs).map((r) => normalize(r.paragraph)),
+
+    studentLife: {
+      id: "student-life",
+      title: acf.cl_sl_title,
+      paragraphs: toArray(acf.cl_sl_paragraphs).map((r) =>
+        normalize(r.paragraph),
+      ),
+      afterParagraphs: toArray(acf.cl_sl_after_paragraphs).map((r) =>
+        normalize(r.paragraph),
+      ),
+      media: {
+        kind: "gallery",
+        images: toArray(acf.cl_sl_gallery).map((r) => r.image),
+      },
+    },
+
+    virtualTour: {
+      image: acf.cl_vt_image,
+      label: acf.cl_vt_label,
+      href:
+        typeof acf.cl_vt_href === "object" && acf.cl_vt_href?.url
+          ? acf.cl_vt_href.url
+          : "#",
+    },
+
+    residenceLife: {
+      id: "residence-life",
+      title: acf.cl_rl_title,
+      paragraphs: toArray(acf.cl_rl_paragraphs).map((r) =>
+        normalize(r.paragraph),
+      ),
+      media: {
+        kind: "carousel",
+        slides: (() => {
+          const slides = toArray(acf.cl_rl_slides).map((s) => ({
+            image: s.image,
+            caption: s.caption || undefined,
+          }));
+          return slides.length > 0
+            ? slides
+            : [{ image: "https://picsum.photos/seed/residence-life-fallback/900/680" }];
+        })(),
+      },
+    },
+
+    sportsFacilities: {
+      id: "sports",
+      title: acf.cl_sf_title,
+      paragraphs: toArray(acf.cl_sf_paragraphs).map((r) =>
+        normalize(r.paragraph),
+      ),
+      media: {
+        kind: "duo",
+        images: [acf.cl_sf_image_1, acf.cl_sf_image_2],
+      },
+    },
+
+    clubs: {
+      title: acf.cl_clubs_title,
+      tabs: toArray(acf.cl_clubs_tabs).map((tab, ti) => ({
+        id: `tab-${ti}`,
+        label: tab.label,
+        clubs: toArray(tab.clubs).map((club, ci) => ({
+          id: `club-${ti}-${ci}`,
+          name: club.name,
+          image: club.image,
+          description: club.description,
+          contacts: toArray(club.contacts).map((c) => ({
+            name: c.name,
+            role: c.role,
+          })),
+          email: club.email,
+          instagram:
+            typeof club.instagram === "object" && club.instagram?.url
+              ? club.instagram.url
+              : undefined,
+        })),
+      })),
+    },
+
+    studentBody: {
+      title: acf.cl_sb_title,
+      members: toArray(acf.cl_sb_members).map((m, i) => ({
+        id: `sbg-${i}`,
+        name: m.name,
+        position: m.position,
+        image: m.image,
+        href:
+          typeof m.href === "object" && m.href?.url ? m.href.url : "#",
+      })),
+    },
+
+    ieee: {
+      id: "ieee",
+      title: acf.cl_ieee_title,
+      paragraphs: toArray(acf.cl_ieee_paragraphs).map((r) =>
+        normalize(r.paragraph),
+      ),
+      media: {
+        kind: "carousel",
+        slides: (() => {
+          const slides = toArray(acf.cl_ieee_slides).map((r) => ({ image: r.image }));
+          return slides.length > 0
+            ? slides
+            : [{ image: "https://picsum.photos/seed/ieee-fallback/900/680" }];
+        })(),
+      },
+    },
+
+    successStories: {
+      title: acf.cl_stories_title,
+      description: acf.cl_stories_description,
+      items: toArray(acf.cl_stories_items).map((s, i) => ({
+        id: `story-${i + 1}`,
+        quote: s.quote,
+        name: s.name,
+        year: s.year,
+        image: s.image,
+      })),
+    },
+
+    cta: {
+      left: {
+        description: acf.cl_cta_left_description,
+        cta: acf.cl_cta_left_label,
+        href: acf.cl_cta_left_href?.url ?? "#",
+      },
+      right: {
+        description: acf.cl_cta_right_description,
+        cta: acf.cl_cta_right_label,
+        href: acf.cl_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getStudentSupportPage(): Promise<StudentSupportPageData> {
-  return studentSupportPageData;
+  const acf = await getPageAcf<WpStudentSupportAcf>("student-support");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Student Support page ACF not found — falling back to mock data.",
+    );
+    return studentSupportPageData;
+  }
+
+  const normalize = (s: string) =>
+    s.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  return {
+    hero: {
+      title: acf.ss_hero_title,
+      subline: acf.ss_hero_subline || undefined,
+      image: acf.ss_hero_image,
+    },
+
+    subNavLabel: acf.ss_subnav_label || "Student Support",
+
+    subNav: toArray(acf.ss_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.ss_intro_paragraphs).map((r) => normalize(r.paragraph)),
+
+    wellbeing: {
+      title: acf.ss_wb_title,
+      paragraphs: toArray(acf.ss_wb_paragraphs).map((r) =>
+        normalize(r.paragraph),
+      ),
+      phone: acf.ss_wb_phone,
+      email: acf.ss_wb_email,
+    },
+
+    antiRagging: toArray(acf.ss_ragging_items).map((item, i) => ({
+      id: `ragging-${i}`,
+      title: item.title,
+      paragraphs: toArray(item.paragraphs).map((r) => normalize(r.paragraph)),
+      link:
+        item.link_label &&
+        typeof item.link_href === "object" &&
+        item.link_href?.url
+          ? { label: item.link_label, href: item.link_href.url }
+          : undefined,
+      image:
+        typeof item.image === "string" && item.image ? item.image : undefined,
+      button:
+        item.button_label &&
+        typeof item.button_href === "object" &&
+        item.button_href?.url
+          ? { label: item.button_label, href: item.button_href.url }
+          : undefined,
+    })),
+
+    medical: {
+      title: acf.ss_medical_title,
+      intro: toArray(acf.ss_medical_intro).map((r) => normalize(r.paragraph)),
+      cells: toArray(acf.ss_medical_cells).map((c) => ({
+        name: c.name,
+        time: c.time,
+      })),
+      outro: toArray(acf.ss_medical_outro).map((r) => normalize(r.paragraph)),
+    },
+
+    cta: {
+      left: {
+        description: acf.ss_cta_left_description,
+        cta: acf.ss_cta_left_label,
+        href: acf.ss_cta_left_href?.url ?? "#",
+      },
+      right: {
+        description: acf.ss_cta_right_description,
+        cta: acf.ss_cta_right_label,
+        href: acf.ss_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getFestEventsPage(): Promise<FestEventsPageData> {
-  return festEventsPageData;
+  const acf = await getPageAcf<WpFestEventsAcf>("fest-events");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Fest & Events page ACF not found — falling back to mock data.",
+    );
+    return festEventsPageData;
+  }
+
+  // Fetch both CPTs in parallel — no waterfall
+  const [festPosts, eventPosts] = await Promise.all([
+    wpFetch<WpFestPost[]>(
+      `/wp/v2/fest?_embed=wp:featuredmedia&acf_format=standard&per_page=6&orderby=date&order=desc`,
+    ),
+    // Fetch enough events for the "Show More" client-side reveal (6 shown,
+    // rest revealed on click) — 20 gives good headroom.
+    wpFetch<WpEventPost[]>(
+      `/wp/v2/event?_embed=wp:featuredmedia&per_page=20&orderby=date&order=desc`,
+    ),
+  ]);
+
+  return {
+    hero: {
+      title: acf.fe_hero_title,
+      subline: acf.fe_hero_subline || undefined,
+      image: acf.fe_hero_image,
+    },
+
+    subNavLabel: acf.fe_subnav_label || "Fest & Events",
+
+    subNav: toArray(acf.fe_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.fe_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    upcomingFest: {
+      title: acf.fe_fest_title,
+      items: festPosts.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        date: formatEventDateTime(post.acf?.event_date, post.acf?.event_time) || formatIsoDate(post.date),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/fest-${post.id}/1000/560`,
+        href: `/life/events/${post.slug}`,
+      })),
+    },
+
+    upcomingEvents: {
+      title: acf.fe_events_title,
+      items: eventPosts.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        date: formatIsoDate(post.date),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/event-${post.id}/600/380`,
+        href: `/life/events/${post.slug}`,
+      })),
+    },
+
+    cta: {
+      left: {
+        description: acf.fe_cta_left_description,
+        cta: acf.fe_cta_left_label,
+        href: acf.fe_cta_left_href?.url ?? "#",
+      },
+      right: {
+        description: acf.fe_cta_right_description,
+        cta: acf.fe_cta_right_label,
+        href: acf.fe_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 // ─── Research ─────────────────────────────────────────────────────────────────
@@ -4161,90 +5235,156 @@ export async function getAwardsPage(): Promise<AwardsPageData> {
 }
 
 // ─── Faculty ──────────────────────────────────────────────────────────────────
+interface WpFpLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
 
+interface WpFpBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpFpSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFacultyLandingAcf {
+  // Hero
+  fp_hero_subline: string;
+  fp_hero_image: string;
+  fp_breadcrumb: WpFpBreadcrumb[] | false;
+  // Sub Nav
+  fp_subnav_label: string;
+  fp_subnav_links: WpFpSubNavLink[] | false;
+  // CTA
+  fp_cta_left_title: string;
+  fp_cta_left_description: string;
+  fp_cta_left_label: string;
+  fp_cta_left_href: WpFpLinkField;
+  fp_cta_right_title: string;
+  fp_cta_right_description: string;
+  fp_cta_right_label: string;
+  fp_cta_right_href: WpFpLinkField;
+}
+
+// Full faculty CPT post shape — includes the extended fields
+// (department, interests, phone, address, email)
+interface WpFacultyFullPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    position?: string;
+    department?: string;
+    interests?: string;
+    phone?: string;
+    address?: string;
+    email?: string;
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{
+      source_url: string;
+      alt_text: string;
+    }>;
+  };
+}
+
+// ─── Taxonomy term map ─────────────────────────────────────────────────────
+// ⚠️ Replace these termId values with the REAL ones from your WordPress.
+// Check by visiting: https://dau.123demo.fun/wp-json/wp/v2/faculty-type
+// That page lists every term with its numeric "id" — match each id to the
+// correct slug/label below.
+
+const FACULTY_TYPE_TERMS: Array<{
+  slug: string;
+  label: string;
+  termId: number;
+}> = [
+  { slug: "regular-faculty", label: "Faculty", termId: 27 },
+  { slug: "visiting-faculty", label: "Visiting Faculty", termId: 28 },
+  { slug: "distinguished-profs", label: "Distinguished Profs.", termId: 29 },
+  { slug: "professor-of-practice", label: "Professor of Practice", termId: 30 },
+  { slug: "international-faculty", label: "International Faculty", termId: 31 },
+];
+
+// ─── Helper: maps one WP faculty post → the FacultyCardData shape ─────────
+
+function mapFacultyPost(post: WpFacultyFullPost): FacultyCardData {
+  return {
+    id: String(post.id),
+    name: decodeHtml(post.title.rendered),
+    position: post.acf?.position ?? "",
+    department: post.acf?.department ?? "",
+    interests: post.acf?.interests || undefined,
+    phone: post.acf?.phone || undefined,
+    address: post.acf?.address || undefined,
+    email: post.acf?.email || undefined,
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/faculty-${post.id}/220/260`,
+    href: `/faculty/${post.slug}`,
+  };
+}
 export async function getFacultyPage(): Promise<FacultyPageData> {
-  const [acf, terms, posts] = await Promise.all([
-    getPageAcf<WpFacultyPageAcf>("faculty"),
-    wpFetch<WpFacultyTypeTerm[]>(
-      `/wp/v2/faculty-type?per_page=100&acf_format=standard`,
-    ),
-    wpFetch<WpFacultyPostWithType[]>(
-      `/wp/v2/faculty?per_page=100&_embed=wp:featuredmedia&acf_format=standard`,
-    ),
-  ]);
+  const acf = await getPageAcf<WpFacultyLandingAcf>("faculty");
 
   if (!acf) {
     console.warn(
-      "[wordpress.ts] Faculty page ACF not found — falling back to mock data.",
+      "[wordpress.ts] Faculty landing page ACF not found — falling back to mock data.",
     );
     return facultyPageData;
   }
 
-  // Tab order comes from each term's ACF "order" field (ties fall back to
-  // whatever order the REST API returned them in).
-  const orderedTerms = [...terms].sort(
-    (a, b) => (a.acf?.order ?? 0) - (b.acf?.order ?? 0),
+  // Fetch every faculty-type term's members in parallel
+  const tabResults = await Promise.all(
+    FACULTY_TYPE_TERMS.map(({ termId }) =>
+      wpFetch<WpFacultyFullPost[]>(
+        `/wp/v2/faculty?faculty-type=${termId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
+      ),
+    ),
   );
 
-  const tabs: FacultyTabData[] = orderedTerms.map((term) => ({
+  const tabs: FacultyTabData[] = FACULTY_TYPE_TERMS.map((term, i) => ({
     slug: term.slug,
-    label: term.name,
-    intro: decodeHtml(term.description || ""),
-    members: posts
-      .filter((post) => post.faculty_type_slug === term.slug)
-      .map((post) => ({
-        id: String(post.id),
-        name: decodeHtml(post.title.rendered),
-        // Same field names as the existing mapFaculty() — position +
-        // department combined here since FacultyMember has one string field.
-        position: [post.acf?.position, post.acf?.department]
-          .filter(Boolean)
-          .join(", "),
-        image:
-          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
-          `https://picsum.photos/seed/faculty-${post.id}/290/360`,
-        href: `/faculty/${post.slug}`,
-      })),
+    label: term.label,
+    members: tabResults[i].map(mapFacultyPost),
   }));
 
   return {
     hero: {
-      title: acf.ft_hero_title,
-      subline: acf.ft_hero_subline || undefined,
-      image: acf.ft_hero_image,
-      breadcrumb: toArray(acf.ft_breadcrumb).map((b) => ({
+      title: "Faculty",
+      subline: acf.fp_hero_subline || undefined,
+      image: acf.fp_hero_image,
+      breadcrumb: toArray(acf.fp_breadcrumb).map((b) => ({
         label: b.label,
         href: b.href,
       })),
     },
 
-    subNavLabel: acf.ft_subnav_label,
+    subNavLabel: acf.fp_subnav_label || "Page Title",
 
-    subNav: toArray(acf.ft_subnav_links).map((l) => ({
+    subNav: toArray(acf.fp_subnav_links).map((l) => ({
       label: l.label,
       href: l.href,
     })),
-
-    applyBanner: {
-      text: acf.ft_apply_banner_text,
-      cta: acf.ft_apply_banner_cta,
-      href: acf.ft_apply_banner_href?.url ?? "#",
-    },
 
     tabs,
 
     cta: {
       left: {
-        title: acf.ft_cta_left_title || undefined,
-        description: acf.ft_cta_left_description,
-        cta: acf.ft_cta_left_label,
-        href: acf.ft_cta_left_href?.url ?? "#",
+        title: acf.fp_cta_left_title || undefined,
+        description: acf.fp_cta_left_description,
+        cta: acf.fp_cta_left_label,
+        href: acf.fp_cta_left_href?.url ?? "#",
       },
       right: {
-        title: acf.ft_cta_right_title || undefined,
-        description: acf.ft_cta_right_description,
-        cta: acf.ft_cta_right_label,
-        href: acf.ft_cta_right_href?.url ?? "#",
+        title: acf.fp_cta_right_title || undefined,
+        description: acf.fp_cta_right_description,
+        cta: acf.fp_cta_right_label,
+        href: acf.fp_cta_right_href?.url ?? "#",
       },
     },
   };
@@ -5707,5 +6847,689 @@ export async function getScholarshipDetailPage(
         href: acf.sch_cta_right_href?.url ?? "#",
       },
     },
+  };
+}
+
+export async function getResourceCentrePage(): Promise<AcademicSupportDetailPageData> {
+  const acf = await getPageAcf<WpResourceCentreAcf>("resource-centre");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Resource Centre page ACF not found — using placeholder data.",
+    );
+    // No pre-existing mock file for this page — minimal inline fallback
+    return {
+      hero: {
+        title: "Resource Centre",
+        image: "https://picsum.photos/seed/resource-centre/1280/560",
+        breadcrumb: [],
+      },
+      subNavLabel: "Academic Areas",
+      subNav: [],
+      introHtml: "<p>Content coming soon.</p>",
+      schedule: [],
+      outroHtml: "",
+    };
+  }
+
+  return {
+    hero: {
+      title: "Resource Centre",
+      subline: acf.rc_hero_subline || undefined,
+      image: acf.rc_hero_image,
+      breadcrumb: toArray(acf.rc_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.rc_subnav_label || "Academic Areas",
+
+    subNav: toArray(acf.rc_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    introHtml: acf.rc_intro_html || "",
+
+    schedule: toArray(acf.rc_schedule_cells).map((c) => ({
+      name: c.name,
+      time: c.time,
+    })),
+
+    outroHtml: acf.rc_outro_html || "",
+  };
+}
+
+export async function getComputationalResourcesPage(): Promise<ComputationalResourcesPageData> {
+  const acf = await getPageAcf<WpComputationalResourcesAcf>(
+    "computational-resources",
+  );
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Computational Resources page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: {
+        title: "Computational Resources",
+        image: "https://picsum.photos/seed/computational-resources/1280/560",
+        breadcrumb: [],
+      },
+      subNavLabel: "Academic Areas",
+      subNav: [],
+      content: { paragraphs: [], image: "" },
+    };
+  }
+
+  return {
+    hero: {
+      title: "Computational Resources",
+      subline: acf.cr_hero_subline || undefined,
+      image: acf.cr_hero_image,
+      breadcrumb: toArray(acf.cr_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.cr_subnav_label || "Academic Areas",
+
+    subNav: toArray(acf.cr_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    content: {
+      paragraphs: toArray(acf.cr_content_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+      image: acf.cr_content_image,
+    },
+  };
+}
+
+export async function getStaffPage(): Promise<StaffPageData> {
+  const acf = await getPageAcf<WpStaffLandingAcf>("staff");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Staff landing page ACF not found — falling back to placeholder data.",
+    );
+    return {
+      hero: {
+        title: "Staff",
+        image: "https://picsum.photos/seed/staff/1200/500",
+        breadcrumb: [],
+      },
+      subNavLabel: "Page Title",
+      subNav: [],
+      members: [],
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  const staffPosts = await wpFetch<WpStaffPost[]>(
+    `/wp/v2/staff?_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
+  );
+
+  const members: StaffCardData[] = staffPosts.map((post) => ({
+    id: String(post.id),
+    name: decodeHtml(post.title.rendered),
+    position: post.acf?.position ?? "",
+    department: post.acf?.department ?? "",
+    phone: post.acf?.phone || undefined,
+    email: post.acf?.email || undefined,
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/staff-${post.id}/220/260`,
+  }));
+
+  return {
+    hero: {
+      title: "Staff",
+      subline: acf.stp_hero_subline || undefined,
+      image: acf.stp_hero_image,
+      breadcrumb: toArray(acf.stp_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.stp_subnav_label || "Page Title",
+
+    subNav: toArray(acf.stp_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    members,
+
+    cta: {
+      left: {
+        title: acf.stp_cta_left_title || undefined,
+        description: acf.stp_cta_left_description,
+        cta: acf.stp_cta_left_label,
+        href: acf.stp_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.stp_cta_right_title || undefined,
+        description: acf.stp_cta_right_description,
+        cta: acf.stp_cta_right_label,
+        href: acf.stp_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+export async function getDoctoralScholarsPage(): Promise<DoctoralScholarsPageData> {
+  const acf = await getPageAcf<WpDoctoralScholarsLandingAcf>(
+    "doctoral-scholars",
+  );
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Doctoral Scholars page ACF not found — falling back to placeholder data.",
+    );
+    return {
+      hero: {
+        title: "Doctoral Scholars",
+        image: "https://picsum.photos/seed/doctoral-scholars/1200/500",
+        breadcrumb: [],
+      },
+      subNavLabel: "Page Title",
+      subNav: [],
+      doctoralScholars: { label: "Doctoral Scholars", members: [] },
+      recentGraduates: { label: "Recent Graduates", members: [] },
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  const [scholarPosts, graduatePosts] = await Promise.all([
+    wpFetch<WpDoctoralScholarPost[]>(
+      `/wp/v2/doctoral-scholars?doctoral-type=${DOCTORAL_SCHOLARS_TERM_ID}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
+    ),
+    wpFetch<WpDoctoralScholarPost[]>(
+      `/wp/v2/doctoral-scholars?doctoral-type=${RECENT_GRADUATES_TERM_ID}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
+    ),
+  ]);
+
+  return {
+    hero: {
+      title: "Doctoral Scholars",
+      subline: acf.dsp_hero_subline || undefined,
+      image: acf.dsp_hero_image,
+      breadcrumb: toArray(acf.dsp_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.dsp_subnav_label || "Page Title",
+
+    subNav: toArray(acf.dsp_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    doctoralScholars: {
+      label: "Doctoral Scholars",
+      members: scholarPosts.map(mapDoctoralScholarPost),
+    },
+
+    recentGraduates: {
+      label: "Recent Graduates",
+      members: graduatePosts.map(mapRecentGraduatePost),
+    },
+
+    cta: {
+      left: {
+        title: acf.dsp_cta_left_title || undefined,
+        description: acf.dsp_cta_left_description,
+        cta: acf.dsp_cta_left_label,
+        href: acf.dsp_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.dsp_cta_right_title || undefined,
+        description: acf.dsp_cta_right_description,
+        cta: acf.dsp_cta_right_label,
+        href: acf.dsp_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+// ─── Raw WordPress shapes ────────────────────────────────────────────────────
+
+interface WpTfpLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpTfpBreadcrumb {
+  label: string;
+  href: string;
+}
+
+interface WpTfpSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpTeachingFellowsLandingAcf {
+  tfp_hero_subline: string;
+  tfp_hero_image: string;
+  tfp_breadcrumb: WpTfpBreadcrumb[] | false;
+  tfp_subnav_label: string;
+  tfp_subnav_links: WpTfpSubNavLink[] | false;
+  tfp_cta_left_title: string;
+  tfp_cta_left_description: string;
+  tfp_cta_left_label: string;
+  tfp_cta_left_href: WpTfpLinkField;
+  tfp_cta_right_title: string;
+  tfp_cta_right_description: string;
+  tfp_cta_right_label: string;
+  tfp_cta_right_href: WpTfpLinkField;
+}
+
+interface WpTeachingFellowPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    position?: string;
+    date_of_joining?: string; // "Ymd"
+    office?: string;
+  };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+// ─── ⚠️ PLACEHOLDER taxonomy term map — replace with real slug/IDs ───────────
+const TEACHING_FELLOW_TERMS: Array<{
+  slug: string;
+  label: string;
+  termId: number;
+}> = [
+  { slug: "teaching-fellows", label: "Teaching Fellows", termId: 36 },
+  { slug: "past-teaching-fellows", label: "Past Teaching Fellows", termId: 37 },
+];
+
+const TEACHING_FELLOW_TAXONOMY = "teaching-type";
+
+/** "Ymd" e.g. "20260115" → "15 January, 2026" (full date, for Teaching Fellows) */
+function parseYmdToFullDate(ymd: string | undefined): string {
+  if (!ymd || ymd.length < 8) return "";
+  const year = Number(ymd.slice(0, 4));
+  const month = Number(ymd.slice(4, 6)) - 1;
+  const day = Number(ymd.slice(6, 8));
+  const date = new Date(year, month, day);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function mapTeachingFellowPost(
+  post: WpTeachingFellowPost,
+): TeachingFellowCardData {
+  return {
+    id: String(post.id),
+    name: decodeHtml(post.title.rendered),
+    position: post.acf?.position ?? "",
+    dateOfJoining: parseYmdToFullDate(post.acf?.date_of_joining),
+    office: post.acf?.office || undefined,
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/fellow-${post.id}/220/260`,
+  };
+}
+
+export async function getTeachingFellowsPage(): Promise<TeachingFellowsPageData> {
+  const acf = await getPageAcf<WpTeachingFellowsLandingAcf>(
+    "teaching-fellows",
+  );
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Teaching Fellows page ACF not found — falling back to placeholder data.",
+    );
+    return {
+      hero: {
+        title: "Teaching Fellows",
+        image: "https://picsum.photos/seed/teaching-fellows/1200/500",
+        breadcrumb: [],
+      },
+      subNavLabel: "Page Title",
+      subNav: [],
+      tabs: [],
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  const tabResults = await Promise.all(
+    TEACHING_FELLOW_TERMS.map(({ termId }) =>
+      wpFetch<WpTeachingFellowPost[]>(
+        `/wp/v2/teaching-fellows?${TEACHING_FELLOW_TAXONOMY}=${termId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
+      ),
+    ),
+  );
+
+  const tabs: TeachingFellowsTabData[] = TEACHING_FELLOW_TERMS.map(
+    (term, i) => ({
+      slug: term.slug,
+      label: term.label,
+      members: tabResults[i].map(mapTeachingFellowPost),
+    }),
+  );
+
+  return {
+    hero: {
+      title: "Teaching Fellows",
+      subline: acf.tfp_hero_subline || undefined,
+      image: acf.tfp_hero_image,
+      breadcrumb: toArray(acf.tfp_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.tfp_subnav_label || "Page Title",
+
+    subNav: toArray(acf.tfp_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    tabs,
+
+    cta: {
+      left: {
+        title: acf.tfp_cta_left_title || undefined,
+        description: acf.tfp_cta_left_description,
+        cta: acf.tfp_cta_left_label,
+        href: acf.tfp_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.tfp_cta_right_title || undefined,
+        description: acf.tfp_cta_right_description,
+        cta: acf.tfp_cta_right_label,
+        href: acf.tfp_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+export async function getAlumniPage(): Promise<AlumniPageData> {
+  const [acf, contact] = await Promise.all([
+    getPageAcf<WpAlumniAcf>("alumni"),
+    getSiteSettings(),
+  ]);
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Alumni page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Alumni", image: "https://picsum.photos/seed/alumni/900/600", breadcrumb: [] },
+      subNavLabel: "Alumni",
+      subNav: [],
+      directorMessage: { title: "", name: "", role: "", image: "", bio: [] },
+      intro: { title: "Alumni", image: "", email: "", paragraphs: [] },
+      events: { title: "Events on Campus", rows: [] },
+      memories: { title: "Campus Memories", cards: [] },
+      newsletter: { title: "Alumni Newsletter", items: [] },
+      usefulLinks: { title: "Other Useful Links", links: [] },
+      contact,
+    };
+  }
+
+  const normalize = (s: string) =>
+    s.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  return {
+    hero: {
+      title: acf.al_hero_title,
+      subline: acf.al_hero_subline || undefined,
+      image: acf.al_hero_image,
+    },
+
+    subNavLabel: acf.al_subnav_label || "Alumni",
+
+    subNav: toArray(acf.al_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    directorMessage: {
+      title: acf.al_dir_title,
+      name: acf.al_dir_name,
+      role: acf.al_dir_role,
+      image: acf.al_dir_image,
+      bio: toArray(acf.al_dir_paragraphs).map((r) => normalize(r.paragraph)),
+    },
+
+    intro: {
+      title: acf.al_intro_title,
+      image: acf.al_intro_image,
+      email: acf.al_intro_email,
+      paragraphs: toArray(acf.al_intro_paragraphs).map((r) =>
+        normalize(r.paragraph),
+      ),
+    },
+
+    events: {
+      title: acf.al_events_title,
+      rows: toArray(acf.al_events_rows).map((row, i) => ({
+        id: `row-${i}`,
+        image: row.image,
+        paragraphs: toArray(row.paragraphs).map((r) => normalize(r.paragraph)),
+        button:
+          row.button_label &&
+          typeof row.button_href === "object" &&
+          row.button_href?.url
+            ? { label: row.button_label, href: row.button_href.url }
+            : undefined,
+        imageSide: row.image_side === "right" ? "right" : "left",
+      })),
+    },
+
+    memories: {
+      title: acf.al_mem_title,
+      cards: toArray(acf.al_mem_cards).map((card, i) => ({
+        id: `mem-${i}`,
+        image: card.image,
+        caption: card.caption,
+        button: {
+          label: card.button_label,
+          href: card.button_href?.url ?? "#",
+        },
+      })),
+    },
+
+    newsletter: {
+      title: acf.al_news_title,
+      items: toArray(acf.al_news_items).map((item, i) => ({
+        id: `news-${i}`,
+        image: item.image,
+        caption: item.caption,
+        href:
+          typeof item.href === "object" && item.href?.url
+            ? item.href.url
+            : undefined,
+      })),
+    },
+
+    usefulLinks: {
+      title: acf.al_links_title,
+      links: toArray(acf.al_links_items).map((l) => ({
+        label: l.label,
+        href: l.href?.url ?? "#",
+      })),
+    },
+
+    // ✅ Live from Site Settings options page (already built)
+    contact,
+  };
+}
+
+export async function getResourcesPage(): Promise<ResourcesPageData> {
+  const acf = await getPageAcf<WpResourcesAcf>("resources");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Resources page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Resource", image: "https://picsum.photos/seed/resources/1200/500", breadcrumb: [] },
+      subNavLabel: "Academic Areas",
+      subNav: [],
+      cards: [],
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.re_hero_title,
+      subline: acf.re_hero_subline || undefined,
+      image: acf.re_hero_image,
+    },
+
+    subNavLabel: acf.re_subnav_label || "Academic Areas",
+
+    subNav: toArray(acf.re_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    cards: toArray(acf.re_cards).map((c, i) => ({
+      id: String(i),
+      label: c.label,
+      icon: c.icon,
+      href: c.href?.url ?? "#",
+    })),
+  };
+}
+
+export async function getPoliciesPage(): Promise<PoliciesPageData> {
+  const acf = await getPageAcf<WpPoliciesAcf>("policies");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Policies page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Policies", image: "https://picsum.photos/seed/policies/1200/500", breadcrumb: [] },
+      sectionTitle: "Policies",
+      sectionSubtitle: "Click on the link below to view or download the policy",
+      items: [],
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.pl_hero_title,
+      subline: acf.pl_hero_subline || undefined,
+      image: acf.pl_hero_image,
+    },
+
+    sectionTitle: acf.pl_section_title,
+    sectionSubtitle: acf.pl_section_subtitle,
+
+    items: toArray(acf.pl_items).map((item, i) => ({
+      id: String(i),
+      title: item.title,
+      fileUrl: item.file,
+    })),
+  };
+}
+
+export async function getAnnualReportPage(): Promise<AnnualReportPageData> {
+  const acf = await getPageAcf<WpAnnualReportAcf>("annual-report");
+ 
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Annual Report page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Annual Report", image: "https://picsum.photos/seed/annual-report/1200/500", breadcrumb: [] },
+      sectionTitle: "Annual Report",
+      sectionSubtitle: "Click on the link below to view or download the policy",
+      items: [],
+    };
+  }
+ 
+  return {
+    hero: {
+      title: acf.ar_hero_title,
+      subline: acf.ar_hero_subline || undefined,
+      image: acf.ar_hero_image,
+    },
+ 
+    sectionTitle: acf.ar_section_title,
+    sectionSubtitle: acf.ar_section_subtitle,
+ 
+    items: toArray(acf.ar_items).map((item, i) => ({
+      id: String(i),
+      coverImage: item.cover_image,
+      year: item.year,
+      fileUrl: item.file,
+    })),
+  };
+}
+
+export async function getConvocationPage(): Promise<ConvocationPageData> {
+  const acf = await getPageAcf<WpConvocationPageAcf>("convocation");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Convocation page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Convocation", image: "https://picsum.photos/seed/convocation/1200/500", breadcrumb: [] },
+      subNavLabel: "Convocation",
+      subNav: [],
+      cards: [],
+    };
+  }
+
+  const posts = await wpFetch<WpConvocationPost[]>(
+    `/wp/v2/convocation?_embed=wp:featuredmedia&acf_format=standard&per_page=20&orderby=date&order=desc`,
+  );
+
+  return {
+    hero: {
+      title: acf.cv_hero_title,
+      subline: acf.cv_hero_subline || undefined,
+      image: acf.cv_hero_image,
+    },
+
+    subNavLabel: acf.cv_subnav_label || "Convocation",
+
+    subNav: toArray(acf.cv_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    cards: posts.map((post) => ({
+      id: String(post.id),
+      title: decodeHtml(post.title.rendered),
+      date: parseYmdToFullDate(post.acf?.convocation_date),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/convocation-${post.id}/680/420`,
+    })),
   };
 }

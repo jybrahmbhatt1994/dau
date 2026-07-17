@@ -9,6 +9,7 @@ import { PeopleCardGrid } from "@/components/life/PeopleCardGrid";
 import { SuccessStories } from "@/components/life/SuccessStories";
 import { ProgramSlider } from "@/components/academics/ProgramSlider";
 import { SplitCta } from "@/components/academics/SplitCta";
+import { StudentClubs } from "@/components/life/StudentClubs";
 
 export const metadata: Metadata = {
   title: "Campus Life | Dhirubhai Ambani University",
@@ -35,8 +36,8 @@ export default async function CampusLifePage() {
       {/* Sports Facilities — two-up images */}
       <MediaSection data={data.sportsFacilities} className="bg-surface" />
 
-      {/* Student Clubs — full-bleed-right card slider */}
-      <ProgramSlider data={data.clubs} className="bg-surface" />
+      {/* Student Clubs — tabbed vertical club slider */}
+      <StudentClubs data={data.clubs} className="bg-surface" />
 
       {/* Student Body Government — people card grid */}
       <PeopleCardGrid data={data.studentBody} className="bg-surface" />

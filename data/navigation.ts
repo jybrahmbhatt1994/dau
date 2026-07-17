@@ -22,7 +22,7 @@ export const navigation: NavItem[] = [
           { label: "Doctoral Program", href: "/academics/program/doctoral-program" },
         ],
       },
-      // { label: "B.Tech", href: "/academics/btech" },
+      // { label: "B.Tech", href: "/academics/support/resource-centre" },
     ],
   },
   {
