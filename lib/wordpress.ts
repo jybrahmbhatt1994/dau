@@ -2441,16 +2441,112 @@ interface WpConvocationPageAcf {
 }
 
 // convocation CPT post shape
+// interface WpConvocationPost {
+//   id: number;
+//   slug: string;
+//   title: { rendered: string };
+//   acf: {
+//     convocation_date?: string; // "Ymd"
+//   };
+//   _embedded?: {
+//     "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+//   };
+// }
+
+interface WpConvocationLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpCvSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpConvocationPageAcf {
+  cv_hero_title: string;
+  cv_hero_subline: string;
+  cv_hero_image: string;
+  cv_subnav_label: string;
+  cv_subnav_links: WpCvSubNavLink[] | false;
+}
+
 interface WpConvocationPost {
   id: number;
   slug: string;
   title: { rendered: string };
+  content: { rendered: string };
   acf: {
     convocation_date?: string; // "Ymd"
+    link?: WpConvocationLinkField | "";
   };
   _embedded?: {
     "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
   };
+}
+
+interface WpCdLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpCdSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpCdParagraph {
+  paragraph: string;
+}
+
+interface WpCdImageRow {
+  image: string;
+}
+
+interface WpCdButton {
+  icon: string | false;
+  label: string;
+  href: WpCdLinkField;
+}
+
+interface WpCdLeadershipItem {
+  position: string;
+}
+
+interface WpConvocationDetailAcf {
+  // Hero
+  cd_hero_subline: string;
+  cd_hero_image: string;
+  // Sub Nav
+  cd_subnav_label: string;
+  cd_subnav_links: WpCdSubNavLink[] | false;
+  // Intro
+  cd_intro_paragraph: string;
+  // Buttons
+  cd_buttons: WpCdButton[] | false;
+  // Article
+  cd_article_title: string;
+  cd_article_paragraphs: WpCdParagraph[] | false;
+  cd_article_photos: WpCdImageRow[] | false;
+  // Photo Gallery
+  cd_gallery_title: string;
+  cd_gallery_images: WpCdImageRow[] | false;
+  // Gold Medalists
+  cd_medalists_title: string;
+  cd_medalists_images: WpCdImageRow[] | false;
+  // Live Broadcast
+  cd_broadcast_title: string;
+  cd_broadcast_youtube: string;
+  // Chief Guest
+  cd_cg_title: string;
+  cd_cg_name: string;
+  cd_cg_role: string;
+  cd_cg_bio: WpCdParagraph[] | false;
+  cd_cg_image: string;
+  cd_cg_leadership_title: string;
+  cd_cg_leadership_items: WpCdLeadershipItem[] | false;
 }
 
 const DOCTORAL_SCHOLARS_TERM_ID = 34;
@@ -7523,13 +7619,141 @@ export async function getConvocationPage(): Promise<ConvocationPageData> {
       href: l.href,
     })),
 
-    cards: posts.map((post) => ({
-      id: String(post.id),
-      title: decodeHtml(post.title.rendered),
-      date: parseYmdToFullDate(post.acf?.convocation_date),
-      image:
-        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
-        `https://picsum.photos/seed/convocation-${post.id}/680/420`,
+    cards: posts.map((post) => {
+      // Editor override (e.g. external gallery) takes priority; otherwise
+      // link to this convocation's own detail page.
+      const overrideHref =
+        typeof post.acf?.link === "object" && post.acf.link?.url
+          ? post.acf.link.url
+          : null;
+
+      return {
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        date: parseYmdToFullDate(post.acf?.convocation_date),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/convocation-${post.id}/680/420`,
+        href: overrideHref ?? `/resources/convocation/${post.slug}`,
+      };
+    }),
+  };
+}
+
+// ─── NEW: Individual convocation detail page accessor ────────────────────────
+
+export async function getConvocationDetailPage(
+  slug: string,
+): Promise<ConvocationDetailPageData> {
+  const [posts, contact] = await Promise.all([
+    wpFetch<
+      Array<{
+        id: number;
+        slug: string;
+        title: { rendered: string };
+        acf: WpConvocationDetailAcf;
+      }>
+    >(`/wp/v2/convocation?slug=${slug}&acf_format=standard`),
+    getSiteSettings(),
+  ]);
+
+  if (!posts || posts.length === 0) {
+    console.warn(`[wordpress.ts] Convocation '${slug}' not found.`);
+    return {
+      hero: {
+        title: "Convocation",
+        image: "https://picsum.photos/seed/convocation-missing/1200/500",
+        breadcrumb: [],
+      },
+      subNavLabel: "Page Title",
+      subNav: [],
+      introParagraph: "",
+      actionButtons: [],
+      article: { title: "", paragraphs: [], sidePhotos: [] },
+      photoGallery: { title: "Photo Gallery", images: [] },
+      goldMedalists: { title: "Gold Medalists", images: [] },
+      liveBroadcast: { title: "Live Broadcast", youtubeUrl: "" },
+      chiefGuest: {
+        title: "Chief Guest",
+        name: "",
+        role: "",
+        bio: [],
+        image: "",
+        leadershipTitle: "Major Leadership Positions Held",
+        leadershipPositions: [],
+      },
+      contact,
+    };
+  }
+
+  const post = posts[0];
+  const acf = post.acf;
+  const title = decodeHtml(post.title.rendered);
+  const normalize = (s: string) => s.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  return {
+    hero: {
+      title,
+      subline: acf.cd_hero_subline || undefined,
+      image: acf.cd_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Convocation", href: "/resources/convocation" },
+        { label: title, href: `/resources/convocation/${slug}` },
+      ],
+    },
+
+    subNavLabel: acf.cd_subnav_label || "Page Title",
+
+    subNav: toArray(acf.cd_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
     })),
+
+    introParagraph: acf.cd_intro_paragraph,
+
+    actionButtons: toArray(acf.cd_buttons).map((b) => ({
+      icon: typeof b.icon === "string" && b.icon ? b.icon : undefined,
+      label: b.label,
+      href: b.href?.url ?? "#",
+    })),
+
+    article: {
+      title: acf.cd_article_title,
+      paragraphs: toArray(acf.cd_article_paragraphs).map((r) =>
+        normalize(r.paragraph),
+      ),
+      sidePhotos: toArray(acf.cd_article_photos).map((r) => r.image),
+    },
+
+    photoGallery: {
+      title: acf.cd_gallery_title,
+      images: toArray(acf.cd_gallery_images).map((r) => r.image),
+    },
+
+    goldMedalists: {
+      title: acf.cd_medalists_title,
+      images: toArray(acf.cd_medalists_images).map((r) => r.image),
+    },
+
+    liveBroadcast: {
+      title: acf.cd_broadcast_title,
+      youtubeUrl: acf.cd_broadcast_youtube || "",
+    },
+
+    chiefGuest: {
+      title: acf.cd_cg_title,
+      name: acf.cd_cg_name,
+      role: acf.cd_cg_role,
+      bio: toArray(acf.cd_cg_bio).map((r) => normalize(r.paragraph)),
+      image: acf.cd_cg_image,
+      leadershipTitle: acf.cd_cg_leadership_title,
+      leadershipPositions: toArray(acf.cd_cg_leadership_items).map(
+        (r) => r.position,
+      ),
+    },
+
+    // ✅ Live from Site Settings options page
+    contact,
   };
 }

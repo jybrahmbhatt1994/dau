@@ -1827,3 +1827,49 @@ export interface ConvocationPageData {
   subNav: SubNavLink[];
   cards: ConvocationCard[];
 }
+
+export interface ConvocationActionButton {
+  icon?: string;
+  label: string;
+  href: string;
+}
+ 
+export interface ConvocationArticleData {
+  title: string;
+  paragraphs: string[];
+  /** Stacked photos beside the article text — typically 3. */
+  sidePhotos: string[];
+}
+ 
+export interface ConvocationGalleryData {
+  title: string;
+  images: string[];
+}
+ 
+export interface ConvocationChiefGuestData {
+  title: string;
+  name: string;
+  role: string;
+  bio: string[];
+  image: string;
+  leadershipTitle: string;
+  leadershipPositions: string[];
+}
+ 
+export interface ConvocationDetailPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  introParagraph: string;
+  actionButtons: ConvocationActionButton[];
+  article: ConvocationArticleData;
+  photoGallery: ConvocationGalleryData;
+  goldMedalists: ConvocationGalleryData;
+  liveBroadcast: {
+    title: string;
+    youtubeUrl: string;
+  };
+  chiefGuest: ConvocationChiefGuestData;
+  /** Reuses the homepage ConnectContact data shape (from Site Settings). */
+  contact: HomeData["contact"];
+}
