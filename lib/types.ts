@@ -1873,3 +1873,58 @@ export interface ConvocationDetailPageData {
   /** Reuses the homepage ConnectContact data shape (from Site Settings). */
   contact: HomeData["contact"];
 }
+
+export interface FacultyTenureOpeningCard {
+  id: string;
+  title: string;
+  image: string;
+  href: string;
+}
+ 
+export interface FacultyTenureEligibilityRole {
+  role: string;
+  description: string;
+}
+ 
+export interface FacultyTenureTab {
+  label: string;
+  contentHtml: string;
+}
+ 
+export interface FacultyOnTenurePageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  applyBanner: { text: string; cta: string; href: string };
+  intro: string;
+ 
+  openings: {
+    title: string;
+    description: string;
+    cards: FacultyTenureOpeningCard[];
+  };
+ 
+  eligibility: {
+    title: string;
+    generalBullets: string[];
+    roles: FacultyTenureEligibilityRole[];
+  };
+ 
+  aboutInstitute: {
+    title: string;
+    /** Raw HTML — contains inline links (programs page, faculty page, etc). */
+    contentHtml: string;
+    gallery: string[];
+  };
+ 
+  applicationProcess: {
+    title: string;
+    /** Raw HTML — contains inline links (email, faculty profile). */
+    contentHtml: string;
+  };
+ 
+  /** "Prospective Faculty" / "Compensation Package" pill tabs. */
+  tabs: FacultyTenureTab[];
+ 
+  cta: { left: CtaPanel; right: CtaPanel };
+}

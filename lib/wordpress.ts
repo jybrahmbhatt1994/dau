@@ -2549,6 +2549,83 @@ interface WpConvocationDetailAcf {
   cd_cg_leadership_items: WpCdLeadershipItem[] | false;
 }
 
+interface WpFtLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpFtSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFtOpeningCard {
+  title: string;
+  image: string;
+  href: WpFtLinkField | "";   // ← add this
+}
+
+interface WpFtBullet {
+  bullet: string;
+}
+
+interface WpFtRole {
+  role: string;
+  description: string;
+}
+
+interface WpFtGalleryImage {
+  image: string;
+}
+
+interface WpFtTabItem {
+  label: string;
+  content: string;
+}
+
+interface WpFacultyTenureAcf {
+  // Hero
+  ft_hero_title: string;
+  ft_hero_subline: string;
+  ft_hero_image: string;
+  // Sub Nav
+  ft_subnav_label: string;
+  ft_subnav_links: WpFtSubNavLink[] | false;
+  // Apply Banner
+  ft_banner_text: string;
+  ft_banner_cta: string;
+  ft_banner_href: WpFtLinkField;
+  // Intro
+  ft_intro: string;
+  // Openings
+  ft_openings_title: string;
+  ft_openings_description: string;
+  ft_openings_cards: WpFtOpeningCard[] | false;
+  // Eligibility
+  ft_eligibility_title: string;
+  ft_eligibility_bullets: WpFtBullet[] | false;
+  ft_eligibility_roles: WpFtRole[] | false;
+  // About the Institute
+  ft_about_title: string;
+  ft_about_content: string;
+  ft_about_gallery: WpFtGalleryImage[] | false;
+  // Application Process
+  ft_app_title: string;
+  ft_app_content: string;
+  // Tabs
+  ft_tabs_items: WpFtTabItem[] | false;
+  // CTA
+  ft_cta_left_title: string;
+  ft_cta_left_description: string;
+  ft_cta_left_label: string;
+  ft_cta_left_href: WpFtLinkField;
+  ft_cta_right_title: string;
+  ft_cta_right_description: string;
+  ft_cta_right_label: string;
+  ft_cta_right_href: WpFtLinkField;
+}
+
 const DOCTORAL_SCHOLARS_TERM_ID = 34;
 const RECENT_GRADUATES_TERM_ID = 35;
 
@@ -7755,5 +7832,108 @@ export async function getConvocationDetailPage(
 
     // ✅ Live from Site Settings options page
     contact,
+  };
+}
+
+export async function getFacultyOnTenurePage(): Promise<FacultyOnTenurePageData> {
+  const acf = await getPageAcf<WpFacultyTenureAcf>("faculty-on-tenure");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Faculty on Tenure page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Faculty on Tenure", image: "https://picsum.photos/seed/faculty-tenure/1200/500", breadcrumb: [] },
+      subNavLabel: "Page Title",
+      subNav: [],
+      applyBanner: { text: "", cta: "Apply Now", href: "#" },
+      intro: "",
+      openings: { title: "Current Openings", description: "", cards: [] },
+      eligibility: { title: "Eligibility Criteria", generalBullets: [], roles: [] },
+      aboutInstitute: { title: "About the Institute", contentHtml: "", gallery: [] },
+      applicationProcess: { title: "Application Process", contentHtml: "" },
+      tabs: [],
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.ft_hero_title,
+      subline: acf.ft_hero_subline || undefined,
+      image: acf.ft_hero_image,
+    },
+
+    subNavLabel: acf.ft_subnav_label || "Page Title",
+
+    subNav: toArray(acf.ft_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    applyBanner: {
+      text: acf.ft_banner_text,
+      cta: acf.ft_banner_cta,
+      href: acf.ft_banner_href?.url ?? "#",
+    },
+
+    intro: acf.ft_intro,
+
+    openings: {
+      title: acf.ft_openings_title,
+      description: acf.ft_openings_description,
+      cards: toArray(acf.ft_openings_cards).map((c, i) => ({
+        id: String(i),
+        title: c.title,
+        image: c.image,
+        href:                                    // ← add this
+          typeof c.href === "object" && c.href?.url ? c.href.url : "#",
+      })),
+    },
+
+    eligibility: {
+      title: acf.ft_eligibility_title,
+      generalBullets: toArray(acf.ft_eligibility_bullets).map(
+        (b) => b.bullet,
+      ),
+      roles: toArray(acf.ft_eligibility_roles).map((r) => ({
+        role: r.role,
+        description: r.description,
+      })),
+    },
+
+    aboutInstitute: {
+      title: acf.ft_about_title,
+      contentHtml: acf.ft_about_content || "",
+      gallery: toArray(acf.ft_about_gallery).map((r) => r.image),
+    },
+
+    applicationProcess: {
+      title: acf.ft_app_title,
+      contentHtml: acf.ft_app_content || "",
+    },
+
+    tabs: toArray(acf.ft_tabs_items).map((t) => ({
+      label: t.label,
+      contentHtml: t.content || "",
+    })),
+
+    cta: {
+      left: {
+        title: acf.ft_cta_left_title || undefined,
+        description: acf.ft_cta_left_description,
+        cta: acf.ft_cta_left_label,
+        href: acf.ft_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.ft_cta_right_title || undefined,
+        description: acf.ft_cta_right_description,
+        cta: acf.ft_cta_right_label,
+        href: acf.ft_cta_right_href?.url ?? "#",
+      },
+    },
   };
 }
