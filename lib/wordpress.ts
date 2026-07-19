@@ -126,6 +126,7 @@ import type {
   FacultyOnTenurePageData,
   StaffPageData,
   StaffCardData,
+  ProjectPositionsPageData,
 } from "@/lib/types";
 
 // ============================================================================
@@ -2638,6 +2639,123 @@ interface WpFacultyTenureAcf {
   ft_cta_right_description: string;
   ft_cta_right_label: string;
   ft_cta_right_href: WpFtLinkField;
+}
+
+interface WpPpLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpPpSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpProjectPositionsPageAcf {
+  // Hero
+  pp_hero_title: string;
+  pp_hero_subline: string;
+  pp_hero_image: string;
+  // Sub Nav
+  pp_subnav_label: string;
+  pp_subnav_links: WpPpSubNavLink[] | false;
+  // Apply Banner
+  pp_banner_text: string;
+  pp_banner_cta: string;
+  pp_banner_href: WpPpLinkField;
+  // List
+  pp_section_title: string;
+  // CTA
+  pp_cta_left_title: string;
+  pp_cta_left_description: string;
+  pp_cta_left_label: string;
+  pp_cta_left_href: WpPpLinkField;
+  pp_cta_right_title: string;
+  pp_cta_right_description: string;
+  pp_cta_right_label: string;
+  pp_cta_right_href: WpPpLinkField;
+}
+
+// project-position CPT post shape — just title + slug for now; detail
+// fields will be added once the detail page design is provided.
+interface WpProjectPositionPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+}
+
+interface WpPpdSkillItem {
+  skill: string;
+}
+
+interface WpProjectPositionDetailAcf {
+  ppd_centre_name: string;
+  ppd_centre_subtitle: string;
+  ppd_reference_number: string;
+  ppd_intro: string;
+
+  ppd_project_title: string;
+  ppd_investigators: string;
+  ppd_position_fellowship: string;
+  ppd_essential_qualification: string;
+  ppd_desirable_skills: WpPpdSkillItem[] | false;
+  ppd_upper_age_limit: string;
+  ppd_period_of_appointment: string;
+
+  ppd_how_to_apply: string;
+  ppd_important_dates: string;
+  ppd_additional_info: string;
+}
+
+interface WpProjectPositionDetailPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: WpProjectPositionDetailAcf;
+}
+
+interface WpTfpLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpTfpSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpTfpSectionItem {
+  title: string;
+  content: string;
+}
+
+interface WpTeachingFellowPositionsAcf {
+  // Hero
+  tfp_hero_title: string;
+  tfp_hero_subline: string;
+  tfp_hero_image: string;
+  // Sub Nav
+  tfp_subnav_label: string;
+  tfp_subnav_links: WpTfpSubNavLink[] | false;
+  // Intro
+  tfp_intro: string;
+  // Sections
+  tfp_sections: WpTfpSectionItem[] | false;
+  // Apply
+  tfp_apply_label: string;
+  tfp_apply_href: WpTfpLinkField;
+  tfp_deadline: string;
+  // CTA
+  tfp_cta_left_title: string;
+  tfp_cta_left_description: string;
+  tfp_cta_left_label: string;
+  tfp_cta_left_href: WpTfpLinkField;
+  tfp_cta_right_title: string;
+  tfp_cta_right_description: string;
+  tfp_cta_right_label: string;
+  tfp_cta_right_href: WpTfpLinkField;
 }
 
 const DOCTORAL_SCHOLARS_TERM_ID = 34;
@@ -7947,6 +8065,249 @@ export async function getFacultyOnTenurePage(): Promise<FacultyOnTenurePageData>
         description: acf.ft_cta_right_description,
         cta: acf.ft_cta_right_label,
         href: acf.ft_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+export async function getProjectPositionsPage(): Promise<ProjectPositionsPageData> {
+  const acf = await getPageAcf<WpProjectPositionsPageAcf>("project-positions");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Project Positions page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Project Positions", image: "https://picsum.photos/seed/project-positions/1200/500", breadcrumb: [] },
+      subNavLabel: "Page Title",
+      subNav: [],
+      applyBanner: { text: "", cta: "Apply Now", href: "#" },
+      sectionTitle: "Open Project Positions",
+      positions: [],
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  const posts = await wpFetch<WpProjectPositionPost[]>(
+    `/wp/v2/project-position?per_page=50&orderby=date&order=desc`,
+  );
+
+  return {
+    hero: {
+      title: acf.pp_hero_title,
+      subline: acf.pp_hero_subline || undefined,
+      image: acf.pp_hero_image,
+    },
+
+    subNavLabel: acf.pp_subnav_label || "Page Title",
+
+    subNav: toArray(acf.pp_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    applyBanner: {
+      text: acf.pp_banner_text,
+      cta: acf.pp_banner_cta,
+      href: acf.pp_banner_href?.url ?? "#",
+    },
+
+    sectionTitle: acf.pp_section_title,
+
+    positions: posts.map((post) => ({
+      id: String(post.id),
+      title: decodeHtml(post.title.rendered),
+      href: `/careers/project-positions/${post.slug}`,
+    })),
+
+    cta: {
+      left: {
+        title: acf.pp_cta_left_title || undefined,
+        description: acf.pp_cta_left_description,
+        cta: acf.pp_cta_left_label,
+        href: acf.pp_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.pp_cta_right_title || undefined,
+        description: acf.pp_cta_right_description,
+        cta: acf.pp_cta_right_label,
+        href: acf.pp_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+export async function getProjectPositionDetailPage(
+  slug: string,
+): Promise<ProjectPositionDetailPageData> {
+  // Reuse the listing page's hero + sub-nav (shared across the whole
+  // careers/project-positions section) instead of duplicating per-post.
+  const [listingAcf, posts] = await Promise.all([
+    getPageAcf<WpProjectPositionsPageAcf>("project-positions"),
+    wpFetch<WpProjectPositionDetailPost[]>(
+      `/wp/v2/project-position?slug=${slug}&acf_format=standard`,
+    ),
+  ]);
+
+  const fallbackHero: PageHeroContent = {
+    title: "Project Positions",
+    image: "https://picsum.photos/seed/project-positions/1200/500",
+    breadcrumb: [],
+  };
+
+  if (!posts || posts.length === 0) {
+    console.warn(`[wordpress.ts] Project position '${slug}' not found.`);
+    return {
+      hero: fallbackHero,
+      subNavLabel: "Page Title",
+      subNav: [],
+      centreName: "",
+      centreSubtitle: "",
+      referenceNumber: "",
+      introParagraph: "",
+      details: {
+        projectTitle: "",
+        investigators: "",
+        positionFellowship: "",
+        essentialQualificationHtml: "",
+        desirableSkills: [],
+        upperAgeLimit: "",
+        periodOfAppointment: "",
+      },
+      howToApplyHtml: "",
+      importantDatesHtml: "",
+      additionalInfoHtml: "",
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  const post = posts[0];
+  const acf = post.acf;
+
+  return {
+    hero: listingAcf
+      ? {
+          title: listingAcf.pp_hero_title,
+          subline: listingAcf.pp_hero_subline || undefined,
+          image: listingAcf.pp_hero_image,
+        }
+      : fallbackHero,
+
+    subNavLabel: listingAcf?.pp_subnav_label || "Page Title",
+
+    subNav: toArray(listingAcf?.pp_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    centreName: acf.ppd_centre_name,
+    centreSubtitle: acf.ppd_centre_subtitle,
+    referenceNumber: acf.ppd_reference_number,
+    introParagraph: acf.ppd_intro,
+
+    details: {
+      projectTitle: acf.ppd_project_title,
+      investigators: acf.ppd_investigators,
+      positionFellowship: acf.ppd_position_fellowship,
+      essentialQualificationHtml: acf.ppd_essential_qualification || "",
+      desirableSkills: toArray(acf.ppd_desirable_skills).map(
+        (s) => s.skill,
+      ),
+      upperAgeLimit: acf.ppd_upper_age_limit,
+      periodOfAppointment: acf.ppd_period_of_appointment,
+    },
+
+    howToApplyHtml: acf.ppd_how_to_apply || "",
+    importantDatesHtml: acf.ppd_important_dates || "",
+    additionalInfoHtml: acf.ppd_additional_info || "",
+
+    cta: {
+      left: {
+        title: listingAcf?.pp_cta_left_title || undefined,
+        description: listingAcf?.pp_cta_left_description ?? "",
+        cta: listingAcf?.pp_cta_left_label ?? "Know More",
+        href: listingAcf?.pp_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: listingAcf?.pp_cta_right_title || undefined,
+        description: listingAcf?.pp_cta_right_description ?? "",
+        cta: listingAcf?.pp_cta_right_label ?? "Know More",
+        href: listingAcf?.pp_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+export async function getTeachingFellowPositionsPage(): Promise<TeachingFellowPositionsPageData> {
+  const acf = await getPageAcf<WpTeachingFellowPositionsAcf>(
+    "teaching-fellow-positions",
+  );
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Teaching Fellow Positions page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Teaching Fellow Positions", image: "https://picsum.photos/seed/teaching-fellow-positions/1200/500", breadcrumb: [] },
+      subNavLabel: "Page Title",
+      subNav: [],
+      introParagraph: "",
+      sections: [],
+      applyButton: { label: "Apply Now", href: "#" },
+      submissionDeadline: "",
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.tfp_hero_title,
+      subline: acf.tfp_hero_subline || undefined,
+      image: acf.tfp_hero_image,
+    },
+
+    subNavLabel: acf.tfp_subnav_label || "Page Title",
+
+    subNav: toArray(acf.tfp_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    introParagraph: acf.tfp_intro,
+
+    sections: toArray(acf.tfp_sections).map((s) => ({
+      title: s.title,
+      contentHtml: s.content || "",
+    })),
+
+    applyButton: {
+      label: acf.tfp_apply_label,
+      href: acf.tfp_apply_href?.url ?? "#",
+    },
+
+    submissionDeadline: acf.tfp_deadline || "",
+
+    cta: {
+      left: {
+        title: acf.tfp_cta_left_title || undefined,
+        description: acf.tfp_cta_left_description,
+        cta: acf.tfp_cta_left_label,
+        href: acf.tfp_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.tfp_cta_right_title || undefined,
+        description: acf.tfp_cta_right_description,
+        cta: acf.tfp_cta_right_label,
+        href: acf.tfp_cta_right_href?.url ?? "#",
       },
     },
   };

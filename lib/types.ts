@@ -1929,3 +1929,77 @@ export interface FacultyOnTenurePageData {
  
   cta: { left: CtaPanel; right: CtaPanel };
 }
+
+export interface ProjectPositionCard {
+  id: string;
+  title: string;
+  href: string;
+}
+ 
+export interface ProjectPositionsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  applyBanner: { text: string; cta: string; href: string };
+  sectionTitle: string;
+  positions: ProjectPositionCard[];
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  ADD to lib/types.ts — Project Position detail page (dynamic [slug])
+// ============================================================================
+
+export interface ProjectPositionDetailPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+
+  centreName: string;
+  centreSubtitle: string;
+  referenceNumber: string;
+  introParagraph: string;
+
+  details: {
+    projectTitle: string;
+    investigators: string;
+    /** Multi-line — e.g. "Research Fellow - 1 position\nINR 45,000 per month" */
+    positionFellowship: string;
+    /** Raw HTML — may contain an "OR" paragraph separator between options. */
+    essentialQualificationHtml: string;
+    desirableSkills: string[];
+    upperAgeLimit: string;
+    periodOfAppointment: string;
+  };
+
+  /** Raw HTML — contains inline mailto: links. */
+  howToApplyHtml: string;
+  /** Raw HTML. */
+  importantDatesHtml: string;
+  /** Raw HTML — contains an inline external link. */
+  additionalInfoHtml: string;
+
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
+// ============================================================================
+//  ADD to lib/types.ts — Teaching Fellow Positions page
+// ============================================================================
+
+export interface TeachingFellowPositionsSection {
+  title: string;
+  /** Raw HTML — supports nested/lettered bullet lists. */
+  contentHtml: string;
+}
+
+export interface TeachingFellowPositionsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  introParagraph: string;
+  /** Overview, Eligibility, Compensation, Selection Process, etc. — flexible, editor-orderable. */
+  sections: TeachingFellowPositionsSection[];
+  applyButton: { label: string; href: string };
+  submissionDeadline: string;
+  cta: { left: CtaPanel; right: CtaPanel };
+}
