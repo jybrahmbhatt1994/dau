@@ -127,6 +127,9 @@ import type {
   StaffPageData,
   StaffCardData,
   ProjectPositionsPageData,
+  ProjectPositionDetailPageData,
+  TeachingFellowPositionsPageData,
+  PageHeroContent,
 } from "@/lib/types";
 
 // ============================================================================
