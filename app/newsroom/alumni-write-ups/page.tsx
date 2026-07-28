@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getNewslettersPage } from "@/lib/wordpress";
+import { getAlumniWriteUpsPage } from "@/lib/wordpress";
 import { PageHero } from "@/components/layout/PageHero";
 import { PageSubNav } from "@/components/layout/PageSubNav";
 import { ProseIntro } from "@/components/layout/ProseIntro";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function NewslettersPage() {
-  const data = await getNewslettersPage();
+  const data = await getAlumniWriteUpsPage();
 
   return (
     <>

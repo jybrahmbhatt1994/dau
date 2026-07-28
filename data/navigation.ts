@@ -79,7 +79,7 @@ export const navigation: NavItem[] = [
     href: "/newsroom",
     children: [
       { label: "Infocus Template", href: "/newsroom/student-stories" },
-      { label: "Newsletter", href: "/newsroom/newsletters" },
+      { label: "Alumni Write Ups", href: "/newsroom/alumni-write-ups" },
       { label: "Photo Gallery", href: "/newsroom/photo-gallery" },
     ],
   },

@@ -2761,6 +2761,206 @@ interface WpTeachingFellowPositionsAcf {
   tfp_cta_right_href: WpTfpLinkField;
 }
 
+interface WpNrLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpNrSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpNrParagraph {
+  paragraph: string;
+}
+
+interface WpNewsroomAcf {
+  // Hero
+  nr_hero_subline: string;
+  nr_hero_image: string;
+  // Sub Nav
+  nr_subnav_label: string;
+  nr_subnav_links: WpNrSubNavLink[] | false;
+  // Intro
+  nr_intro_paragraphs: WpNrParagraph[] | false;
+  // Media sections
+  nr_in_media_title: string;
+  nr_in_media_view_all: WpNrLinkField | "";
+  nr_press_title: string;
+  nr_press_view_all: WpNrLinkField | "";
+  // Latest News
+  nr_news_title: string;
+  nr_news_description: string;
+  // Stories & Blogs
+  nr_stories_title: string;
+  nr_stories_description: string;
+  nr_stories_view_all: WpNrLinkField | "";
+  // Podcasts
+  nr_podcasts_title: string;
+  nr_podcasts_description: string;
+  // CTA
+  nr_cta_left_description: string;
+  nr_cta_left_label: string;
+  nr_cta_left_href: WpNrLinkField;
+  nr_cta_right_description: string;
+  nr_cta_right_label: string;
+  nr_cta_right_href: WpNrLinkField;
+}
+
+// Simple link-list post shape — used for in-media and press-release CPTs
+// (title + published date + slug only, no featured image needed).
+interface WpMediaLinkPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+}
+
+// Standard WordPress blog post (post_type=post) — used for Stories & Blogs
+interface WpBlogPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+// podcast CPT post shape
+interface WpPodcastPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+interface WpStsLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpStsSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpStsParagraph {
+  paragraph: string;
+}
+
+interface WpStudentStoriesAcf {
+  sts_hero_subline: string;
+  sts_hero_image: string;
+  sts_subnav_label: string;
+  sts_subnav_links: WpStsSubNavLink[] | false;
+  sts_intro_paragraphs: WpStsParagraph[] | false;
+  sts_cta_left_description: string;
+  sts_cta_left_label: string;
+  sts_cta_left_href: WpStsLinkField;
+  sts_cta_right_description: string;
+  sts_cta_right_label: string;
+  sts_cta_right_href: WpStsLinkField;
+}
+
+// student-stories CPT post — uses native WP title, featured image, and
+// published date/time (no custom ACF fields needed)
+interface WpStudentStoryPost {
+  id: number;
+  slug: string;
+  date: string; // ISO datetime, e.g. "2026-04-19T12:20:00"
+  title: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+interface WpAwuLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpAwuSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpAwuParagraph {
+  paragraph: string;
+}
+
+interface WpAlumniWriteUpsAcf {
+  awu_hero_subline: string;
+  awu_hero_image: string;
+  awu_subnav_label: string;
+  awu_subnav_links: WpAwuSubNavLink[] | false;
+  awu_intro_paragraphs: WpAwuParagraph[] | false;
+  awu_cta_left_title: string;
+  awu_cta_left_description: string;
+  awu_cta_left_label: string;
+  awu_cta_left_href: WpAwuLinkField;
+  awu_cta_right_title: string;
+  awu_cta_right_description: string;
+  awu_cta_right_label: string;
+  awu_cta_right_href: WpAwuLinkField;
+}
+
+// alumni-write-up CPT post — native WP title, featured image, published date
+interface WpAlumniWriteUpPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+interface WpPgLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpPgSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpPhotoGalleryPageAcf {
+  pg_hero_subline: string;
+  pg_hero_image: string;
+  pg_subnav_label: string;
+  pg_subnav_links: WpPgSubNavLink[] | false;
+  pg_intro: string;
+  pg_cta_calendar_title: string;
+  pg_cta_calendar_description: string;
+  pg_cta_calendar_label: string;
+  pg_cta_calendar_href: WpPgLinkField;
+  pg_cta_areas_title: string;
+  pg_cta_areas_description: string;
+  pg_cta_areas_label: string;
+  pg_cta_areas_href: WpPgLinkField;
+}
+
+// photo-gallery CPT post — one post = one category/album (title + featured
+// image only; the actual photos inside each gallery will live on the
+// detail page once that design is provided)
+interface WpPhotoGalleryPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
 const DOCTORAL_SCHOLARS_TERM_ID = 34;
 const RECENT_GRADUATES_TERM_ID = 35;
 
@@ -4568,20 +4768,375 @@ export async function getAdministrationPage(): Promise<AdministrationPageData> {
 // ─── Newsroom ─────────────────────────────────────────────────────────────────
 
 export async function getNewsroomPage(): Promise<NewsroomPageData> {
-  return newsroomPageData;
+  const acf = await getPageAcf<WpNewsroomAcf>("newsroom");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Newsroom page ACF not found — falling back to mock data.",
+    );
+    return newsroomPageData;
+  }
+
+  // Fetch all 5 sources in parallel — no waterfall
+  const [inMediaPosts, pressPosts, newsPosts, blogPosts, podcastPosts] =
+    await Promise.all([
+      wpFetch<WpMediaLinkPost[]>(
+        `/wp/v2/in-media?per_page=5&orderby=date&order=desc&_fields=id,slug,date,title`,
+      ),
+      wpFetch<WpMediaLinkPost[]>(
+        `/wp/v2/press-release?per_page=5&orderby=date&order=desc&_fields=id,slug,date,title`,
+      ),
+      wpFetch<WpNewsPost[]>(
+        `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
+      ),
+      wpFetch<WpBlogPost[]>(
+        `/wp/v2/posts?_embed=wp:featuredmedia&per_page=4&orderby=date&order=desc`,
+      ),
+      wpFetch<WpPodcastPost[]>(
+        `/wp/v2/podcast?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
+      ),
+    ]);
+
+  const mapMediaLink = (post: WpMediaLinkPost, prefix: string): MediaLinkItem => ({
+    id: String(post.id),
+    date: formatIsoDate(post.date),
+    title: decodeHtml(post.title.rendered),
+    href: `/newsroom/${prefix}/${post.slug}`,
+  });
+
+  return {
+    hero: {
+      title: "Newsroom",
+      subline: acf.nr_hero_subline || undefined,
+      image: acf.nr_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Newsroom", href: "/newsroom" },
+      ],
+    },
+
+    subNavLabel: acf.nr_subnav_label || "Newsroom",
+
+    subNav: toArray(acf.nr_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.nr_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    media: {
+      inMedia: {
+        title: acf.nr_in_media_title,
+        items: inMediaPosts.map((p) => mapMediaLink(p, "in-the-media")),
+        viewAllHref:
+          typeof acf.nr_in_media_view_all === "object" &&
+          acf.nr_in_media_view_all?.url
+            ? acf.nr_in_media_view_all.url
+            : "/newsroom/in-the-media",
+      },
+      pressRelease: {
+        title: acf.nr_press_title,
+        items: pressPosts.map((p) => mapMediaLink(p, "press-releases")),
+        viewAllHref:
+          typeof acf.nr_press_view_all === "object" &&
+          acf.nr_press_view_all?.url
+            ? acf.nr_press_view_all.url
+            : "/newsroom/press-releases",
+      },
+    },
+
+    // ✅ Reuses the same news CPT + featured/list pattern as the homepage
+    latestNews: {
+      title: acf.nr_news_title,
+      description: acf.nr_news_description,
+      featured: newsPosts[0]
+        ? {
+            id: String(newsPosts[0].id),
+            title: decodeHtml(newsPosts[0].title.rendered),
+            excerpt: excerptFromHtml(newsPosts[0].content.rendered, 30),
+            date: formatIsoDate(newsPosts[0].date),
+            image:
+              newsPosts[0]._embedded?.["wp:featuredmedia"]?.[0]
+                ?.source_url ??
+              `https://picsum.photos/seed/news-feat/1044/660`,
+            href: `/newsroom/news/${newsPosts[0].slug}`,
+          }
+        : {
+            id: "none",
+            title: "",
+            excerpt: "",
+            date: "",
+            image: "",
+            href: "#",
+          },
+      list: newsPosts.slice(1, 5).map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        date: formatIsoDate(post.date),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/news-${post.id}/300/220`,
+        href: `/newsroom/news/${post.slug}`,
+      })),
+    },
+
+    stories: {
+      title: acf.nr_stories_title,
+      description: acf.nr_stories_description,
+      viewAllHref:
+        typeof acf.nr_stories_view_all === "object" &&
+        acf.nr_stories_view_all?.url
+          ? acf.nr_stories_view_all.url
+          : "/newsroom/stories",
+      items: blogPosts.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        date: formatIsoDate(post.date),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/story-${post.id}/400/400`,
+        href: `/newsroom/stories/${post.slug}`,
+      })),
+    },
+
+    podcasts: {
+      title: acf.nr_podcasts_title,
+      description: acf.nr_podcasts_description,
+      cards: podcastPosts.map((post) => ({
+        id: String(post.id),
+        title: decodeHtml(post.title.rendered),
+        image:
+          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+          `https://picsum.photos/seed/podcast-${post.id}/900/380`,
+        href: `/newsroom/podcasts/${post.slug}`,
+      })),
+    },
+
+    cta: {
+      left: {
+        description: acf.nr_cta_left_description,
+        cta: acf.nr_cta_left_label,
+        href: acf.nr_cta_left_href?.url ?? "#",
+      },
+      right: {
+        description: acf.nr_cta_right_description,
+        cta: acf.nr_cta_right_label,
+        href: acf.nr_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getPhotoGalleryPage(): Promise<PhotoGalleryPageData> {
-  return photoGalleryPageData;
+  const acf = await getPageAcf<WpPhotoGalleryPageAcf>("photo-gallery");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Photo Gallery page ACF not found — falling back to mock data.",
+    );
+    return photoGalleryPageData;
+  }
+
+  const posts = await wpFetch<WpPhotoGalleryPost[]>(
+    `/wp/v2/photo-gallery?_embed=wp:featuredmedia&per_page=50&orderby=menu_order&order=asc`,
+  );
+
+  return {
+    hero: {
+      title: "Photo Gallery",
+      subline: acf.pg_hero_subline || undefined,
+      image: acf.pg_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Newsroom", href: "/newsroom" },
+        { label: "Photo Gallery", href: "/newsroom/photo-gallery" },
+      ],
+    },
+
+    subNavLabel: acf.pg_subnav_label || "Page Title",
+
+    subNav: toArray(acf.pg_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: acf.pg_intro || "",
+
+    categories: posts.map((post) => ({
+      id: String(post.id),
+      title: decodeHtml(post.title.rendered),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/gallery-${post.id}/900/380`,
+      href: `/newsroom/photo-gallery/${post.slug}`,
+    })),
+
+    cta: {
+      calendar: {
+        title: acf.pg_cta_calendar_title || undefined,
+        description: acf.pg_cta_calendar_description,
+        cta: acf.pg_cta_calendar_label,
+        href: acf.pg_cta_calendar_href?.url ?? "#",
+      },
+      areas: {
+        title: acf.pg_cta_areas_title || undefined,
+        description: acf.pg_cta_areas_description,
+        cta: acf.pg_cta_areas_label,
+        href: acf.pg_cta_areas_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getNewslettersPage(): Promise<CardGridPageData> {
   return newslettersPageData;
 }
 
+export async function getAlumniWriteUpsPage(): Promise<CardGridPageData> {
+  const acf = await getPageAcf<WpAlumniWriteUpsAcf>("alumni-write-ups");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Alumni Write Ups page ACF not found — falling back to mock data.",
+    );
+    return newslettersPageData;
+  }
+
+  const posts = await wpFetch<WpAlumniWriteUpPost[]>(
+    `/wp/v2/alumni-write-up?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+  );
+
+  return {
+    hero: {
+      title: "Alumni Write Ups",
+      subline: acf.awu_hero_subline || undefined,
+      image: acf.awu_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Newsroom", href: "/newsroom" },
+        { label: "Alumni Write Ups", href: "/newsroom/alumni-write-ups" },
+      ],
+    },
+
+    subNavLabel: acf.awu_subnav_label || "Page Title",
+
+    subNav: toArray(acf.awu_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.awu_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    // Reuses formatDayMonthTime() already built for Student Stories —
+    // same "19 Apr, 12:20PM" format, no year.
+    items: posts.map((post) => ({
+      id: String(post.id),
+      title: decodeHtml(post.title.rendered),
+      date: formatDayMonthTime(post.date),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/alumni-write-up-${post.id}/640/360`,
+      href: `/newsroom/alumni-write-ups/${post.slug}`,
+    })),
+
+    cta: {
+      left: {
+        title: acf.awu_cta_left_title || undefined,
+        description: acf.awu_cta_left_description,
+        cta: acf.awu_cta_left_label,
+        href: acf.awu_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.awu_cta_right_title || undefined,
+        description: acf.awu_cta_right_description,
+        cta: acf.awu_cta_right_label,
+        href: acf.awu_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+function formatDayMonthTime(iso: string): string {
+  const date = new Date(iso);
+  const datePart = date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+  });
+  const timePart = date
+    .toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .replace(" ", "");
+  return `${datePart}, ${timePart}`;
+}
 /** Student Stories / In Focus (/infocus/student-stories) */
 export async function getStudentStoriesPage(): Promise<CardGridPageData> {
-  return studentStoriesPageData;
+  const acf = await getPageAcf<WpStudentStoriesAcf>("student-stories");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Student Stories page ACF not found — falling back to mock data.",
+    );
+    return studentStoriesPageData;
+  }
+
+  // Fetch a generous batch — PaginatedCardGrid handles pagination client-side
+  const posts = await wpFetch<WpStudentStoryPost[]>(
+    `/wp/v2/student-stories?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+  );
+
+  return {
+    hero: {
+      title: "Student Stories",
+      subline: acf.sts_hero_subline || undefined,
+      image: acf.sts_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "In Focus", href: "/newsroom" },
+        { label: "Student Stories", href: "/newsroom/student-stories" },
+      ],
+    },
+
+    subNavLabel: acf.sts_subnav_label || "Page Title",
+
+    subNav: toArray(acf.sts_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.sts_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    items: posts.map((post) => ({
+      id: String(post.id),
+      title: decodeHtml(post.title.rendered),
+      date: formatDayMonthTime(post.date),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/story-${post.id}/640/360`,
+      href: `/newsroom/student-stories/${post.slug}`,
+    })),
+
+    cta: {
+      left: {
+        description: acf.sts_cta_left_description,
+        cta: acf.sts_cta_left_label,
+        href: acf.sts_cta_left_href?.url ?? "#",
+      },
+      right: {
+        description: acf.sts_cta_right_description,
+        cta: acf.sts_cta_right_label,
+        href: acf.sts_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 // ─── Life @ DAU ───────────────────────────────────────────────────────────────
