@@ -14,6 +14,9 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
   // Mobile-only: tracks which nested (3rd-level) group is expanded, keyed by
   // "parentLabel > childLabel" so nested toggles never collide across groups.
   const [openSubGroup, setOpenSubGroup] = useState<string | null>(null);
+  // Mobile-only: tracks which 4th-level group is expanded, keyed by
+  // "parentLabel > childLabel > grandchildLabel".
+  const [openSubGroup2, setOpenSubGroup2] = useState<string | null>(null);
 
   // Lock background scroll while the drawer is open
   useEffect(() => {
@@ -80,13 +83,45 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
                             >
                               <ul className="py-2">
                                 {child.children.map((grandchild) => (
-                                  <li key={grandchild.label}>
+                                  <li
+                                    key={grandchild.label}
+                                    className="group/nested2 relative"
+                                  >
                                     <Link
                                       href={grandchild.href}
-                                      className="block px-4 py-2.5 text-sm font-medium text-black/80 transition-colors hover:bg-surface hover:text-brand"
+                                      className="flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-medium text-black/80 transition-colors hover:bg-surface hover:text-brand"
                                     >
-                                      {grandchild.label}
+                                      <span>{grandchild.label}</span>
+                                      {grandchild.children && (
+                                        <ChevronDown className="h-3 w-3 -rotate-90 text-ash" />
+                                      )}
                                     </Link>
+
+                                    {/* 4th-level flyout — opens to the right of the 3rd-level dropdown */}
+                                    {grandchild.children && (
+                                      <div
+                                        className={`invisible absolute top-0 z-50 min-w-[240px] border-t-2 border-brand bg-white opacity-0 shadow-lg transition-all duration-150 group-hover/nested2:visible group-hover/nested2:opacity-100 ${
+                                          alignRight
+                                            ? "right-full mr-px"
+                                            : "left-full ml-px"
+                                        }`}
+                                      >
+                                        <ul className="py-2">
+                                          {grandchild.children.map(
+                                            (greatGrandchild) => (
+                                              <li key={greatGrandchild.label}>
+                                                <Link
+                                                  href={greatGrandchild.href}
+                                                  className="block px-4 py-2.5 text-sm font-medium text-black/80 transition-colors hover:bg-surface hover:text-brand"
+                                                >
+                                                  {greatGrandchild.label}
+                                                </Link>
+                                              </li>
+                                            ),
+                                          )}
+                                        </ul>
+                                      </div>
+                                    )}
                                   </li>
                                 ))}
                               </ul>
@@ -230,17 +265,65 @@ export function Header({ navigation }: { navigation: NavItem[] }) {
                                 }`}
                               >
                                 <ul className="min-h-0 overflow-hidden bg-white">
-                                  {child.children.map((grandchild) => (
-                                    <li key={grandchild.label}>
-                                      <Link
-                                        href={grandchild.href}
-                                        onClick={() => setOpen(false)}
-                                        className="block px-9 py-2.5 text-sm text-black/70"
-                                      >
-                                        {grandchild.label}
-                                      </Link>
-                                    </li>
-                                  ))}
+                                  {child.children.map((grandchild) => {
+                                    const subKey2 = `${subKey} > ${grandchild.label}`;
+                                    const subOpen2 = openSubGroup2 === subKey2;
+
+                                    return (
+                                      <li key={grandchild.label}>
+                                        <div className="flex items-center justify-between">
+                                          <Link
+                                            href={grandchild.href}
+                                            onClick={() => setOpen(false)}
+                                            className="flex-1 px-9 py-2.5 text-sm text-black/70"
+                                          >
+                                            {grandchild.label}
+                                          </Link>
+                                          {grandchild.children && (
+                                            <button
+                                              type="button"
+                                              onClick={() =>
+                                                setOpenSubGroup2(
+                                                  subOpen2 ? null : subKey2,
+                                                )
+                                              }
+                                              className="px-4 py-2.5 text-ash"
+                                              aria-label={`Toggle ${grandchild.label} submenu`}
+                                            >
+                                              <ChevronDown
+                                                className={`h-3 w-3 transition-transform duration-300 ${subOpen2 ? "rotate-180" : ""}`}
+                                              />
+                                            </button>
+                                          )}
+                                        </div>
+
+                                        {/* 4th-level nested accordion */}
+                                        {grandchild.children && (
+                                          <div
+                                            className={`grid overflow-hidden transition-all duration-300 ease-in-out ${
+                                              subOpen2 ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                            }`}
+                                          >
+                                            <ul className="min-h-0 overflow-hidden bg-surface">
+                                              {grandchild.children.map(
+                                                (greatGrandchild) => (
+                                                  <li key={greatGrandchild.label}>
+                                                    <Link
+                                                      href={greatGrandchild.href}
+                                                      onClick={() => setOpen(false)}
+                                                      className="block px-12 py-2.5 text-sm text-black/65"
+                                                    >
+                                                      {greatGrandchild.label}
+                                                    </Link>
+                                                  </li>
+                                                ),
+                                              )}
+                                            </ul>
+                                          </div>
+                                        )}
+                                      </li>
+                                    );
+                                  })}
                                 </ul>
                               </div>
                             )}

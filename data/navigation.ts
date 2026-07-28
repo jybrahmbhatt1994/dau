@@ -6,69 +6,95 @@ import type { NavItem, UtilityLink } from "@/lib/types";
 export const navigation: NavItem[] = [
   { label: "Home", href: "/" },
   {
+    // Parent trigger only — no page of its own. All real destinations
+    // live on the children below (per client requirement).
     label: "Academics",
-    href: "/academics",
+    href: "#",
     children: [
-      { label: "Dean", href: "/academics/dean" },
-      { label: "SOT", href: "/academics/sot" },
-      { label: "Academic Areas", href: "/academics/areas" },
+      { label: "Academics", href: "/academics" },
       {
-        label: "Programs of Study",
-        href: "/academics/programs-of-study",
+        // "Schools" is a trigger-only group, same rule as the parent.
+        label: "Schools",
+        href: "#",
         children: [
-          { label: "Undergraduate Programs", href: "/academics/program/undergraduate-programs" },
-          { label: "Postgraduate Programs", href: "/academics/program/postgraduate-programs" },
-          { label: "Dual Degree Programs", href: "/academics/program/dual-degree-programs" },
-          { label: "Doctoral Program", href: "/academics/program/doctoral-program" },
+          {
+            // SOT itself has no standalone page in this hierarchy — only
+            // its programmes do. Give it a real href instead if SOT should
+            // also be clickable on desktop (see chat note).
+            label: "School of Technology",
+            href: "/academics/sot",
+            children: [
+              { label: "Undergraduate Programmes", href: "/academics/program/undergraduate-programs" },
+              { label: "Dual Degree", href: "/academics/program/dual-degree-programs" },
+              { label: "Graduate Programmes", href: "/academics/program/postgraduate-programs" },
+              { label: "Doctoral Programmes", href: "/academics/program/doctoral-program" },
+            ],
+          },
+          { label: "School of Law", href: "https://sol.daiict.ac.in/" },
         ],
       },
-      // { label: "B.Tech", href: "/academics/support/resource-centre" },
+      { label: "Office of Dean Academics", href: "/academics/dean" },
+      // TODO: replace with the real LMS URL — external link, opens in new tab.
+      { label: "Moodle", href: "https://moodle.dau.ac.in" },
     ],
   },
   {
     label: "Admission",
-    href: "/admission",
+    href: "#",
     children: [
-      // { label: "Undergraduate Admissions", href: "/admission/ug" },
+      { label: "Admission", href: "/admission" },
       { label: "Financial Support", href: "/admission/financial-support" },
       { label: "Scholarships", href: "/admission/scholarships" },
     ],
   },
   {
     label: "Faculty",
-    href: "/faculty",
+    href: "#",
     children: [
-      { label: "Dean Faculty", href: "/faculty/dean" },
+      { label: "Faculty", href: "/faculty" },
+      { label: "Office of the Dean-Faculty", href: "/faculty/dean" },
       { label: "Faculty Recruitment", href: "/faculty/recruitment" },
-      { label: "Faculty Handbook", href: "/faculty/handbook" },
       { label: "Faculty Development & Evaluation", href: "/faculty/development" },
+      { label: "Faculty Handbook", href: "/faculty/handbook" },
     ],
   },
   {
     label: "Research",
-    href: "/research",
+    href: "#",
     children: [
-      { label: "Dean Research", href: "/research/dean" },
+      { label: "Research", href: "/research" },
+      { label: "Office of the Dean-Research", href: "/research/dean" },
       { label: "Research Areas", href: "/research/areas" },
+      { label: "Research Labs", href: "#" },
       { label: "Grants & Projects", href: "/research/grants" },
+      { label: "Noteworthy Contributions", href: "#",
+        children: [
+          { label: "Accomplishments", href: "#" },
+          { label: "Outreach and Contrbutions", href: "#" },
+        ],
+       },
+      { label: "Partnerships", href: "#" },
       { label: "Awards", href: "/research/awards" },
     ],
   },
   {
     label: "Placement",
-    href: "/placements",
+    href: "#",
     children: [
+      { label: "Placement", href: "/placements" },
       { label: "Placement Team", href: "/placements/team" },
       { label: "Placement Stats", href: "/placements/stats" },
+      { label: "The Career Preparatory Programme", href: "#" },
       { label: "Top Recruiter", href: "/placements/recruiters" },
       { label: "Placement Internship", href: "/placements/internships" },
     ],
   },
   {
     label: "Life@DAU",
-    href: "/life",
+    href: "#",
     children: [
-      { label: "Dean Student", href: "/life/dean" },
+      // { label: "Overview", href: "/life" },
+      { label: "Office of Dean Students", href: "/life/dean" },
       { label: "Campus Life", href: "/life/campus" },
       { label: "Student Support", href: "/life/support" },
       { label: "Fest & Events", href: "/life/events" },
@@ -76,18 +102,26 @@ export const navigation: NavItem[] = [
   },
   {
     label: "News & Events",
-    href: "/newsroom",
+    href: "#",
     children: [
-      { label: "Infocus Template", href: "/newsroom/student-stories" },
+      { label: "Newsroom", href: "/newsroom" },
+      { label: "In focus", href: "/newsroom/student-stories" },
       { label: "Alumni Write Ups", href: "/newsroom/alumni-write-ups" },
       { label: "Photo Gallery", href: "/newsroom/photo-gallery" },
     ],
   },
-  { label: "Centers", href: "/centers" },
+  { label: "Centers", href: "#",
+    children: [
+      { label: "Resource Centre", href: "/academics/support/resource-centre" },
+      { label: "SELC", href: "#" },
+      { label: "DCEI", href: "#" },
+    ],
+   },
   {
     label: "About",
-    href: "/about",
+    href: "#",
     children: [
+      { label: "Mission and Vision", href: "/about" },
       { label: "Leadership", href: "/about/leadership" },
       { label: "Administration", href: "/about/administration" },
     ],
