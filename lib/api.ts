@@ -48,18 +48,33 @@ export async function wpFetch<T>(
  * Fetch a single WordPress page by slug and return its ACF fields.
  * Returns null if the page is not found.
  */
+// export async function getPageAcf<T>(
+//   slug: string,
+//   revalidate = 60,
+// ): Promise<T | null> {
+//   const pages = await wpFetch<Array<{ acf: T }>>(
+//     `/wp/v2/pages?slug=${slug}&acf_format=standard&_fields=id,slug,acf`,
+//     revalidate,
+//   );
+
+//   if (!pages || pages.length === 0) return null;
+
+//   return pages[0].acf;
+// }
 export async function getPageAcf<T>(
   slug: string,
-  revalidate = 60,
+  revalidate?: number,
 ): Promise<T | null> {
-  const pages = await wpFetch<Array<{ acf: T }>>(
-    `/wp/v2/pages?slug=${slug}&acf_format=standard&_fields=id,slug,acf`,
-    revalidate,
-  );
-
-  if (!pages || pages.length === 0) return null;
-
-  return pages[0].acf;
+  try {
+    const pages = await wpFetch<Array<{ acf: T }>>(
+      `/wp/v2/pages?slug=${slug}&acf_format=standard&_fields=id,slug,acf`,
+      revalidate,
+    );
+    return pages[0]?.acf ?? null;
+  } catch (err) {
+    console.warn(`[getPageAcf] Failed for slug "${slug}":`, err);
+    return null;
+  }
 }
 
 /**
