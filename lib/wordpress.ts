@@ -5470,15 +5470,19 @@ export async function getFestEventsPage(): Promise<FestEventsPageData> {
 
   // Fetch both CPTs in parallel — no waterfall
   const [festPosts, eventPosts] = await Promise.all([
-    wpFetch<WpFestPost[]>(
-      `/wp/v2/fest?_embed=wp:featuredmedia&acf_format=standard&per_page=6&orderby=date&order=desc`,
-    ),
-    // Fetch enough events for the "Show More" client-side reveal (6 shown,
-    // rest revealed on click) — 20 gives good headroom.
-    wpFetch<WpEventPost[]>(
-      `/wp/v2/event?_embed=wp:featuredmedia&per_page=20&orderby=date&order=desc`,
-    ),
-  ]);
+  wpFetch<WpFestPost[]>(
+    `/wp/v2/fest?_embed=wp:featuredmedia&acf_format=standard&per_page=6&orderby=date&order=desc`,
+  ).catch((err) => {
+    console.warn("[wordpress.ts] Fest fetch failed, using empty list:", err);
+    return [] as WpFestPost[];
+  }),
+  wpFetch<WpEventPost[]>(
+    `/wp/v2/event?_embed=wp:featuredmedia&acf_format=standard&per_page=20&orderby=date&order=desc`,
+  ).catch((err) => {
+    console.warn("[wordpress.ts] Event fetch failed, using empty list:", err);
+    return [] as WpEventPost[];
+  }),
+]);
 
   return {
     hero: {
