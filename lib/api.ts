@@ -61,3 +61,22 @@ export async function getPageAcf<T>(
 
   return pages[0].acf;
 }
+
+/**
+ * Wraps wpFetch with a fallback value on failure. Use this for any
+ * build-time fetch where a transient WP error shouldn't take down the
+ * whole page/build — the page just renders with an empty/fallback list,
+ * and ISR (revalidate) will pick up real data on the next request.
+ */
+export async function wpFetchSafe<T>(
+  endpoint: string,
+  fallback: T,
+  revalidate?: number,
+): Promise<T> {
+  try {
+    return await wpFetch<T>(endpoint, revalidate);
+  } catch (err) {
+    console.warn(`[wpFetchSafe] Failed: ${endpoint}`, err);
+    return fallback;
+  }
+}

@@ -17,7 +17,7 @@
  *   6. Components never change.
  */
 
-import { wpFetch, getPageAcf } from "@/lib/api";
+import { wpFetch, wpFetchSafe, getPageAcf } from "@/lib/api";
 
 // ─── Mock data imports (remove each one as its section is migrated to WP) ────
 import { homeData } from "@/data/home";
@@ -6208,12 +6208,13 @@ export async function getFacultyPage(): Promise<FacultyPageData> {
 
   // Fetch every faculty-type term's members in parallel
   const tabResults = await Promise.all(
-    FACULTY_TYPE_TERMS.map(({ termId }) =>
-      wpFetch<WpFacultyFullPost[]>(
-        `/wp/v2/faculty?faculty-type=${termId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
-      ),
+  FACULTY_TYPE_TERMS.map(({ termId }) =>
+    wpFetchSafe<WpFacultyFullPost[]>(
+      `/wp/v2/faculty?faculty-type=${termId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
+      [], // fallback: empty tab instead of crashing the whole build
     ),
-  );
+  ),
+);
 
   const tabs: FacultyTabData[] = FACULTY_TYPE_TERMS.map((term, i) => ({
     slug: term.slug,
