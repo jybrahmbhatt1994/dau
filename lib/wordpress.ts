@@ -5734,8 +5734,9 @@ export async function getResearchAreaDetailPage(
     Array<{ id: number; slug: string; title: { rendered: string }; acf: WpResearchAreaDetailAcf }>
   >(
     `/wp/v2/research-area?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
+    [],
     0,
-   []);
+  );
 
   if (!posts || posts.length === 0) {
     console.warn(
