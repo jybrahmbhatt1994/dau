@@ -3068,7 +3068,9 @@ function arr<T>(value: unknown): T[] {
 
 // No local fetch helper here — every call below uses the `wpFetch` /
 // `getPageAcf` already imported at the top of lib/wordpress.ts from
-// "@/lib/api". Their signature is `wpFetch<T>(endpoint, revalidate = 60)`
+// "@/lib/api". Their signature is `wpFetch<T>(endpoint, revalidate = 60)` (and
+// `wpFetchSafe<T>(endpoint, fallback, revalidate?)` for calls that shouldn't
+// crash the whole build on a transient WordPress failure)
 // where `endpoint` starts with "/wp/v2/…" or "/dau/v1/…" — no "/wp-json"
 
 function mapAdmissionDataset(post: WpAdmissionPost): AdmissionDataset {
@@ -3792,22 +3794,22 @@ export async function getHomeData(): Promise<HomeData> {
   const [facultyPosts, researchPosts, newsPosts, eventPosts, centerPosts, siteSettings] =
     await Promise.all([
       facultyIds
-        ? wpFetch<WpFacultyPost[]>(
+        ? wpFetchSafe<WpFacultyPost[]>(
             `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
-          )
+           [])
         : Promise.resolve([] as WpFacultyPost[]),
-      wpFetch<WpResearchPost[]>(
+      wpFetchSafe<WpResearchPost[]>(
         `/wp/v2/research-area?_embed=wp:featuredmedia&per_page=6&orderby=date&order=desc`,
-      ),
-      wpFetch<WpNewsPost[]>(
+       []),
+      wpFetchSafe<WpNewsPost[]>(
         `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
-      ),
-      wpFetch<WpEventPost[]>(
+       []),
+      wpFetchSafe<WpEventPost[]>(
         `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
-      ),
-      wpFetch<WpCenterPost[]>(
+       []),
+      wpFetchSafe<WpCenterPost[]>(
         `/wp/v2/center?_embed=wp:featuredmedia&per_page=6&orderby=date&order=desc`,
-      ),
+       []),
       getSiteSettings(),
     ]);
 
@@ -3856,9 +3858,9 @@ export async function getAcademicsPage(): Promise<AcademicsData> {
 
   // Fetch relationship-selected posts (no waterfall needed — just one call)
   const programPosts = programIds
-    ? await wpFetch<WpProgramCategorySlimPost[]>(
+    ? await wpFetchSafe<WpProgramCategorySlimPost[]>(
         `/wp/v2/pragrams-of-study?include=${programIds}&acf_format=standard&_fields=id,slug,title,acf`,
-      )
+       [])
     : ([] as WpProgramCategorySlimPost[]);
 
   // Preserve editor's chosen order for both relationship fields
@@ -4051,21 +4053,21 @@ export async function getSchoolPage(): Promise<SchoolPageData> {
   // selected research areas, latest news, latest events. No waterfall.
   const [coursePosts, researchPosts, newsPosts, eventPosts] = await Promise.all([
     programIds
-      ? wpFetch<WpCoursePost[]>(
+      ? wpFetchSafe<WpCoursePost[]>(
           `/wp/v2/course?include=${programIds}&_embed=wp:featuredmedia&acf_format=standard`,
-        )
+         [])
       : Promise.resolve([] as WpCoursePost[]),
     researchIds
-      ? wpFetch<WpResearchPost[]>(
+      ? wpFetchSafe<WpResearchPost[]>(
           `/wp/v2/research-area?include=${researchIds}&_embed=wp:featuredmedia&acf_format=standard`,
-        )
+         [])
       : Promise.resolve([] as WpResearchPost[]),
-    wpFetch<WpNewsPost[]>(
+    wpFetchSafe<WpNewsPost[]>(
       `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
-    ),
-    wpFetch<WpEventPost[]>(
+     []),
+    wpFetchSafe<WpEventPost[]>(
       `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
-    ),
+     []),
   ]);
 
   // Preserve editor's chosen order for both relationship fields
@@ -4250,9 +4252,9 @@ export async function getAcademicAreasPage(): Promise<AcademicAreasPageData> {
 export async function getProgramsListingPage(
   slug: string,
 ): Promise<ProgramsListingPageData> {
-  const posts = await wpFetch<WpProgramCategoryPost[]>(
+  const posts = await wpFetchSafe<WpProgramCategoryPost[]>(
     `/wp/v2/pragrams-of-study?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
-  );
+   []);
  
   if (!posts || posts.length === 0) {
     console.warn(
@@ -4271,14 +4273,14 @@ export async function getProgramsListingPage(
   // Fetch faculty + courses in parallel — no waterfall
   const [facultyPosts, coursePosts] = await Promise.all([
     facultyIds
-      ? wpFetch<WpFacultyPost[]>(
+      ? wpFetchSafe<WpFacultyPost[]>(
           `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
-        )
+         [])
       : Promise.resolve([] as WpFacultyPost[]),
     courseIds
-      ? wpFetch<WpCoursePost[]>(
+      ? wpFetchSafe<WpCoursePost[]>(
           `/wp/v2/course?include=${courseIds}&_embed=wp:featuredmedia&acf_format=standard`,
-        )
+         [])
       : Promise.resolve([] as WpCoursePost[]),
   ]);
  
@@ -4381,9 +4383,9 @@ export async function getProgramsListingPage(
 
 /** B.Tech (ICT) program detail page (/academics/btech-ict) */
 export async function getProgramPage(slug: string): Promise<ProgramPageData> {
-  const posts = await wpFetch<WpCourseDetailPost[]>(
+  const posts = await wpFetchSafe<WpCourseDetailPost[]>(
     `/wp/v2/course?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
-  );
+   []);
 
   if (!posts || posts.length === 0) {
     console.warn(
@@ -4781,21 +4783,21 @@ export async function getNewsroomPage(): Promise<NewsroomPageData> {
   // Fetch all 5 sources in parallel — no waterfall
   const [inMediaPosts, pressPosts, newsPosts, blogPosts, podcastPosts] =
     await Promise.all([
-      wpFetch<WpMediaLinkPost[]>(
+      wpFetchSafe<WpMediaLinkPost[]>(
         `/wp/v2/in-media?per_page=5&orderby=date&order=desc&_fields=id,slug,date,title`,
-      ),
-      wpFetch<WpMediaLinkPost[]>(
+       []),
+      wpFetchSafe<WpMediaLinkPost[]>(
         `/wp/v2/press-release?per_page=5&orderby=date&order=desc&_fields=id,slug,date,title`,
-      ),
-      wpFetch<WpNewsPost[]>(
+       []),
+      wpFetchSafe<WpNewsPost[]>(
         `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
-      ),
-      wpFetch<WpBlogPost[]>(
+       []),
+      wpFetchSafe<WpBlogPost[]>(
         `/wp/v2/posts?_embed=wp:featuredmedia&per_page=4&orderby=date&order=desc`,
-      ),
-      wpFetch<WpPodcastPost[]>(
+       []),
+      wpFetchSafe<WpPodcastPost[]>(
         `/wp/v2/podcast?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
-      ),
+       []),
     ]);
 
   const mapMediaLink = (post: WpMediaLinkPost, prefix: string): MediaLinkItem => ({
@@ -4940,9 +4942,9 @@ export async function getPhotoGalleryPage(): Promise<PhotoGalleryPageData> {
     return photoGalleryPageData;
   }
 
-  const posts = await wpFetch<WpPhotoGalleryPost[]>(
+  const posts = await wpFetchSafe<WpPhotoGalleryPost[]>(
     `/wp/v2/photo-gallery?_embed=wp:featuredmedia&per_page=50&orderby=menu_order&order=asc`,
-  );
+   []);
 
   return {
     hero: {
@@ -5005,9 +5007,9 @@ export async function getAlumniWriteUpsPage(): Promise<CardGridPageData> {
     return newslettersPageData;
   }
 
-  const posts = await wpFetch<WpAlumniWriteUpPost[]>(
+  const posts = await wpFetchSafe<WpAlumniWriteUpPost[]>(
     `/wp/v2/alumni-write-up?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
-  );
+   []);
 
   return {
     hero: {
@@ -5088,9 +5090,9 @@ export async function getStudentStoriesPage(): Promise<CardGridPageData> {
   }
 
   // Fetch a generous batch — PaginatedCardGrid handles pagination client-side
-  const posts = await wpFetch<WpStudentStoryPost[]>(
+  const posts = await wpFetchSafe<WpStudentStoryPost[]>(
     `/wp/v2/student-stories?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
-  );
+   []);
 
   return {
     hero: {
@@ -5651,9 +5653,9 @@ export async function getResearchAreasPage(): Promise<ResearchAreasPageData> {
   const [acf, areaPosts] = await Promise.all([
     // Note: WP page slug is "research-areas-data" (not "research-areas")
     getPageAcf<WpResearchAreasAcf>("research-areas-data"),
-    wpFetch<WpResearchPost[]>(
+    wpFetchSafe<WpResearchPost[]>(
       `/wp/v2/research-area?_embed=wp:featuredmedia&per_page=20&orderby=title&order=asc`,
-    ),
+     []),
   ]);
  
   if (!acf) {
@@ -5728,12 +5730,12 @@ export async function getResearchAreaDetailPage(
   // revalidate=0 → bypass ISR cache so we never serve stale fallback data
   // while production WordPress is being populated.
   // Change to a positive number (e.g. 60) once all research area posts exist on the CMS.
-  const posts = await wpFetch<
+  const posts = await wpFetchSafe<
     Array<{ id: number; slug: string; title: { rendered: string }; acf: WpResearchAreaDetailAcf }>
   >(
     `/wp/v2/research-area?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
     0,
-  );
+   []);
 
   if (!posts || posts.length === 0) {
     console.warn(
@@ -5914,12 +5916,12 @@ export async function getGrantsPage(): Promise<GrantsPageData> {
   const [acf, availableGrants, pastGrants] = await Promise.all([
     getPageAcf<WpGrantsPageAcf>("grants-projects"),
     // Term IDs: available=4, past=3
-    wpFetch<WpGrantPost[]>(
+    wpFetchSafe<WpGrantPost[]>(
       `/wp/v2/grant?grants-type=4&acf_format=standard&per_page=20&orderby=date&order=desc`,
-    ),
-    wpFetch<WpGrantPost[]>(
+     []),
+    wpFetchSafe<WpGrantPost[]>(
       `/wp/v2/grant?grants-type=3&acf_format=standard&per_page=20&orderby=date&order=desc`,
-    ),
+     []),
   ]);
  
   if (!acf) {
@@ -6714,12 +6716,12 @@ export async function getPlacementTeamPage(): Promise<PlacementTeamPageData> {
 
   // Taxonomy term IDs: main-cell = 33, student-cell = 32
   const [mainCellPosts, studentCellPosts] = await Promise.all([
-    wpFetch<WpPlacementCellPost[]>(
+    wpFetchSafe<WpPlacementCellPost[]>(
       `/wp/v2/placement-cell?cell-type=33&_embed=wp:featuredmedia&acf_format=standard&per_page=50`,
-    ),
-    wpFetch<WpPlacementCellPost[]>(
+     []),
+    wpFetchSafe<WpPlacementCellPost[]>(
       `/wp/v2/placement-cell?cell-type=32&_embed=wp:featuredmedia&acf_format=standard&per_page=50`,
-    ),
+     []),
   ]);
 
   return {
@@ -7196,7 +7198,7 @@ export async function getUgAdmissionsPage(): Promise<UgAdmissionsPageData> {
 
 export async function getAdmissionPage(): Promise<AdmissionPageData> {
   const [filterRes, acf] = await Promise.all([
-    wpFetch<WpAdmissionFilterResponse>("/dau/v1/admission-filter"),
+    wpFetchSafe<WpAdmissionFilterResponse>("/dau/v1/admission-filter", { streams: [], categories: [] }),
     getPageAcf<WpAdmissionPageAcf>("admission"),
   ]);
  
@@ -7258,9 +7260,9 @@ export async function getAdmissionDataset(
   });
   if (category) params.set("category_slug", category);
 
-  const posts = await wpFetch<WpAdmissionPost[]>(
+  const posts = await wpFetchSafe<WpAdmissionPost[]>(
     `/wp/v2/admission?${params.toString()}`
-  );
+  , []);
 
   const post = posts[0];
   return post ? mapAdmissionDataset(post) : null;
@@ -7361,9 +7363,9 @@ export async function getUgScholarshipsPage(): Promise<FinancialSupportPageData>
   const selectedIds = (acf.us_offered_selected ?? []).join(",");
  
   const scholarshipPosts = selectedIds
-    ? await wpFetch<WpScholarshipSlimPost[]>(
+    ? await wpFetchSafe<WpScholarshipSlimPost[]>(
         `/wp/v2/scholarship?include=${selectedIds}&_embed=wp:featuredmedia&acf_format=standard`,
-      )
+       [])
     : [];
  
   // Preserve editor's chosen order
@@ -7635,9 +7637,9 @@ const mockScholarshipData: ScholarshipDetailPageData = {
 export async function getScholarshipDetailPage(
   slug: string,
 ): Promise<ScholarshipDetailPageData> {
-  const posts = await wpFetch<WpScholarshipPost[]>(
+  const posts = await wpFetchSafe<WpScholarshipPost[]>(
     `/wp/v2/scholarship?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
-  );
+   []);
 
   if (!posts || posts.length === 0) {
     console.warn(
@@ -7841,9 +7843,9 @@ export async function getStaffPage(): Promise<StaffPageData> {
     };
   }
 
-  const staffPosts = await wpFetch<WpStaffPost[]>(
+  const staffPosts = await wpFetchSafe<WpStaffPost[]>(
     `/wp/v2/staff?_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
-  );
+   []);
 
   const members: StaffCardData[] = staffPosts.map((post) => ({
     id: String(post.id),
@@ -7921,12 +7923,12 @@ export async function getDoctoralScholarsPage(): Promise<DoctoralScholarsPageDat
   }
 
   const [scholarPosts, graduatePosts] = await Promise.all([
-    wpFetch<WpDoctoralScholarPost[]>(
+    wpFetchSafe<WpDoctoralScholarPost[]>(
       `/wp/v2/doctoral-scholars?doctoral-type=${DOCTORAL_SCHOLARS_TERM_ID}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
-    ),
-    wpFetch<WpDoctoralScholarPost[]>(
+     []),
+    wpFetchSafe<WpDoctoralScholarPost[]>(
       `/wp/v2/doctoral-scholars?doctoral-type=${RECENT_GRADUATES_TERM_ID}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
-    ),
+     []),
   ]);
 
   return {
@@ -8090,9 +8092,9 @@ export async function getTeachingFellowsPage(): Promise<TeachingFellowsPageData>
 
   const tabResults = await Promise.all(
     TEACHING_FELLOW_TERMS.map(({ termId }) =>
-      wpFetch<WpTeachingFellowPost[]>(
+      wpFetchSafe<WpTeachingFellowPost[]>(
         `/wp/v2/teaching-fellows?${TEACHING_FELLOW_TAXONOMY}=${termId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100`,
-      ),
+       []),
     ),
   );
 
@@ -8374,9 +8376,9 @@ export async function getConvocationPage(): Promise<ConvocationPageData> {
     };
   }
 
-  const posts = await wpFetch<WpConvocationPost[]>(
+  const posts = await wpFetchSafe<WpConvocationPost[]>(
     `/wp/v2/convocation?_embed=wp:featuredmedia&acf_format=standard&per_page=20&orderby=date&order=desc`,
-  );
+   []);
 
   return {
     hero: {
@@ -8419,14 +8421,14 @@ export async function getConvocationDetailPage(
   slug: string,
 ): Promise<ConvocationDetailPageData> {
   const [posts, contact] = await Promise.all([
-    wpFetch<
+    wpFetchSafe<
       Array<{
         id: number;
         slug: string;
         title: { rendered: string };
         acf: WpConvocationDetailAcf;
       }>
-    >(`/wp/v2/convocation?slug=${slug}&acf_format=standard`),
+    >(`/wp/v2/convocation?slug=${slug}&acf_format=standard`, []),
     getSiteSettings(),
   ]);
 
@@ -8655,9 +8657,9 @@ export async function getProjectPositionsPage(): Promise<ProjectPositionsPageDat
     };
   }
 
-  const posts = await wpFetch<WpProjectPositionPost[]>(
+  const posts = await wpFetchSafe<WpProjectPositionPost[]>(
     `/wp/v2/project-position?per_page=50&orderby=date&order=desc`,
-  );
+   []);
 
   return {
     hero: {
@@ -8711,9 +8713,9 @@ export async function getProjectPositionDetailPage(
   // careers/project-positions section) instead of duplicating per-post.
   const [listingAcf, posts] = await Promise.all([
     getPageAcf<WpProjectPositionsPageAcf>("project-positions"),
-    wpFetch<WpProjectPositionDetailPost[]>(
+    wpFetchSafe<WpProjectPositionDetailPost[]>(
       `/wp/v2/project-position?slug=${slug}&acf_format=standard`,
-    ),
+     []),
   ]);
 
   const fallbackHero: PageHeroContent = {
