@@ -130,6 +130,7 @@ import type {
   ProjectPositionDetailPageData,
   TeachingFellowPositionsPageData,
   PageHeroContent,
+  MediaLinkItem,
 } from "@/lib/types";
 
 // ============================================================================
