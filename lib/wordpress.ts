@@ -131,6 +131,7 @@ import type {
   TeachingFellowPositionsPageData,
   PageHeroContent,
   MediaLinkItem,
+  CampusTourFormOptions,
 } from "@/lib/types";
 
 // ============================================================================
@@ -8878,4 +8879,9 @@ export async function getTeachingFellowPositionsPage(): Promise<TeachingFellowPo
       },
     },
   };
+}
+
+export async function getCampusTourFormOptions(): Promise<CampusTourFormOptions> {
+  // revalidate 0 — this contains a one-time captcha token, must never be cached
+  return wpFetch<CampusTourFormOptions>(`/custom/v1/campus-tour/options`, 0);
 }

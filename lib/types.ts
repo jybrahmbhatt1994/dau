@@ -2003,3 +2003,34 @@ export interface TeachingFellowPositionsPageData {
   submissionDeadline: string;
   cta: { left: CtaPanel; right: CtaPanel };
 }
+
+export interface CampusTourStateOption {
+  state: string;
+  cities: string[];
+}
+
+export interface CampusTourFormOptions {
+  states: CampusTourStateOption[];
+  currentClass: string[];
+  preferredStream: string[];
+  tourDates: string[];
+  yearToJoin: string[];
+  accompaniedCount: string[];
+  offerLetterOptions: string[];
+  modeOfTransport: string[];
+  captcha: { question: string; token: string };
+}
+
+// lib/types.ts
+export interface CampusTourFormOptions {
+  hero: PageHeroContent; // reuses the existing shared hero type
+  states: CampusTourStateOption[];
+  currentClass: string[];
+  preferredStream: string[];
+  tourDates: string[];
+  yearToJoin: string[];
+  accompaniedCount: string[];
+  offerLetterOptions: string[];
+  modeOfTransport: string[];
+  captcha: { question: string; token: string };
+}
