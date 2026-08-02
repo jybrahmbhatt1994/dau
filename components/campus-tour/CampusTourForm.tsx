@@ -152,7 +152,7 @@ export function CampusTourForm({ options }: { options: CampusTourFormOptions }) 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <select required className={selectClass} value={form.yearToJoin}
           onChange={(e) => update("yearToJoin", e.target.value)}>
-          <option value="">Select Year to Join Ashoka *</option>
+          <option value="">Select Year to Join DAU *</option>
           {options.yearToJoin.map((y) => <option key={y} value={y}>{y}</option>)}
         </select>
         <select required className={selectClass} value={form.accompaniedCount}
@@ -186,7 +186,7 @@ export function CampusTourForm({ options }: { options: CampusTourFormOptions }) 
       <label className="flex items-start gap-3 text-sm text-white/90">
         <input required type="checkbox" className="mt-1 h-4 w-4 accent-gold"
           checked={form.agree} onChange={(e) => update("agree", e.target.checked)} />
-        I agree to receive information about Ashoka University. *
+        I agree to receive information about DAU University. *
       </label>
 
       {status === "error" && <p className="text-sm font-medium text-red-300">{errorMessage}</p>}
