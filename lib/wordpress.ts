@@ -8885,3 +8885,53 @@ export async function getCampusTourFormOptions(): Promise<CampusTourFormOptions>
   // revalidate 0 — this contains a one-time captcha token, must never be cached
   return wpFetch<CampusTourFormOptions>(`/custom/v1/campus-tour/options`, 0);
 }
+
+export async function getCareerPreparatoryProgrammePage(): Promise<ComputationalResourcesPageData> {
+  const acf = await getPageAcf<WpComputationalResourcesAcf>(
+    "career-preparatory-programme",
+  );
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Career Preparatory Programme page ACF not found — using placeholder data.",
+    );
+
+    return {
+      hero: {
+        title: "The Career Preparatory Programme",
+        image:
+          "https://picsum.photos/seed/career-preparatory-programme/1280/560",
+        breadcrumb: [],
+      },
+      subNavLabel: "Academic Areas",
+      subNav: [],
+      content: { paragraphs: [], image: "" },
+    };
+  }
+
+  return {
+    hero: {
+      title: "The Career Preparatory Programme",
+      subline: acf.cr_hero_subline || undefined,
+      image: acf.cr_hero_image,
+      breadcrumb: toArray(acf.cr_breadcrumb).map((b) => ({
+        label: b.label,
+        href: b.href,
+      })),
+    },
+
+    subNavLabel: acf.cr_subnav_label || "Academic Areas",
+
+    subNav: toArray(acf.cr_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    content: {
+      paragraphs: toArray(acf.cr_content_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+      image: acf.cr_content_image,
+    },
+  };
+}

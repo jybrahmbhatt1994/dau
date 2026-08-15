@@ -95,7 +95,7 @@ export const navigation: NavItem[] = [
       // { label: "Placement", href: "/placements" },
       { label: "Placement Team", href: "/placements/team" },
       { label: "Placement Stats", href: "/placements/stats" },
-      { label: "The Career Preparatory Programme", href: "#" },
+      { label: "The Career Preparatory Programme", href: "/placements/career-preparatory-programme" },
       { label: "Top Recruiter", href: "/placements/recruiters" },
       { label: "Placement Internship", href: "/placements/internships" },
     ],
