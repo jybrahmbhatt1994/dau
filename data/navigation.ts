@@ -34,6 +34,17 @@ export const navigation: NavItem[] = [
         ],
       },
       { label: "Academic Areas", href: "/academics/areas" },
+      {
+        // "Schools" is a trigger-only group, same rule as the parent.
+        label: "Academic Support",
+        href: "#",
+        children: [
+          { label: "Resource Centre", href: "#" },
+          { label: "Software Labs", href: "#" },
+          { label: "Hardware Labs", href: "#" },
+          { label: "Computional Resources", href: "#" },
+        ],
+      },
       // TODO: replace with the real LMS URL — external link, opens in new tab.
       { label: "Moodle", href: "https://moodle.dau.ac.in" },
     ],
