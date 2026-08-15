@@ -39,10 +39,10 @@ export const navigation: NavItem[] = [
         label: "Academic Support",
         href: "#",
         children: [
-          { label: "Resource Centre", href: "#" },
-          { label: "Software Labs", href: "#" },
-          { label: "Hardware Labs", href: "#" },
-          { label: "Computional Resources", href: "#" },
+          { label: "Resource Centre", href: "/academics/support/resource-centre" },
+          { label: "Research Labs", href: "https://lab.daiict.ac.in/index.php/essential/lab-da-iict" },
+          { label: "Teaching Labs", href: "https://lab.daiict.ac.in/index.php/essential/lab-da-iict" },
+          { label: "Computional Resources", href: "/academics/support/computational-resources" },
         ],
       },
       // TODO: replace with the real LMS URL — external link, opens in new tab.
