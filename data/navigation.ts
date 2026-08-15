@@ -53,9 +53,9 @@ export const navigation: NavItem[] = [
     label: "Admission",
     href: "#",
     children: [
-      { label: "Admission", href: "/admission" },
-      { label: "Financial Support", href: "/admission/financial-support" },
+      { label: "Programme Admission", href: "/admission" },
       { label: "Scholarships", href: "/admission/scholarships" },
+      { label: "Financial Support", href: "/admission/financial-support" },
     ],
   },
   {
