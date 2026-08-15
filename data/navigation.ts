@@ -73,10 +73,10 @@ export const navigation: NavItem[] = [
     label: "Research",
     href: "#",
     children: [
-      { label: "Research", href: "/research" },
+      // { label: "Research", href: "/research" },
       { label: "Office of the Dean-Research", href: "/research/dean" },
       { label: "Research Areas", href: "/research/areas" },
-      { label: "Research Labs", href: "#" },
+      // { label: "Research Labs", href: "#" },
       { label: "Grants & Projects", href: "/research/grants" },
       { label: "Noteworthy Contributions", href: "#",
         children: [
@@ -92,7 +92,7 @@ export const navigation: NavItem[] = [
     label: "Placement",
     href: "#",
     children: [
-      { label: "Placement", href: "/placements" },
+      // { label: "Placement", href: "/placements" },
       { label: "Placement Team", href: "/placements/team" },
       { label: "Placement Stats", href: "/placements/stats" },
       { label: "The Career Preparatory Programme", href: "#" },
