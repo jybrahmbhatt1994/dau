@@ -62,8 +62,8 @@ export const navigation: NavItem[] = [
     label: "Faculty",
     href: "#",
     children: [
-      { label: "Faculty", href: "/faculty" },
       { label: "Office of the Dean-Faculty", href: "/faculty/dean" },
+      { label: "Faculty", href: "/faculty" },
       { label: "Faculty Recruitment", href: "/faculty/recruitment" },
       { label: "Faculty Development & Evaluation", href: "/faculty/development" },
       { label: "Faculty Handbook", href: "/faculty/handbook" },
