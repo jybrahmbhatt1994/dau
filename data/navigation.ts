@@ -9,9 +9,9 @@ export const navigation: NavItem[] = [
     // Parent trigger only — no page of its own. All real destinations
     // live on the children below (per client requirement).
     label: "Academics",
-    href: "#",
+    href: "/academics",
     children: [
-      { label: "Academics", href: "/academics" },
+      { label: "Office of Dean Academics", href: "/academics/dean" },
       {
         // "Schools" is a trigger-only group, same rule as the parent.
         label: "Schools",
@@ -33,7 +33,7 @@ export const navigation: NavItem[] = [
           { label: "School of Law", href: "https://sol.daiict.ac.in/" },
         ],
       },
-      { label: "Office of Dean Academics", href: "/academics/dean" },
+      { label: "Academic Areas", href: "/academics/areas" },
       // TODO: replace with the real LMS URL — external link, opens in new tab.
       { label: "Moodle", href: "https://moodle.dau.ac.in" },
     ],
