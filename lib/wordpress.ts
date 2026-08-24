@@ -929,6 +929,7 @@ interface WpProgramCategoryAcf {
   pc_admission_eyebrow: string;
   pc_admission_title: string;
   pc_admission_description: string;
+  pc_admission_button_href: string;
   // Faculty
   pc_faculty_title: string;
   pc_faculty_description: string;
