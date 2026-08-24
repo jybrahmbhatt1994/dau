@@ -3550,7 +3550,7 @@ function mapResearch(
     description: acf.research_description,
     cards: posts.map((post) => ({
       id: String(post.id),
-      title: post.title.rendered,
+      title: decodeHtml(post.title.rendered),
       date: formatIsoDate(post.date),
       image:
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
@@ -3614,7 +3614,7 @@ function mapNews(
  
   const toNewsArticle = (post: WpNewsPost): NewsArticle => ({
     id: String(post.id),
-    title: post.title.rendered,
+    title: decodeHtml(post.title.rendered),
     date: formatIsoDate(post.date),
     image:
       post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
@@ -3642,7 +3642,7 @@ function mapEvents(
     title: acf.events_title,
     items: posts.map((post) => ({
       id: String(post.id),
-      title: post.title.rendered,
+      title: decodeHtml(post.title.rendered),
       date: formatIsoDate(post.date),
       image:
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
