@@ -56,6 +56,7 @@ export const ugProgramsPageData: UgProgramsPageData = {
     title: "Admissions started for 2027",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      buttonHref: "#",
   },
 
   faculty: {
