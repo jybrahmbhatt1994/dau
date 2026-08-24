@@ -90,8 +90,31 @@ function MailIcon() {
 
 export function FacultyDirectoryCard({ member }: { member: FacultyCardData }) {
   return (
-    <div className="flex bg-surface">
-      <div className="relative w-[180px] shrink-0 overflow-hidden sm:w-[220px]">
+    <div className="flex flex-col bg-surface sm:flex-row">
+      {/* Mobile-only top row: small photo + name/designation side by side */}
+      <div className="flex items-center gap-4 p-4 sm:hidden">
+        <div className="relative h-[90px] w-[90px] shrink-0 overflow-hidden">
+          <Image
+            src={member.image}
+            alt={member.name}
+            fill
+            sizes="90px"
+            className="object-cover"
+          />
+        </div>
+        <div className="space-y-1">
+          <h3 className="font-display text-base font-bold text-navy">
+            {member.name}
+          </h3>
+          <p className="text-sm text-ash">
+            {member.position}
+            {member.department ? `, ${member.department}` : ""}
+          </p>
+        </div>
+      </div>
+
+      {/* Desktop photo — full-height, left side. Hidden on mobile (mobile has its own small photo above) */}
+      <div className="relative hidden w-[180px] shrink-0 overflow-hidden sm:block sm:w-[220px]">
         <Image
           src={member.image}
           alt={member.name}
@@ -102,7 +125,8 @@ export function FacultyDirectoryCard({ member }: { member: FacultyCardData }) {
       </div>
 
       <div className="flex flex-1 flex-col justify-center gap-5 p-6">
-        <div className="space-y-1">
+        {/* Desktop name/designation — hidden on mobile since it's already shown above */}
+        <div className="hidden space-y-1 sm:block">
           <h3 className="font-display text-lg font-bold text-navy">
             {member.name}
           </h3>
@@ -137,7 +161,7 @@ export function FacultyDirectoryCard({ member }: { member: FacultyCardData }) {
             {member.email && (
               <div className="flex items-center gap-2">
                 <MailIcon />
-                <span>{member.email}</span>
+                <span className="min-w-0 break-words">{member.email}</span>
               </div>
             )}
           </div>

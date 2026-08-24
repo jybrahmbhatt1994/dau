@@ -172,10 +172,10 @@ interface WpPlacementGalleryItem {
   image: string;
 }
 
-interface WpRecruiterLogo {
-  image: string;
-  name: string;
-}
+// interface WpRecruiterLogo {
+//   image: string;
+//   name: string;
+// }
 
 interface WpStat {
   value: string;
@@ -220,7 +220,7 @@ interface WpHomeAcf {
   placements_title: string;
   placements_description: string;
   placements_gallery: WpPlacementGalleryItem[] | false;
-  recruiter_logos: WpRecruiterLogo[] | false;
+  // recruiter_logos: WpRecruiterLogo[] | false;
   placement_stats: WpStat[] | false;
   // Life @ DAU
   life_title: string;
@@ -3574,15 +3574,16 @@ function mapPublications(acf: WpHomeAcf): HomeData["publications"] {
   };
 }
 
-function mapPlacements(acf: WpHomeAcf): HomeData["placements"] {
+function mapPlacements(acf: WpHomeAcf, recruiterItems: WpTrRecruiterItem[]): HomeData["placements"] {
   return {
     title: acf.placements_title,
     description: acf.placements_description,
     gallery: toArray(acf.placements_gallery).map((row) => row.image),
-    recruiters: toArray(acf.recruiter_logos).map((row, i) => ({
+    recruiters: recruiterItems.map((item, i) => ({   // ← reads param, not acf
       id: String(i),
-      name: row.name,
-      logo: row.image,   // ← WP field is "image", type field is "logo"
+      name: item.name,
+      logo: item.logo,
+      href: item.href ? item.href.url : undefined,   // ← new: href now populated
     })),
     stats: toArray(acf.placement_stats).map((row) => ({
       value: row.value,
@@ -3796,7 +3797,7 @@ export async function getHomeData(): Promise<HomeData> {
   const facultyIds = (acf.faculty_selected ?? []).join(",");
 
   // All CPT fetches run in parallel — no waterfall
-  const [facultyPosts, researchPosts, newsPosts, eventPosts, centerPosts, siteSettings] =
+  const [facultyPosts, researchPosts, newsPosts, eventPosts, centerPosts, siteSettings, topRecruitersAcf] =
     await Promise.all([
       facultyIds
         ? wpFetchSafe<WpFacultyPost[]>(
@@ -3815,8 +3816,12 @@ export async function getHomeData(): Promise<HomeData> {
       wpFetchSafe<WpCenterPost[]>(
         `/wp/v2/center?_embed=wp:featuredmedia&per_page=6&orderby=date&order=desc`,
        []),
+      
       getSiteSettings(),
+      getPageAcf<WpTopRecruitersAcf>("top-recruiters"),
     ]);
+
+    const recruiterItems = toArray(topRecruitersAcf?.tr_recruiters_items);
 
   return {
     // ✅ Live from WordPress
@@ -3826,7 +3831,7 @@ export async function getHomeData(): Promise<HomeData> {
     faculty:      mapFaculty(acf, facultyPosts),
     research:     mapResearch(acf, researchPosts),
     publications: mapPublications(acf),
-    placements:   mapPlacements(acf),
+    placements:   mapPlacements(acf, recruiterItems),
     life:         mapLife(acf),
     news:         mapNews(acf, newsPosts),
     events:       mapEvents(acf, eventPosts),
