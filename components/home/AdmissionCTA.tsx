@@ -26,7 +26,7 @@ export function AdmissionCTA({ data }: { data: HomeData["admissionCta"] }) {
           {data.description}
         </p>
         <div className="mt-8">
-          <ActionButton href="/apply" variant="filledRoyal">
+          <ActionButton href={data.buttonHref} variant="filledRoyal">
             Get Started
           </ActionButton>
         </div>
