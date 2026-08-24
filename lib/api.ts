@@ -11,6 +11,16 @@ if (!WP_URL) {
   throw new Error("WORDPRESS_API_URL is not set in environment variables.");
 }
 
+async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /**
  * Fetch any WordPress REST API endpoint.
  * @param endpoint  Path after /wp-json — e.g. "/wp/v2/pages?slug=home"
@@ -22,26 +32,36 @@ export async function wpFetch<T>(
 ): Promise<T> {
   const url = `${WP_URL}/wp-json${endpoint}`;
 
-  // In dev always bypass cache. In prod: revalidate=0 uses cache:'no-store'
-  // (fully skips Vercel's Data Cache, which persists across deploys); any
-  // positive value uses next:{revalidate} for ISR as normal.
   const effectiveRevalidate =
     process.env.NODE_ENV === "development" ? 0 : revalidate;
 
-  const res = await fetch(
-    url,
+  const fetchOptions: RequestInit =
     effectiveRevalidate === 0
       ? { cache: "no-store" }
-      : { next: { revalidate: effectiveRevalidate } },
-  );
+      : { next: { revalidate: effectiveRevalidate } };
 
-  if (!res.ok) {
-    throw new Error(
-      `WordPress API error: ${res.status} ${res.statusText} — ${url}`,
-    );
+  const MAX_ATTEMPTS = 3;
+  let lastErr: unknown;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const res = await fetchWithTimeout(url, fetchOptions);
+      if (!res.ok) {
+        throw new Error(`WordPress API error: ${res.status} ${res.statusText} — ${url}`);
+      }
+      return (await res.json()) as T;
+    } catch (err) {
+      lastErr = err;
+      if (attempt < MAX_ATTEMPTS) {
+        // small backoff before retrying — gives Hostinger's PHP-FPM
+        // a moment to warm up instead of failing immediately
+        await new Promise((r) => setTimeout(r, 400 * attempt));
+      }
+    }
   }
 
-  return res.json() as Promise<T>;
+  console.error(`[wpFetch] All ${MAX_ATTEMPTS} attempts failed for ${url}`, lastErr);
+  throw lastErr;
 }
 
 /**
