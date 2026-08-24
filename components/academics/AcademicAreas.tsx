@@ -6,8 +6,7 @@ import type { AreaCard } from "@/lib/types";
 
 function AreaCardItem({ card }: { card: AreaCard }) {
   return (
-    <Link
-      href={card.href}
+    <div
       className="group flex items-stretch border border-line bg-white transition-shadow hover:shadow-card"
     >
       <div className="relative aspect-square w-[110px] shrink-0 overflow-hidden sm:w-[148px]">
@@ -24,7 +23,7 @@ function AreaCardItem({ card }: { card: AreaCard }) {
           {card.title}
         </h3>
       </div>
-    </Link>
+    </div>
   );
 }
 
