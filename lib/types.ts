@@ -119,6 +119,7 @@ export interface HomeData {
     eyebrow: string;
     title: string;
     description: string;
+    buttonHref: string;
   };
   faculty: SectionIntro & { members: FacultyMember[] };
   research: SectionIntro & { cards: ResearchCard[] };

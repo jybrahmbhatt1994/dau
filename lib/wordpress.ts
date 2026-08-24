@@ -204,6 +204,7 @@ interface WpHomeAcf {
   admission_eyebrow: string;
   admission_title: string;
   admission_description: string;
+  admission_button_href: string;
   // Faculty
   faculty_title: string;
   faculty_description: string;
@@ -3511,6 +3512,7 @@ function mapAdmissionCta(acf: WpHomeAcf): HomeData["admissionCta"] {
     eyebrow: acf.admission_eyebrow,
     title: acf.admission_title,
     description: acf.admission_description,
+    buttonHref: acf.admission_button_href || "#",
   };
 }
 
