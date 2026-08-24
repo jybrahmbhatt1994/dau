@@ -4337,6 +4337,7 @@ export async function getProgramsListingPage(
       eyebrow: acf.pc_admission_eyebrow,
       title: acf.pc_admission_title,
       description: acf.pc_admission_description,
+      buttonHref: acf.pc_admission_button_href || "#",
     },
  
     faculty: {
@@ -4512,6 +4513,7 @@ export async function getProgramPage(slug: string): Promise<ProgramPageData> {
       eyebrow: acf.pg_admission_eyebrow,
       title: acf.pg_admission_title,
       description: acf.pg_admission_description,
+      buttonHref: acf.pg_admission_button_href || "#",
     },
 
     faqs: {
