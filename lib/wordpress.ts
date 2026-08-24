@@ -1141,6 +1141,7 @@ interface WpCourseAcf {
   pg_admission_eyebrow: string;
   pg_admission_title: string;
   pg_admission_description: string;
+  pg_admission_button_href: string;
   // FAQs
   pg_faqs_title: string;
   pg_faqs_items: WpPgFaqItem[] | false;
