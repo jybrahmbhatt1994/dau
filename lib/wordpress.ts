@@ -4059,7 +4059,7 @@ export async function getSchoolPage(): Promise<SchoolPageData> {
   const [coursePosts, researchPosts, newsPosts, eventPosts] = await Promise.all([
     programIds
       ? wpFetchSafe<WpCoursePost[]>(
-          `/wp/v2/course?include=${programIds}&_embed=wp:featuredmedia&acf_format=standard`,
+          `/wp/v2/pragrams-of-study?include=${programIds}&_embed=wp:featuredmedia&acf_format=standard`,
          [])
       : Promise.resolve([] as WpCoursePost[]),
     researchIds
