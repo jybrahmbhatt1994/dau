@@ -43,6 +43,7 @@ export const homeData: HomeData = {
     eyebrow: "Ready to take a leap?",
     title: "Admissions started for 2027",
     description: LOREM_SHORT,
+    buttonHref: "#",
   },
 
   faculty: {
