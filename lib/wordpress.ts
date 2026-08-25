@@ -132,6 +132,7 @@ import type {
   PageHeroContent,
   MediaLinkItem,
   CampusTourFormOptions,
+  PublicationsPageData,
 } from "@/lib/types";
 
 // ============================================================================
@@ -6699,6 +6700,10 @@ interface WpPlacementCellPost {
   title: { rendered: string };
   acf: {
     position?: string;
+    email?: string;
+    phone?: string;
+    linkedin_url?: string;
+    cell_year?: number | string;
   };
   _embedded?: {
     "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
@@ -6710,11 +6715,37 @@ function mapCellPost(post: WpPlacementCellPost, prefix: string, i: number): Facu
     id: `${prefix}-${i}`,
     name: decodeHtml(post.title.rendered),
     position: post.acf?.position ?? "",
+    email: post.acf?.email || undefined,
+    phone: post.acf?.phone || undefined,
+    linkedinUrl: post.acf?.linkedin_url || undefined,
     image:
       post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
       `https://picsum.photos/seed/${prefix}-${i}/290/360`,
     href: `/placements/team/${post.slug}`,
   };
+}
+
+/** Groups student-cell posts into { year, members }[] using the cell_year
+ *  ACF field (not the WP published date), newest year first. Posts missing
+ *  cell_year are bucketed under "Unspecified" and sorted last. */
+function groupByCellYear(
+  posts: WpPlacementCellPost[],
+  prefix: string,
+): Array<{ year: string; members: FacultyMember[] }> {
+  const buckets = new Map<string, FacultyMember[]>();
+
+  posts.forEach((post, i) => {
+    const year = post.acf?.cell_year ? String(post.acf.cell_year) : "Unspecified";
+    const member = mapCellPost(post, prefix, i);
+    if (!buckets.has(year)) buckets.set(year, []);
+    buckets.get(year)!.push(member);
+  });
+
+  return Array.from(buckets.entries()).sort(([a], [b]) => {
+    if (a === "Unspecified") return 1;
+    if (b === "Unspecified") return -1;
+    return Number(b) - Number(a); // newest year first
+  }).map(([year, members]) => ({ year, members }));
 }
 
 export async function getPlacementTeamPage(): Promise<PlacementTeamPageData> {
@@ -6766,7 +6797,8 @@ export async function getPlacementTeamPage(): Promise<PlacementTeamPageData> {
 
     studentCell: {
       title: acf.pt_student_cell_title,
-      members: studentCellPosts.map((post, i) => mapCellPost(post, "spc", i)),
+      // members: studentCellPosts.map((post, i) => mapCellPost(post, "spc", i)),
+      years: groupByCellYear(studentCellPosts, "spc"),
     },
 
     cta: {
@@ -8944,5 +8976,43 @@ export async function getCareerPreparatoryProgrammePage(): Promise<Computational
       ),
       image: acf.cr_content_image,
     },
+  };
+}
+
+interface WpPublicationYearRow {
+  pub_year_label: string;
+  pub_year_link: { url: string; title?: string; target?: string } | null;
+}
+
+interface WpPublicationsAcf {
+  pub_hero_image: string;
+  pub_hero_subline?: string;
+  pub_years: WpPublicationYearRow[] | false; // ACF returns false when empty
+}
+
+export async function getPublicationsPage(): Promise<PublicationsPageData> {
+  const acf = await getPageAcf<WpPublicationsAcf>("publications");
+
+  
+  if (!acf) {
+    throw new Error(
+      "[wordpress.ts] Publications page ACF not found in WordPress.",
+    );
+  }
+
+  return {
+    hero: {
+      title: "Publications",
+      subline: acf.pub_hero_subline || undefined,
+      image: acf.pub_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Publications", href: "/publications" },
+      ],
+    },
+    years: toArray(acf.pub_years).map((row) => ({
+      label: row.pub_year_label,
+      href: row.pub_year_link?.url ?? "#",
+    })),
   };
 }

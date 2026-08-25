@@ -35,6 +35,9 @@ export interface FacultyMember {
   position: string;
   image: string;
   href: string;
+  email?: string;
+  phone?: string;
+  linkedinUrl?: string
 }
 
 export interface ResearchCard {
@@ -1142,7 +1145,8 @@ export interface PlacementTeamPageData {
   /** Paginated team — typically a longer list */
   studentCell: {
     title: string;
-    members: FacultyMember[];
+    // members: FacultyMember[];
+    years: Array<{ year: string; members: FacultyMember[] }>;
   };
   cta: { left: CtaPanel; right: CtaPanel };
 }
@@ -2034,4 +2038,15 @@ export interface CampusTourFormOptions {
   offerLetterOptions: string[];
   modeOfTransport: string[];
   captcha: { question: string; token: string };
+}
+
+/** One year button on the Publications page — links out externally. */
+export interface PublicationYearLink {
+  label: string;   // e.g. "2026"
+  href: string;    // external URL
+}
+
+export interface PublicationsPageData {
+  hero: PageHeroContent;
+  years: PublicationYearLink[];
 }

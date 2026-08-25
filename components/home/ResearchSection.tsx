@@ -58,7 +58,7 @@ export function ResearchSection({ data }: { data: HomeData["research"] }) {
 
       <Container className="mt-10">
         <div className="flex justify-center">
-          <ActionButton href="/research">Know More</ActionButton>
+          <ActionButton href="/research/areas">Know More</ActionButton>
         </div>
       </Container>
     </section>

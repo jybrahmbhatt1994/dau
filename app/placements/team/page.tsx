@@ -2,6 +2,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { PageSubNav } from "@/components/layout/PageSubNav";
 import { ProseIntro } from "@/components/layout/ProseIntro";
 import { FacultyMembersGrid } from "@/components/faculty/FacultyMembersGrid";
+import { StudentCellAccordionGrid } from "@/components/faculty/StudentCellAccordionGrid";
 import { SplitCta } from "@/components/academics/SplitCta";
 import { getPlacementTeamPage } from "@/lib/wordpress";
 
@@ -35,13 +36,20 @@ export default async function PlacementTeamPage() {
         data={data.placementCell}
         className="bg-surface"
         id="placement-cell"
+        showContact
       />
 
       {/* ── Student Placement Cell (paginated grid, white bg) ────────────── */}
-      <FacultyMembersGrid
+      {/* <FacultyMembersGrid
         data={data.studentCell}
         paginated
         pageSize={12}
+        className="bg-white"
+        id="student-cell"
+        showLinkedin
+      /> */}
+      <StudentCellAccordionGrid
+        data={data.studentCell}
         className="bg-white"
         id="student-cell"
       />
