@@ -45,7 +45,10 @@ export const placementTeamPageData: PlacementTeamPageData = {
 
   studentCell: {
     title: "Student Placement Cell",
-    members: makeMembers("spc", 28),
+    years: [
+      { year: "2026", members: makeMembers("spc-2026", 14) },
+      { year: "2025", members: makeMembers("spc-2025", 14) },
+    ],
   },
 
   cta: {
