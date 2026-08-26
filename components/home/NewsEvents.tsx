@@ -75,7 +75,7 @@ export function NewsEvents({ data }: { data: HomeData["news"] }) {
 
         {/* Centered button */}
         <div className="mt-10 flex justify-center">
-          <ActionButton href="/newsroom">All News</ActionButton>
+          <ActionButton href="/newsroom/news">All News</ActionButton>
         </div>
       </Container>
     </section>

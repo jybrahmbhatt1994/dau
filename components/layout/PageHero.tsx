@@ -23,7 +23,14 @@ import type { PageHeroContent } from "@/lib/types";
 // at 40px on smaller screens so the text never touches the viewport edge.
 const EDGE_PAD = "max(2.5rem, calc((100vw - 1440px) / 2 + 2.5rem))";
 
-export function PageHero({ title, subline, image, breadcrumb }: PageHeroContent) {
+interface PageHeroProps extends PageHeroContent {
+  /** Optional override for the title's font-size classes. Falls back to the
+   *  default clamp() size used on every other page when omitted — pass this
+   *  only on pages (e.g. news detail) that need a smaller heading. */
+  titleClassName?: string;
+}
+
+export function PageHero({ title, subline, image, breadcrumb, titleClassName }: PageHeroProps) {
   return (
     <section className="w-full bg-ink">
       <div className="grid grid-cols-1 lg:grid-cols-[63%_37%]">
@@ -72,7 +79,12 @@ export function PageHero({ title, subline, image, breadcrumb }: PageHeroContent)
                   to the right, clipped at the screen edge by the global
                   `overflow-x: clip` — the mirror of BleedTitle's left bleed. */}
               <div className="relative inline-block max-w-full">
-                <h1 className="font-display text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none text-white">
+                <h1
+                  className={
+                    titleClassName ||
+                    "font-display text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none text-white"
+                  }
+                >
                   {title}
                 </h1>
                 <span

@@ -133,6 +133,7 @@ import type {
   MediaLinkItem,
   CampusTourFormOptions,
   PublicationsPageData,
+  NewsDetailPageData,
 } from "@/lib/types";
 
 // ============================================================================
@@ -9014,5 +9015,215 @@ export async function getPublicationsPage(): Promise<PublicationsPageData> {
       label: row.pub_year_label,
       href: row.pub_year_link?.url ?? "#",
     })),
+  };
+}
+
+interface WpNewsImageAcf {
+  url: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+interface WpNewsDetailAcf {
+  news_content: string | null;
+  full_width_image: WpNewsImageAcf | false;
+  news_images_grid: WpNewsImageAcf[] | false;
+  // ACF oembed fields return "" (empty string) when unset, not false —
+  // unlike repeater/gallery/relationship fields
+  news_video: string | null;
+}
+
+interface WpNewsDetailPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  acf: WpNewsDetailAcf;
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{
+      source_url: string;
+      alt_text: string;
+      media_details?: { width: number; height: number };
+    }>;
+  };
+}
+
+function mapNewsDetailPost(post: WpNewsDetailPost): NewsDetailPageData {
+  const acf = post.acf;
+  const featuredMedia = post._embedded?.["wp:featuredmedia"]?.[0];
+  const title = decodeHtml(post.title.rendered);
+
+  return {
+    hero: {
+      title,
+      subline: undefined, // news posts don't have a subline field — omit or wire one up later
+      image:
+        featuredMedia?.source_url ??
+        `https://picsum.photos/seed/news-${post.id}/1200/500`,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "News", href: "/newsroom" },
+        { label: title, href: `/news/${post.slug}` },
+      ],
+    },
+
+    content: acf.news_content ? decodeHtml(acf.news_content) : null,
+    fullWidthImage: acf.full_width_image || false,
+    imagesGrid: toArray(acf.news_images_grid),
+    video: acf.news_video || null,
+  };
+}
+
+export async function getNewsDetailPage(
+  slug: string,
+): Promise<NewsDetailPageData | null> {
+  const posts = await wpFetchSafe<WpNewsDetailPost[]>(
+    `/wp/v2/news?slug=${slug}&_embed=wp:featuredmedia&acf_format=standard`,
+    [],
+  );
+
+  if (!posts || posts.length === 0) {
+    console.warn(`[wordpress.ts] News post '${slug}' not found.`);
+    return null;
+  }
+
+  return mapNewsDetailPost(posts[0]);
+}
+
+export async function getAllNewsSlugs(): Promise<string[]> {
+  const posts = await wpFetchSafe<Array<{ slug: string }>>(
+    `/wp/v2/news?per_page=100&_fields=slug`,
+    [],
+  );
+  return posts.map((p) => p.slug);
+}
+
+// ─── News Listing (/newsroom/news) ─────────────────────────────────────────
+// Same card-grid template as Alumni Write Ups / Student Stories.
+// Reuses the `news` CPT already wired up for getNewsDetailPage().
+//
+// IMPORTANT: unlike Alumni Write Ups / Student Stories, this does NOT require
+// a WordPress *page* with ACF fields to exist. The `news` CPT posts are the
+// real data and are always fetched live. The ACF page (slug "news") is
+// OPTIONAL — if present it only customizes the hero subline/image, subnav,
+// intro paragraphs, and CTA panels. If absent, sensible defaults are used
+// instead of falling back to mock data, so real WP posts always show.
+
+interface WpNlLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpNlSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpNlParagraph {
+  paragraph: string;
+}
+
+interface WpNewsListingAcf {
+  nl_hero_subline?: string;
+  nl_hero_image?: string;
+  nl_subnav_label?: string;
+  nl_subnav_links?: WpNlSubNavLink[] | false;
+  nl_intro_paragraphs?: WpNlParagraph[] | false;
+  nl_cta_left_title?: string;
+  nl_cta_left_description?: string;
+  nl_cta_left_label?: string;
+  nl_cta_left_href?: WpNlLinkField;
+  nl_cta_right_title?: string;
+  nl_cta_right_description?: string;
+  nl_cta_right_label?: string;
+  nl_cta_right_href?: WpNlLinkField;
+}
+
+// news CPT post — native WP title, featured image, published date
+interface WpNewsListingPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+export async function getNewsListingPage(): Promise<CardGridPageData> {
+  // Fetch ACF (optional) and posts (required, real data) in parallel —
+  // a missing/incomplete ACF page must never block the real posts from showing.
+  const [acf, posts] = await Promise.all([
+    getPageAcf<WpNewsListingAcf>("news").catch(() => null),
+    wpFetchSafe<WpNewsListingPost[]>(
+      `/wp/v2/news?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+      [],
+    ),
+  ]);
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] News listing ACF page not found — using default hero/CTA copy, but real news posts are still fetched live.",
+    );
+  }
+
+  if (posts.length === 0) {
+    console.warn(
+      "[wordpress.ts] No published posts found for the 'news' CPT — check that /wp-json/wp/v2/news returns data.",
+    );
+  }
+
+  return {
+    hero: {
+      title: "News",
+      subline: acf?.nl_hero_subline || undefined,
+      image:
+        acf?.nl_hero_image ||
+        "https://picsum.photos/seed/news-hero/1280/560",
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Newsroom", href: "/newsroom" },
+        { label: "News", href: "/newsroom/news" },
+      ],
+    },
+
+    subNavLabel: acf?.nl_subnav_label || "Page Title",
+
+    subNav: toArray(acf?.nl_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf?.nl_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    // Real WP data — same "19 Apr, 12:20PM" format used by Alumni Write Ups / Student Stories
+    items: posts.map((post) => ({
+      id: String(post.id),
+      title: decodeHtml(post.title.rendered),
+      date: formatDayMonthTime(post.date),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/news-${post.id}/640/360`,
+      href: `/newsroom/news/${post.slug}`, // matches app/news/[slug]/page.tsx
+    })),
+
+    cta: {
+      left: {
+        title: acf?.nl_cta_left_title || undefined,
+        description: acf?.nl_cta_left_description ?? "",
+        cta: acf?.nl_cta_left_label ?? "Know More",
+        href: acf?.nl_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf?.nl_cta_right_title || undefined,
+        description: acf?.nl_cta_right_description ?? "",
+        cta: acf?.nl_cta_right_label ?? "Know More",
+        href: acf?.nl_cta_right_href?.url ?? "#",
+      },
+    },
   };
 }

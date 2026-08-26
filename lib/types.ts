@@ -2050,3 +2050,18 @@ export interface PublicationsPageData {
   hero: PageHeroContent;
   years: PublicationYearLink[];
 }
+
+export interface NewsImage {
+  url: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+export interface NewsDetailPageData {
+  hero: PageHeroContent;   // title, subline, image, breadcrumb — reuses existing type
+  content: string | null;
+  fullWidthImage: NewsImage | false;
+  imagesGrid: NewsImage[];
+  video: string | null;
+}
