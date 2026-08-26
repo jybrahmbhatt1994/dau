@@ -191,16 +191,23 @@ export const campusLifePageData: CampusLifePageData = {
     ],
   },
 
-  studentBody: {
-    title: "Student Body Government",
-    members: Array.from({ length: 8 }, (_, n) => ({
-      id: `sbg-${n + 1}`,
-      name: "Faculty Name",
-      position: "Position, Department",
-      image: img(289, 352, `sbg-${n + 1}`),
-      href: "#",
-    })),
-  },
+  // now:
+studentBody: {
+  title: "Student Body Government",
+  tabs: [
+    {
+      id: "sbg-tab-0",
+      label: "Core Team",
+      members: Array.from({ length: 8 }, (_, n) => ({
+        id: `sbg-0-${n + 1}`,
+        name: "Faculty Name",
+        position: "Position, Department",
+        image: `https://picsum.photos/seed/sbg-${n + 1}/289/352`,
+        href: "#",
+      })),
+    },
+  ],
+},
 
   ieee: {
     id: "ieee",
