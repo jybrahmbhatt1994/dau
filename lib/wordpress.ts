@@ -2138,8 +2138,17 @@ interface WpClClubsTab {
 interface WpClStudentBodyMember {
   name: string;
   position: string;
+  email: string;
+  phone: string;
+  extension: string;
+  office: string;
+  availability: string;
   image: string;
   href: WpClLinkField | "";
+}
+interface WpClStudentBodyTab {
+  label: string;
+  members: WpClStudentBodyMember[] | false;
 }
 
 interface WpClStory {
@@ -2182,7 +2191,7 @@ interface WpCampusLifeAcf {
   cl_clubs_tabs: WpClClubsTab[] | false;
   // Student Body
   cl_sb_title: string;
-  cl_sb_members: WpClStudentBodyMember[] | false;
+  cl_sb_tabs: WpClStudentBodyTab[] | false;
   // IEEE
   cl_ieee_title: string;
   cl_ieee_paragraphs: WpClParagraph[] | false;
@@ -5337,13 +5346,21 @@ export async function getCampusLifePage(): Promise<CampusLifePageData> {
 
     studentBody: {
       title: acf.cl_sb_title,
-      members: toArray(acf.cl_sb_members).map((m, i) => ({
-        id: `sbg-${i}`,
-        name: m.name,
-        position: m.position,
-        image: m.image,
-        href:
-          typeof m.href === "object" && m.href?.url ? m.href.url : "#",
+      tabs: toArray(acf.cl_sb_tabs).map((tab, ti) => ({
+        id: `sbg-tab-${ti}`,
+        label: tab.label,
+        members: toArray(tab.members).map((m, mi) => ({
+          id: `sbg-${ti}-${mi}`,
+          name: m.name,
+          position: m.position,
+          email: m.email || undefined,
+          phone: m.phone || undefined,
+          extension: m.extension || undefined,
+          office: m.office || undefined,
+          availability: m.availability || undefined,
+          image: m.image,
+          href: typeof m.href === "object" && m.href?.url ? m.href.url : "#",
+        })),
       })),
     },
 

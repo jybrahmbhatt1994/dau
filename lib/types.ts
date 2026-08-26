@@ -37,7 +37,10 @@ export interface FacultyMember {
   href: string;
   email?: string;
   phone?: string;
-  linkedinUrl?: string
+  linkedinUrl?: string;
+  extension?: string;    // new
+  office?: string;       // new
+  availability?: string; // new — "Day & Timing"
 }
 
 export interface ResearchCard {
@@ -571,7 +574,10 @@ export interface CampusLifePageData {
   sportsFacilities: FeatureSection; // two-up images
   /** "Student Clubs" — reuses ProgramSlider (pass description "" for title-only). */
   clubs: StudentClubsData;
-  studentBody: { title: string; members: FacultyMember[] };
+  studentBody: {
+    title: string;
+    tabs: Array<{ id: string; label: string; members: FacultyMember[] }>;
+  };
   ieee: FeatureSection; // single-image carousel (no caption)
   successStories: SectionIntro & { items: SuccessStory[] };
   /** title-less gold + red split CTA. */
