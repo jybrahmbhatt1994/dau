@@ -7,13 +7,16 @@ import NewsVideoEmbed from "@/components/news/NewsVideoEmbed";
 
 export const revalidate = 60;
 
+type ParamsPromise = Promise<{ slug: string }>;
+
 export async function generateStaticParams() {
   const slugs = await getAllNewsSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const news = await getNewsDetailPage(params.slug);
+export async function generateMetadata({ params }: { params: ParamsPromise }) {
+  const { slug } = await params;
+  const news = await getNewsDetailPage(slug);
   if (!news) return {};
   return {
     title: news.hero.title,
@@ -21,8 +24,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function NewsSinglePage({ params }: { params: { slug: string } }) {
-  const news = await getNewsDetailPage(params.slug);
+export default async function NewsSinglePage({ params }: { params: ParamsPromise }) {
+  const { slug } = await params;
+  const news = await getNewsDetailPage(slug);
   if (!news) notFound();
 
   return (
