@@ -1688,6 +1688,10 @@ export interface ClubEntry {
   contacts: ClubContact[];
   email: string;
   instagram?: string;
+  facebook?: string;
+  linkedin?: string;
+  youtube?: string;
+  website?: string;
 }
 
 export interface ClubTab {
@@ -2069,5 +2073,20 @@ export interface NewsDetailPageData {
   content: string | null;
   fullWidthImage: NewsImage | false;
   imagesGrid: NewsImage[];
+  video: string | null;
+}
+
+export interface EventImage {
+  url: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+export interface EventDetailPageData {
+  hero: PageHeroContent;
+  content: string | null;
+  imagesOneByOne: EventImage[];
+  imagesGrid: EventImage[];
   video: string | null;
 }

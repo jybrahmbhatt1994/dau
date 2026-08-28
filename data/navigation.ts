@@ -116,6 +116,7 @@ export const navigation: NavItem[] = [
     href: "#",
     children: [
       { label: "Newsroom", href: "/newsroom" },
+      { label: "Events", href: "/newsroom/events" },
       { label: "In focus", href: "/newsroom/student-stories" },
       { label: "Alumni Write Ups", href: "/newsroom/alumni-write-ups" },
       { label: "Photo Gallery", href: "/newsroom/photo-gallery" },

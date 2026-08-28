@@ -2128,6 +2128,10 @@ interface WpClClub {
   contacts: WpClContact[] | false;
   email: string;
   instagram: WpClLinkField | "";
+  facebook: WpClLinkField | "";
+  linkedin: WpClLinkField | "";
+  youtube: WpClLinkField | "";
+  website: WpClLinkField | "";
 }
 
 interface WpClClubsTab {
@@ -3469,6 +3473,11 @@ function formatScfDate(ddmmyyyy: string): string {
 /** SCF returns false for empty repeaters — normalise to [] */
 function toArray<T>(val: T[] | false | undefined | null): T[] {
   return Array.isArray(val) ? val : [];
+}
+
+/** ACF Link fields come back as "" when empty, or { title, url, target } when set. */
+function linkFieldUrl(field: WpClLinkField | "" | undefined): string | undefined {
+  return typeof field === "object" && field?.url ? field.url : undefined;
 }
 
 /**
@@ -5336,10 +5345,11 @@ export async function getCampusLifePage(): Promise<CampusLifePageData> {
             role: c.role,
           })),
           email: club.email,
-          instagram:
-            typeof club.instagram === "object" && club.instagram?.url
-              ? club.instagram.url
-              : undefined,
+          instagram: linkFieldUrl(club.instagram),
+          facebook: linkFieldUrl(club.facebook),
+          linkedin: linkFieldUrl(club.linkedin),
+          youtube: linkFieldUrl(club.youtube),
+          website: linkFieldUrl(club.website),
         })),
       })),
     },
@@ -9243,4 +9253,214 @@ export async function getNewsListingPage(): Promise<CardGridPageData> {
       },
     },
   };
+}
+
+// ─── Events Listing (/events or /life/events-listing — adjust route to match your app) ─────
+// Same card-grid template as News Listing / Alumni Write Ups / Student Stories.
+// Reuses the `event` CPT (REST base "event", same shape as WpEventPost used
+// elsewhere in this file for the homepage/newsroom "Events" sections).
+//
+// Same decoupling as getNewsListingPage(): the `event` CPT posts are always
+// fetched live. The ACF page (slug "events") is OPTIONAL — if present it only
+// customizes the hero subline/image, subnav, intro paragraphs, and CTA panels.
+// If absent, sensible defaults are used instead of falling back to mock data,
+// so real WP posts always show.
+
+interface WpElLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpElSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpElParagraph {
+  paragraph: string;
+}
+
+interface WpEventsListingAcf {
+  el_hero_subline?: string;
+  el_hero_image?: string;
+  el_subnav_label?: string;
+  el_subnav_links?: WpElSubNavLink[] | false;
+  el_intro_paragraphs?: WpElParagraph[] | false;
+  el_cta_left_title?: string;
+  el_cta_left_description?: string;
+  el_cta_left_label?: string;
+  el_cta_left_href?: WpElLinkField;
+  el_cta_right_title?: string;
+  el_cta_right_description?: string;
+  el_cta_right_label?: string;
+  el_cta_right_href?: WpElLinkField;
+}
+
+// Reuses the existing WpEventPost interface (id, slug, date, title, _embedded)
+// already declared earlier in this file — no new post interface needed.
+
+export async function getEventsListingPage(): Promise<CardGridPageData> {
+  const [acf, posts] = await Promise.all([
+    getPageAcf<WpEventsListingAcf>("events").catch(() => null),
+    wpFetchSafe<WpEventPost[]>(
+      `/wp/v2/event?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+      [],
+    ),
+  ]);
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Events listing ACF page not found — using default hero/CTA copy, but real event posts are still fetched live.",
+    );
+  }
+
+  if (posts.length === 0) {
+    console.warn(
+      "[wordpress.ts] No published posts found for the 'event' CPT — check that /wp-json/wp/v2/event returns data.",
+    );
+  }
+
+  return {
+    hero: {
+      title: "Events",
+      subline: acf?.el_hero_subline || undefined,
+      image:
+        acf?.el_hero_image ||
+        "https://picsum.photos/seed/events-hero/1280/560",
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Life@DAU", href: "/life" },
+        { label: "Events", href: "/events" },
+      ],
+    },
+
+    subNavLabel: acf?.el_subnav_label || "Page Title",
+
+    subNav: toArray(acf?.el_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf?.el_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    // Real WP data — same "19 Apr, 12:20PM" format as News / Alumni Write Ups
+    items: posts.map((post) => ({
+      id: String(post.id),
+      title: decodeHtml(post.title.rendered),
+      date: formatDayMonthTime(post.date),
+      image:
+        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        `https://picsum.photos/seed/event-${post.id}/640/360`,
+      href: `/newsroom/events/${post.slug}`, // matches your existing app/events/[slug]/page.tsx route
+    })),
+
+    cta: {
+      left: {
+        title: acf?.el_cta_left_title || undefined,
+        description: acf?.el_cta_left_description ?? "",
+        cta: acf?.el_cta_left_label ?? "Know More",
+        href: acf?.el_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf?.el_cta_right_title || undefined,
+        description: acf?.el_cta_right_description ?? "",
+        cta: acf?.el_cta_right_label ?? "Know More",
+        href: acf?.el_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+interface WpEventImageAcf {
+  url: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+interface WpEventImageRow {
+  image: WpEventImageAcf | false;
+}
+
+interface WpEventDetailAcf {
+  event_content: string | null;
+  images_one_by_one: WpEventImageRow[] | false;
+  images_grid: WpEventImageAcf[] | false;
+  video: string | null;
+}
+
+interface WpEventDetailPost {
+  id: number;
+  slug: string;
+  date: string;
+  title: { rendered: string };
+  acf: WpEventDetailAcf;
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{
+      source_url: string;
+      alt_text: string;
+      media_details?: { width: number; height: number };
+    }>;
+  };
+}
+
+function mapEventDetailPost(post: WpEventDetailPost): EventDetailPageData {
+  const acf = post.acf;
+  const featuredMedia = post._embedded?.["wp:featuredmedia"]?.[0];
+  const title = decodeHtml(post.title.rendered);
+
+  return {
+    hero: {
+      title,
+      subline: undefined,
+      image:
+        featuredMedia?.source_url ??
+        `https://picsum.photos/seed/event-${post.id}/1200/500`,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Events", href: "/newsroom/events" },
+        { label: title, href: `/newsroom/events/${post.slug}` },
+      ],
+    },
+
+    content: acf.event_content ? decodeHtml(acf.event_content) : null,
+
+    // repeater of image sub-fields — each row's "image" can be false when empty
+    imagesOneByOne: toArray(acf.images_one_by_one)
+      .map((row) => row.image)
+      .filter((img): img is WpEventImageAcf => img !== false),
+
+    // gallery field — false when unset
+    imagesGrid: toArray(acf.images_grid),
+
+    // oembed field — "" when unset
+    video: acf.video || null,
+  };
+}
+
+export async function getEventDetailPage(
+  slug: string,
+): Promise<EventDetailPageData | null> {
+  const posts = await wpFetchSafe<WpEventDetailPost[]>(
+    `/wp/v2/event?slug=${slug}&_embed=wp:featuredmedia&acf_format=standard`,
+    [],
+  );
+
+  if (!posts || posts.length === 0) {
+    console.warn(`[wordpress.ts] Event post '${slug}' not found.`);
+    return null;
+  }
+
+  return mapEventDetailPost(posts[0]);
+}
+
+export async function getAllEventSlugs(): Promise<string[]> {
+  const posts = await wpFetchSafe<Array<{ slug: string }>>(
+    `/wp/v2/event?per_page=100&_fields=slug`,
+    [],
+  );
+  return posts.map((p) => p.slug);
 }

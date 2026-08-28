@@ -10,8 +10,19 @@ import "swiper/css";
 
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ChevronDown } from "@/components/ui/icons";
+import {
+  ChevronDown,
+  ChevronUp,
+  FacebookIcon,
+  LinkedInIcon,
+  YoutubeIcon,
+  WebsiteIcon,
+} from "@/components/ui/icons";
 import type { StudentClubsData } from "@/lib/types";
+
+// Fixed card height. Left rail slider + right detail panel both respect this,
+// so the card doesn't grow/shrink depending on how much content a club has.
+const PANEL_HEIGHT = "lg:h-[460px]";
 
 export function StudentClubs({
   data,
@@ -27,10 +38,28 @@ export function StudentClubs({
   const clubs = data.tabs[tab].clubs;
   const club = clubs[active];
 
+  if (!club) {
+    return null;
+  }
+
   useEffect(() => {
     setActive(0);
     swiperRef.current?.slideTo(0);
   }, [tab]);
+
+  // Keep `active` and the swiper's position in lock-step — clamped so it can
+  // never point past the current tab's clubs array (which is what was
+  // producing the "reading 'image' of undefined" crash).
+  const goPrev = () => {
+    const next = Math.max(active - 1, 0);
+    setActive(next);
+    swiperRef.current?.slideTo(next);
+  };
+  const goNext = () => {
+    const next = Math.min(active + 1, clubs.length - 1);
+    setActive(next);
+    swiperRef.current?.slideTo(next);
+  };
 
   return (
     <section className={`overflow-x-clip py-16 lg:py-20 ${className}`}>
@@ -59,11 +88,23 @@ export function StudentClubs({
         {/* Panel */}
         <div className="mt-8 flex flex-col gap-6 rounded-2xl bg-white p-4 shadow-card lg:flex-row lg:gap-8 lg:p-6">
           {/* Left rail — vertical club slider */}
-          <div className="relative shrink-0 rounded-xl bg-white py-3 shadow-card lg:w-[190px]">
+          <div
+            className={`relative flex shrink-0 flex-col rounded-xl bg-white py-3 shadow-card lg:w-[190px] ${PANEL_HEIGHT}`}
+          >
+            {/* Up arrow */}
+            <button
+              type="button"
+              onClick={goPrev}
+              aria-label="Previous club"
+              className="relative z-10 flex justify-center bg-white pb-2 text-brand-alt hover:text-brand"
+            >
+              <ChevronUp className="h-5 w-5" aria-hidden />
+            </button>
+
             {/* vertical connector line (sits behind the buttons) */}
             <span
               aria-hidden
-              className="pointer-events-none absolute left-1/2 top-0 z-0 h-full w-[2px] -translate-x-1/2 bg-brand-alt/60"
+              className="pointer-events-none absolute left-1/2 top-9 z-0 h-[calc(100%-4.5rem)] w-[2px] -translate-x-1/2 bg-brand-alt/60"
             />
 
             <Swiper
@@ -74,7 +115,7 @@ export function StudentClubs({
               slidesPerView={4}
               spaceBetween={0}
               grabCursor
-              className="!h-[340px]"
+              className="!h-full min-h-0 flex-1"
             >
               {clubs.map((c, i) => (
                 <SwiperSlide key={c.id} className="!h-auto">
@@ -97,14 +138,23 @@ export function StudentClubs({
               ))}
             </Swiper>
 
-            <div className="relative z-10 flex justify-center bg-white pt-2">
-              <ChevronDown className="h-5 w-5 animate-bounce text-brand-alt" aria-hidden />
-            </div>
+            {/* Down arrow */}
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next club"
+              className="relative z-10 flex justify-center bg-white pt-2 text-brand-alt hover:text-brand"
+            >
+              <ChevronDown className="h-5 w-5 animate-bounce" aria-hidden />
+            </button>
           </div>
 
           {/* Right — club detail */}
-          <div key={club.id} className="grid flex-1 animate-fadeUp gap-6 md:grid-cols-2 md:gap-8">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl md:aspect-auto md:min-h-[300px]">
+          <div
+            key={club.id}
+            className={`grid flex-1 animate-fadeUp gap-6 md:grid-cols-2 md:gap-8 ${PANEL_HEIGHT}`}
+          >
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl md:aspect-auto md:min-h-[300px] lg:h-full lg:aspect-auto">
               <Image
                 src={club.image}
                 alt={club.name}
@@ -114,15 +164,9 @@ export function StudentClubs({
               />
             </div>
 
-            <div className="relative flex flex-col pr-5">
-              {/* right scroll accent */}
-              <span
-                aria-hidden
-                className="absolute right-0 top-0 hidden h-full w-[3px] rounded-full bg-line md:block"
-              >
-                <span className="block h-1/2 w-full rounded-full bg-brand-alt" />
-              </span>
-
+            {/* Scrollable text column — keeps the card the same height
+                regardless of how long a club's description/contacts are */}
+            <div className="flex min-h-0 flex-col overflow-y-auto pr-2 lg:h-full">
               <p className="text-sm font-medium leading-relaxed text-navy/80">
                 {club.description}
               </p>
@@ -139,15 +183,59 @@ export function StudentClubs({
                 </p>
               </div>
 
-              {club.instagram && (
-                <Link
-                  href={club.instagram}
-                  aria-label={`${club.name} on Instagram`}
-                  className="mt-5 inline-block transition-opacity hover:opacity-75"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/instagram.svg" alt="" aria-hidden className="h-8 w-8" />
-                </Link>
+              {(club.instagram ||
+                club.facebook ||
+                club.linkedin ||
+                club.youtube ||
+                club.website) && (
+                <div className="mt-5 flex shrink-0 items-center gap-3">
+                  {club.instagram && (
+                    <Link
+                      href={club.instagram}
+                      aria-label={`${club.name} on Instagram`}
+                      className="inline-block transition-opacity hover:opacity-75"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/instagram.svg" alt="" aria-hidden className="h-8 w-8" />
+                    </Link>
+                  )}
+                  {club.facebook && (
+                    <Link
+                      href={club.facebook}
+                      aria-label={`${club.name} on Facebook`}
+                      className="inline-block text-brand-alt transition-opacity hover:opacity-75"
+                    >
+                      <FacebookIcon className="h-8 w-8" />
+                    </Link>
+                  )}
+                  {club.linkedin && (
+                    <Link
+                      href={club.linkedin}
+                      aria-label={`${club.name} on LinkedIn`}
+                      className="inline-block text-brand-alt transition-opacity hover:opacity-75"
+                    >
+                      <LinkedInIcon className="h-8 w-8" />
+                    </Link>
+                  )}
+                  {club.youtube && (
+                    <Link
+                      href={club.youtube}
+                      aria-label={`${club.name} on YouTube`}
+                      className="inline-block text-brand-alt transition-opacity hover:opacity-75"
+                    >
+                      <YoutubeIcon className="h-8 w-8" />
+                    </Link>
+                  )}
+                  {club.website && (
+                    <Link
+                      href={club.website}
+                      aria-label={`${club.name} website`}
+                      className="inline-block text-brand-alt transition-opacity hover:opacity-75"
+                    >
+                      <WebsiteIcon className="h-8 w-8" />
+                    </Link>
+                  )}
+                </div>
               )}
             </div>
           </div>
