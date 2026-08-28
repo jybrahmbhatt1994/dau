@@ -179,6 +179,7 @@ export const btechIctPageData: ProgramPageData = {
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     buttonHref: "#",
+    bgImage: "https://picsum.photos/seed/admission-btech-ict/1600/900",
   },
 
   faqs: {
