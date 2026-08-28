@@ -204,6 +204,7 @@ interface WpHomeAcf {
   academics_description: string;
   academics_cards: WpAcademicsCard[];
   // Admission CTA
+  admission_bg_image: string;
   admission_eyebrow: string;
   admission_title: string;
   admission_description: string;
@@ -3532,6 +3533,7 @@ function mapAcademics(acf: WpHomeAcf): HomeData["academics"] {
 
 function mapAdmissionCta(acf: WpHomeAcf): HomeData["admissionCta"] {
   return {
+    bgImage: acf.admission_bg_image,
     eyebrow: acf.admission_eyebrow,
     title: acf.admission_title,
     description: acf.admission_description,
@@ -9256,16 +9258,16 @@ export async function getNewsListingPage(): Promise<CardGridPageData> {
   };
 }
 
-// ─── Events Listing (/events or /life/events-listing — adjust route to match your app) ─────
-// Same card-grid template as News Listing / Alumni Write Ups / Student Stories.
-// Reuses the `event` CPT (REST base "event", same shape as WpEventPost used
-// elsewhere in this file for the homepage/newsroom "Events" sections).
+// ─── Events Listing (/events) ──────────────────────────────────────────────
+// Same card-grid template as News Listing, but split into two tabs driven by
+// the `event-type` taxonomy (terms: "upcoming" / "past" — resolved by SLUG at
+// request time, not hardcoded term IDs, since term IDs can differ between
+// your demo/staging/production WP installs).
 //
-// Same decoupling as getNewsListingPage(): the `event` CPT posts are always
-// fetched live. The ACF page (slug "events") is OPTIONAL — if present it only
-// customizes the hero subline/image, subnav, intro paragraphs, and CTA panels.
-// If absent, sensible defaults are used instead of falling back to mock data,
-// so real WP posts always show.
+// Same ACF-optional decoupling as News/Alumni: the `event` CPT posts are
+// always fetched live. The ACF page (slug "events") only customizes the
+// hero/subnav/intro/CTA copy — if missing, sensible defaults are used instead
+// of falling back to mock data.
 
 interface WpElLinkField {
   title: string;
@@ -9298,16 +9300,35 @@ interface WpEventsListingAcf {
   el_cta_right_href?: WpElLinkField;
 }
 
-// Reuses the existing WpEventPost interface (id, slug, date, title, _embedded)
-// already declared earlier in this file — no new post interface needed.
+// `event-type` taxonomy term — used only to resolve slug -> id at request time
+interface WpEventTypeTerm {
+  id: number;
+  slug: string;
+  name: string;
+}
 
-export async function getEventsListingPage(): Promise<CardGridPageData> {
-  const [acf, posts] = await Promise.all([
+// Reuses the existing WpEventPost interface (id, slug, date, title, _embedded)
+// already declared earlier in this file.
+
+const EVENT_TYPE_UPCOMING_SLUG = "upcoming";
+const EVENT_TYPE_PAST_SLUG = "past";
+
+function mapEventPostsToArticles(posts: WpEventPost[]): NewsArticle[] {
+  return posts.map((post) => ({
+    id: String(post.id),
+    title: decodeHtml(post.title.rendered),
+    date: formatDayMonthTime(post.date),
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/event-${post.id}/640/360`,
+    href: `/events/${post.slug}`, // matches app/events/[slug]/page.tsx
+  }));
+}
+
+export async function getEventsListingPage(): Promise<EventsListingPageData> {
+  const [acf, terms] = await Promise.all([
     getPageAcf<WpEventsListingAcf>("events").catch(() => null),
-    wpFetchSafe<WpEventPost[]>(
-      `/wp/v2/event?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
-      [],
-    ),
+    wpFetchSafe<WpEventTypeTerm[]>(`/wp/v2/event-type?per_page=100`, []),
   ]);
 
   if (!acf) {
@@ -9316,11 +9337,36 @@ export async function getEventsListingPage(): Promise<CardGridPageData> {
     );
   }
 
-  if (posts.length === 0) {
+  const upcomingTermId = terms.find(
+    (t) => t.slug === EVENT_TYPE_UPCOMING_SLUG,
+  )?.id;
+  const pastTermId = terms.find((t) => t.slug === EVENT_TYPE_PAST_SLUG)?.id;
+
+  if (!upcomingTermId || !pastTermId) {
     console.warn(
-      "[wordpress.ts] No published posts found for the 'event' CPT — check that /wp-json/wp/v2/event returns data.",
+      `[wordpress.ts] Could not resolve 'event-type' terms by slug ("${EVENT_TYPE_UPCOMING_SLUG}"/"${EVENT_TYPE_PAST_SLUG}") — check the term slugs in WP match exactly. Falling back to showing all events under "Upcoming".`,
     );
   }
+
+  const [upcomingPosts, pastPosts] = await Promise.all([
+    upcomingTermId
+      ? wpFetchSafe<WpEventPost[]>(
+          `/wp/v2/event?event-type=${upcomingTermId}&_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+          [],
+        )
+      : wpFetchSafe<WpEventPost[]>(
+          // Fallback: terms didn't resolve — show everything under Upcoming
+          // rather than showing an empty page.
+          `/wp/v2/event?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+          [],
+        ),
+    pastTermId
+      ? wpFetchSafe<WpEventPost[]>(
+          `/wp/v2/event?event-type=${pastTermId}&_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+          [],
+        )
+      : Promise.resolve([] as WpEventPost[]),
+  ]);
 
   return {
     hero: {
@@ -9347,16 +9393,10 @@ export async function getEventsListingPage(): Promise<CardGridPageData> {
       r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
     ),
 
-    // Real WP data — same "19 Apr, 12:20PM" format as News / Alumni Write Ups
-    items: posts.map((post) => ({
-      id: String(post.id),
-      title: decodeHtml(post.title.rendered),
-      date: formatDayMonthTime(post.date),
-      image:
-        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
-        `https://picsum.photos/seed/event-${post.id}/640/360`,
-      href: `/newsroom/events/${post.slug}`, // matches your existing app/events/[slug]/page.tsx route
-    })),
+    tabs: {
+      upcoming: mapEventPostsToArticles(upcomingPosts),
+      past: mapEventPostsToArticles(pastPosts),
+    },
 
     cta: {
       left: {
@@ -9374,6 +9414,8 @@ export async function getEventsListingPage(): Promise<CardGridPageData> {
     },
   };
 }
+
+//Event detail page
 
 interface WpEventImageAcf {
   url: string;

@@ -122,6 +122,7 @@ export interface HomeData {
   hero: HeroContent;
   academics: SectionIntro & { cards: ProgramCard[] };
   admissionCta: {
+    bgImage: string;
     eyebrow: string;
     title: string;
     description: string;
@@ -2089,4 +2090,16 @@ export interface EventDetailPageData {
   imagesOneByOne: EventImage[];
   imagesGrid: EventImage[];
   video: string | null;
+}
+
+export interface EventsListingPageData {
+  hero: CardGridPageData["hero"];
+  subNavLabel: string;
+  subNav: CardGridPageData["subNav"];
+  intro: string[];
+  tabs: {
+    upcoming: NewsArticle[];
+    past: NewsArticle[];
+  };
+  cta: CardGridPageData["cta"];
 }

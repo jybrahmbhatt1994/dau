@@ -3,7 +3,7 @@ import { getEventsListingPage } from "@/lib/wordpress";
 import { PageHero } from "@/components/layout/PageHero";
 import { PageSubNav } from "@/components/layout/PageSubNav";
 import { ProseIntro } from "@/components/layout/ProseIntro";
-import { PaginatedCardGrid } from "@/components/news/PaginatedCardGrid";
+import { EventsTabbedGrid } from "@/components/events/EventsTabbedGrid";
 import { SplitCta } from "@/components/academics/SplitCta";
 
 export const metadata: Metadata = {
@@ -21,11 +21,7 @@ export default async function EventsListingPage() {
       {/* <ProseIntro paragraphs={data.intro} className="bg-surface" /> */}
 
       <div id="events" className="scroll-mt-24">
-        <PaginatedCardGrid
-          items={data.items}
-          className="bg-surface"
-          showReadMore
-        />
+        <EventsTabbedGrid tabs={data.tabs} className="bg-surface" />
       </div>
 
       <SplitCta calendar={data.cta.left} catalogue={data.cta.right} />

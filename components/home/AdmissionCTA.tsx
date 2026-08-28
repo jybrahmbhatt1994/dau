@@ -8,7 +8,7 @@ export function AdmissionCTA({ data }: { data: HomeData["admissionCta"] }) {
       {/* dark photo backdrop */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center grayscale"
-        style={{ backgroundImage: "url('/images/admission-bg.png')" }}
+        style={{ backgroundImage: `url(${data.bgImage})` }}
         aria-hidden
       />
       {/* <div className="absolute inset-0 -z-10 bg-black/55" aria-hidden /> */}
