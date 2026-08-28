@@ -134,6 +134,7 @@ import type {
   CampusTourFormOptions,
   PublicationsPageData,
   NewsDetailPageData,
+  EventDetailPageData,
 } from "@/lib/types";
 
 // ============================================================================
