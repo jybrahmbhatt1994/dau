@@ -7,7 +7,7 @@ export function AdmissionCTA({ data }: { data: HomeData["admissionCta"] }) {
     <section className="relative isolate overflow-hidden bg-black py-20 text-center text-white lg:py-28">
       {/* dark photo backdrop */}
       <div
-        className="absolute inset-0 -z-10 bg-cover bg-center grayscale"
+        className="absolute inset-0 -z-10 bg-cover bg-center grayscale brightness-50"
         style={{ backgroundImage: `url(${data.bgImage})` }}
         aria-hidden
       />
