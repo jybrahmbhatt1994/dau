@@ -3646,7 +3646,7 @@ function mapNews(
     image:
       post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
       `https://picsum.photos/seed/news-${post.id}/681/411`,
-    href: `/newsroom/${post.slug}`,
+    href: `/newsroom/news/${post.slug}`,
   });
  
   return {
@@ -3674,7 +3674,7 @@ function mapEvents(
       image:
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
         `https://picsum.photos/seed/event-${post.id}/600/360`,
-      href: `/events/${post.slug}`,
+      href: `/newsroom/events/${post.slug}`,
     })),
   };
 }

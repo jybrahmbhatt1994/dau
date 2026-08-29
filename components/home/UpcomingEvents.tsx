@@ -39,7 +39,7 @@ export function UpcomingEvents({ data }: { data: HomeData["events"] }) {
         </div>
 
         <div className="mt-10 flex justify-center">
-          <ActionButton href="/events">View All</ActionButton>
+          <ActionButton href="/newsroom/events">View All</ActionButton>
         </div>
       </Container>
     </section>
