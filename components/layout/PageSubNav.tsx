@@ -16,6 +16,9 @@ export function PageSubNav({
   label: string;
   links: SubNavLink[];
 }) {
+  // TEMP: PageSubNav disabled site-wide. Remove this line to revert.
+  return null;
+
   return (
     <nav aria-label={`${label} sections`} className="sticky top-[72px] z-40 bg-[#ECEDFF] lg:top-[90px]">
       <Container className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-0 sm:h-[56px]">
