@@ -44,6 +44,7 @@ export const homeData: HomeData = {
     title: "Admissions started for 2027",
     description: LOREM_SHORT,
     buttonHref: "#",
+    bgImage: "https://picsum.photos/seed/admission-btech-ict/1600/900",
   },
 
   faculty: {
