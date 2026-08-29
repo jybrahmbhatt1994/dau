@@ -108,7 +108,7 @@ export function PlacementsSection({ data }: { data: HomeData["placements"] }) {
               <img
                 src={logo.logo}   // ← was logo.image
                 alt={logo.name}
-                className="h-8 w-auto object-contain opacity-100"
+                className="h-12 w-auto object-contain opacity-100"
               />
             </div>
           ))}

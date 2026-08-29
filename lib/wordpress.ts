@@ -2210,9 +2210,11 @@ interface WpCampusLifeAcf {
   cl_stories_description: string;
   cl_stories_items: WpClStory[] | false;
   // CTA
+  cl_cta_left_title: string;
   cl_cta_left_description: string;
   cl_cta_left_label: string;
   cl_cta_left_href: WpClLinkField;
+  cl_cta_right_title: string;
   cl_cta_right_description: string;
   cl_cta_right_label: string;
   cl_cta_right_href: WpClLinkField;
@@ -2271,9 +2273,11 @@ interface WpStudentSupportAcf {
   ss_medical_cells: WpSsScheduleCell[] | false;
   ss_medical_outro: WpSsParagraph[] | false;
   // CTA
+  ss_cta_left_title: string;
   ss_cta_left_description: string;
   ss_cta_left_label: string;
   ss_cta_left_href: WpSsLinkField;
+  ss_cta_right_title: string;
   ss_cta_right_description: string;
   ss_cta_right_label: string;
   ss_cta_right_href: WpSsLinkField;
@@ -2308,9 +2312,11 @@ interface WpFestEventsAcf {
   fe_fest_title: string;
   fe_events_title: string;
   // CTA
+  fe_cta_left_title: string;
   fe_cta_left_description: string;
   fe_cta_left_label: string;
   fe_cta_left_href: WpFeLinkField;
+  fe_cta_right_title: string;
   fe_cta_right_description: string;
   fe_cta_right_label: string;
   fe_cta_right_href: WpFeLinkField;
@@ -5409,11 +5415,13 @@ export async function getCampusLifePage(): Promise<CampusLifePageData> {
 
     cta: {
       left: {
+        title: acf.cl_cta_left_title || undefined,
         description: acf.cl_cta_left_description,
         cta: acf.cl_cta_left_label,
         href: acf.cl_cta_left_href?.url ?? "#",
       },
       right: {
+        title: acf.cl_cta_right_title || undefined,
         description: acf.cl_cta_right_description,
         cta: acf.cl_cta_right_label,
         href: acf.cl_cta_right_href?.url ?? "#",
@@ -5492,11 +5500,13 @@ export async function getStudentSupportPage(): Promise<StudentSupportPageData> {
 
     cta: {
       left: {
+        title: acf.ss_cta_left_title || undefined,
         description: acf.ss_cta_left_description,
         cta: acf.ss_cta_left_label,
         href: acf.ss_cta_left_href?.url ?? "#",
       },
       right: {
+        title: acf.ss_cta_right_title || undefined,
         description: acf.ss_cta_right_description,
         cta: acf.ss_cta_right_label,
         href: acf.ss_cta_right_href?.url ?? "#",
@@ -5577,11 +5587,13 @@ export async function getFestEventsPage(): Promise<FestEventsPageData> {
 
     cta: {
       left: {
+        title: acf.fe_cta_left_title || undefined,
         description: acf.fe_cta_left_description,
         cta: acf.fe_cta_left_label,
         href: acf.fe_cta_left_href?.url ?? "#",
       },
       right: {
+        title: acf.fe_cta_right_title || undefined,
         description: acf.fe_cta_right_description,
         cta: acf.fe_cta_right_label,
         href: acf.fe_cta_right_href?.url ?? "#",
