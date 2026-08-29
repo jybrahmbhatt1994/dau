@@ -36,7 +36,7 @@ export default async function NewsSinglePage({ params }: { params: ParamsPromise
         subline={news.hero.subline}
         image={news.hero.image}
         breadcrumb={news.hero.breadcrumb}
-        titleClassName="font-display text-[clamp(1.5rem,3vw,2.5rem)] font-semibold leading-tight text-white"
+        titleClassName="font-display text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-tight text-white"
       />
 
       <Container className="py-10">

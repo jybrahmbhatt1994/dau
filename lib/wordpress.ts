@@ -3668,14 +3668,18 @@ function mapNews(
 
 function mapEvents(
   acf: WpHomeAcf,
-  posts: WpEventPost[],
+  posts: WpEventListingPost[],
 ): HomeData["events"] {
   return {
     title: acf.events_title,
     items: posts.map((post) => ({
       id: String(post.id),
       title: decodeHtml(post.title.rendered),
-      date: formatIsoDate(post.date),
+      // Same event_start_date/event_end_date range logic used on the
+      // Events listing page (formatEventDateRange + WpEventListingPost
+      // are both declared later in this file — function declarations and
+      // interfaces are hoisted, so referencing them here is safe).
+      date: formatEventDateRange(post),
       image:
         post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
         `https://picsum.photos/seed/event-${post.id}/600/360`,
@@ -3841,8 +3845,8 @@ export async function getHomeData(): Promise<HomeData> {
       wpFetchSafe<WpNewsPost[]>(
         `/wp/v2/news?_embed=wp:featuredmedia&per_page=5&orderby=date&order=desc`,
        []),
-      wpFetchSafe<WpEventPost[]>(
-        `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
+      wpFetchSafe<WpEventListingPost[]>(
+        `/wp/v2/event?_embed=wp:featuredmedia&acf_format=standard&per_page=3&orderby=date&order=desc`,
        []),
       wpFetchSafe<WpCenterPost[]>(
         `/wp/v2/center?_embed=wp:featuredmedia&per_page=6&orderby=date&order=desc`,
@@ -9320,17 +9324,48 @@ interface WpEventTypeTerm {
   name: string;
 }
 
-// Reuses the existing WpEventPost interface (id, slug, date, title, _embedded)
-// already declared earlier in this file.
+// ACF fields specific to the `event` CPT. Return Format on both date fields
+// is set to "j F, Y" in ACF (see field settings), so WP already sends back a
+// pre-formatted string like "29 August, 2026" — no date parsing needed here.
+interface WpEventAcf {
+  event_start_date?: string; // e.g. "19 February, 2027" or "" / false if unset
+  event_end_date?: string;
+}
+
+// Extends the existing WpEventPost interface (declared earlier in this file)
+// with the ACF fields — kept local to this fetch so the original interface
+// (used elsewhere for homepage/newsroom event sections) is untouched.
+interface WpEventListingPost extends WpEventPost {
+  acf?: WpEventAcf;
+}
 
 const EVENT_TYPE_UPCOMING_SLUG = "upcoming";
 const EVENT_TYPE_PAST_SLUG = "past";
 
-function mapEventPostsToArticles(posts: WpEventPost[]): NewsArticle[] {
+/**
+ * Builds the display string for an event card: a date range when both ACF
+ * dates are set and differ, a single date when they're the same or only one
+ * is set, and falls back to the post's published date (old formatting) if
+ * neither ACF field has a value — e.g. for events created before these ACF
+ * fields existed.
+ */
+function formatEventDateRange(post: WpEventListingPost): string {
+  const start = post.acf?.event_start_date || "";
+  const end = post.acf?.event_end_date || "";
+
+  if (start && end && start !== end) return `${start} – ${end}`;
+  if (start) return start;
+  if (end) return end;
+
+  // Fallback for events without the new ACF fields populated yet.
+  return formatDayMonthTime(post.date);
+}
+
+function mapEventPostsToArticles(posts: WpEventListingPost[]): NewsArticle[] {
   return posts.map((post) => ({
     id: String(post.id),
     title: decodeHtml(post.title.rendered),
-    date: formatDayMonthTime(post.date),
+    date: formatEventDateRange(post), // date range for event cards only
     image:
       post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
       `https://picsum.photos/seed/event-${post.id}/640/360`,
@@ -9361,24 +9396,26 @@ export async function getEventsListingPage(): Promise<EventsListingPageData> {
     );
   }
 
+  // acf_format=standard is required to get event_start_date/event_end_date
+  // back as plain values (same param used elsewhere, e.g. getPageAcf).
   const [upcomingPosts, pastPosts] = await Promise.all([
     upcomingTermId
-      ? wpFetchSafe<WpEventPost[]>(
-          `/wp/v2/event?event-type=${upcomingTermId}&_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+      ? wpFetchSafe<WpEventListingPost[]>(
+          `/wp/v2/event?event-type=${upcomingTermId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100&orderby=date&order=desc`,
           [],
         )
-      : wpFetchSafe<WpEventPost[]>(
+      : wpFetchSafe<WpEventListingPost[]>(
           // Fallback: terms didn't resolve — show everything under Upcoming
           // rather than showing an empty page.
-          `/wp/v2/event?_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+          `/wp/v2/event?_embed=wp:featuredmedia&acf_format=standard&per_page=100&orderby=date&order=desc`,
           [],
         ),
     pastTermId
-      ? wpFetchSafe<WpEventPost[]>(
-          `/wp/v2/event?event-type=${pastTermId}&_embed=wp:featuredmedia&per_page=100&orderby=date&order=desc`,
+      ? wpFetchSafe<WpEventListingPost[]>(
+          `/wp/v2/event?event-type=${pastTermId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100&orderby=date&order=desc`,
           [],
         )
-      : Promise.resolve([] as WpEventPost[]),
+      : Promise.resolve([] as WpEventListingPost[]),
   ]);
 
   return {
