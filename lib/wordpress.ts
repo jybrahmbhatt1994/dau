@@ -135,6 +135,7 @@ import type {
   PublicationsPageData,
   NewsDetailPageData,
   EventDetailPageData,
+  EventsListingPageData,
 } from "@/lib/types";
 
 // ============================================================================
@@ -934,6 +935,7 @@ interface WpProgramCategoryAcf {
   pc_admission_title: string;
   pc_admission_description: string;
   pc_admission_button_href: string;
+  pc_admission_bg_image: string;
   // Faculty
   pc_faculty_title: string;
   pc_faculty_description: string;
@@ -1146,6 +1148,7 @@ interface WpCourseAcf {
   pg_admission_title: string;
   pg_admission_description: string;
   pg_admission_button_href: string;
+  pg_admission_bg_image: string;
   // FAQs
   pg_faqs_title: string;
   pg_faqs_items: WpPgFaqItem[] | false;
@@ -4368,6 +4371,7 @@ export async function getProgramsListingPage(
       title: acf.pc_admission_title,
       description: acf.pc_admission_description,
       buttonHref: acf.pc_admission_button_href || "#",
+      bgImage: acf.pc_admission_bg_image,
     },
  
     faculty: {
@@ -4544,6 +4548,7 @@ export async function getProgramPage(slug: string): Promise<ProgramPageData> {
       title: acf.pg_admission_title,
       description: acf.pg_admission_description,
       buttonHref: acf.pg_admission_button_href || "#",
+      bgImage: acf.pg_admission_bg_image,
     },
 
     faqs: {
