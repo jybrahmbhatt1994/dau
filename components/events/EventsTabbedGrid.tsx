@@ -8,10 +8,12 @@ import type { NewsArticle } from "@/lib/types";
 type TabKey = "upcoming" | "past";
 
 /**
- * Two-tab wrapper around PaginatedCardGrid for the Events listing page.
- * Tabs are driven by the `event-type` taxonomy (Upcoming / Past), resolved
- * server-side in getEventsListingPage(). Kept as its own component (rather
- * than modifying PaginatedCardGrid further) so News/Alumni Write Ups/Student
+ * Two-tab wrapper around PaginatedCardGrid for taxonomy-split listing pages
+ * (Upcoming / Past). Used by both the Events listing page (event-type
+ * taxonomy) and the Fest listing page (fest-type taxonomy) — labels and the
+ * empty-state noun are parameterized so the same component serves both
+ * without duplicating the tab UI. Kept as its own component (rather than
+ * modifying PaginatedCardGrid further) so News/Alumni Write Ups/Student
  * Stories are unaffected.
  *
  * `key={activeTab}` on PaginatedCardGrid resets its internal page state when
@@ -20,15 +22,23 @@ type TabKey = "upcoming" | "past";
 export function EventsTabbedGrid({
   tabs,
   className = "bg-surface",
+  upcomingLabel = "Upcoming Events",
+  pastLabel = "Past Events",
+  itemNounSingular = "event",
 }: {
   tabs: { upcoming: NewsArticle[]; past: NewsArticle[] };
   className?: string;
+  /** Tab button text, e.g. "Upcoming Fest" / "Past Fest" for the Fest page. */
+  upcomingLabel?: string;
+  pastLabel?: string;
+  /** Used only in the empty-state copy: "No upcoming {noun} right now." */
+  itemNounSingular?: string;
 }) {
   const [activeTab, setActiveTab] = useState<TabKey>("upcoming");
 
   const tabConfig: { key: TabKey; label: string; items: NewsArticle[] }[] = [
-    { key: "upcoming", label: "Upcoming Events", items: tabs.upcoming },
-    { key: "past", label: "Past Events", items: tabs.past },
+    { key: "upcoming", label: upcomingLabel, items: tabs.upcoming },
+    { key: "past", label: pastLabel, items: tabs.past },
   ];
 
   const activeItems = tabs[activeTab];
@@ -67,8 +77,8 @@ export function EventsTabbedGrid({
       {activeItems.length === 0 ? (
         <Container>
           <p className="py-16 text-center text-ash">
-            No {activeTab === "upcoming" ? "upcoming" : "past"} events right
-            now.
+            No {activeTab === "upcoming" ? "upcoming" : "past"}{" "}
+            {itemNounSingular} right now.
           </p>
         </Container>
       ) : (

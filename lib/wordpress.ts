@@ -136,6 +136,7 @@ import type {
   NewsDetailPageData,
   EventDetailPageData,
   EventsListingPageData,
+  FestDetailPageData,
 } from "@/lib/types";
 
 // ============================================================================
@@ -9553,6 +9554,309 @@ export async function getEventDetailPage(
 export async function getAllEventSlugs(): Promise<string[]> {
   const posts = await wpFetchSafe<Array<{ slug: string }>>(
     `/wp/v2/event?per_page=100&_fields=slug`,
+    [],
+  );
+  return posts.map((p) => p.slug);
+}
+
+// ─── Fest Listing (/fest) ───────────────────────────────────────────────────
+// Same pattern as getEventsListingPage(): two tabs driven by a taxonomy
+// (fest-type: upcoming / past), resolved by SLUG at request time — not
+// hardcoded term IDs, since those can differ between WP environments.
+//
+// Reuses EventsListingPageData (no new type needed — identical shape: hero,
+// subNavLabel, subNav, intro, tabs{upcoming,past}, cta) and the existing
+// WpFestPost interface + formatEventDateTime() already declared earlier in
+// this file for the old Fest & Events page.
+//
+// Same ACF-optional decoupling as Events/News: the `fest` CPT posts are
+// always fetched live. The ACF page (slug "fest") only customizes the
+// hero/subnav/intro/CTA copy — if missing, sensible defaults are used
+// instead of falling back to mock data.
+
+interface WpFlLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpFlSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpFlParagraph {
+  paragraph: string;
+}
+
+interface WpFestListingAcf {
+  fl_hero_subline?: string;
+  fl_hero_image?: string;
+  fl_subnav_label?: string;
+  fl_subnav_links?: WpFlSubNavLink[] | false;
+  fl_intro_paragraphs?: WpFlParagraph[] | false;
+  fl_cta_left_title?: string;
+  fl_cta_left_description?: string;
+  fl_cta_left_label?: string;
+  fl_cta_left_href?: WpFlLinkField;
+  fl_cta_right_title?: string;
+  fl_cta_right_description?: string;
+  fl_cta_right_label?: string;
+  fl_cta_right_href?: WpFlLinkField;
+}
+
+// `fest-type` taxonomy term — used only to resolve slug -> id at request time
+interface WpFestTypeTerm {
+  id: number;
+  slug: string;
+  name: string;
+}
+
+const FEST_TYPE_UPCOMING_SLUG = "upcoming";
+const FEST_TYPE_PAST_SLUG = "past";
+
+// Reuses the existing WpFestPost interface (id, slug, date, title,
+// acf.event_date/event_time, _embedded) already declared earlier in this
+// file for getFestEventsPage() — no new post interface needed.
+
+function mapFestPostsToArticles(posts: WpFestPost[]): NewsArticle[] {
+  return posts.map((post) => ({
+    id: String(post.id),
+    title: decodeHtml(post.title.rendered),
+    // Same event_date + event_time combo formatting used on the old
+    // Fest & Events page ("27 Aug, 1:10PM"), falling back to the post's
+    // published date if those ACF fields aren't set yet.
+    date:
+      formatEventDateTime(post.acf?.event_date, post.acf?.event_time) ||
+      formatIsoDate(post.date),
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/fest-${post.id}/640/360`,
+    href: `/life/fest-events/fests/${post.slug}`,
+  }));
+}
+
+export async function getFestListingPage(): Promise<EventsListingPageData> {
+  const [acf, terms] = await Promise.all([
+    getPageAcf<WpFestListingAcf>("fest").catch(() => null),
+    wpFetchSafe<WpFestTypeTerm[]>(`/wp/v2/fest-type?per_page=100`, []),
+  ]);
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Fest listing ACF page not found — using default hero/CTA copy, but real fest posts are still fetched live.",
+    );
+  }
+
+  const upcomingTermId = terms.find(
+    (t) => t.slug === FEST_TYPE_UPCOMING_SLUG,
+  )?.id;
+  const pastTermId = terms.find((t) => t.slug === FEST_TYPE_PAST_SLUG)?.id;
+
+  if (!upcomingTermId || !pastTermId) {
+    console.warn(
+      `[wordpress.ts] Could not resolve 'fest-type' terms by slug ("${FEST_TYPE_UPCOMING_SLUG}"/"${FEST_TYPE_PAST_SLUG}") — check the term slugs in WP match exactly. Falling back to showing all fests under "Upcoming".`,
+    );
+  }
+
+  const [upcomingPosts, pastPosts] = await Promise.all([
+    upcomingTermId
+      ? wpFetchSafe<WpFestPost[]>(
+          `/wp/v2/fest?fest-type=${upcomingTermId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100&orderby=date&order=desc`,
+          [],
+        )
+      : wpFetchSafe<WpFestPost[]>(
+          `/wp/v2/fest?_embed=wp:featuredmedia&acf_format=standard&per_page=100&orderby=date&order=desc`,
+          [],
+        ),
+    pastTermId
+      ? wpFetchSafe<WpFestPost[]>(
+          `/wp/v2/fest?fest-type=${pastTermId}&_embed=wp:featuredmedia&acf_format=standard&per_page=100&orderby=date&order=desc`,
+          [],
+        )
+      : Promise.resolve([] as WpFestPost[]),
+  ]);
+
+  return {
+    hero: {
+      title: "Fest",
+      subline: acf?.fl_hero_subline || undefined,
+      image:
+        acf?.fl_hero_image || "https://picsum.photos/seed/fest-hero/1280/560",
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Life@DAU", href: "/life" },
+        { label: "Fest", href: "/life/fest-events/fests" },
+      ],
+    },
+
+    subNavLabel: acf?.fl_subnav_label || "Page Title",
+
+    subNav: toArray(acf?.fl_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf?.fl_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    tabs: {
+      upcoming: mapFestPostsToArticles(upcomingPosts),
+      past: mapFestPostsToArticles(pastPosts),
+    },
+
+    cta: {
+      left: {
+        title: acf?.fl_cta_left_title || undefined,
+        description: acf?.fl_cta_left_description ?? "",
+        cta: acf?.fl_cta_left_label ?? "Know More",
+        href: acf?.fl_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf?.fl_cta_right_title || undefined,
+        description: acf?.fl_cta_right_description ?? "",
+        cta: acf?.fl_cta_right_label ?? "Know More",
+        href: acf?.fl_cta_right_href?.url ?? "#",
+      },
+    },
+  };
+}
+
+interface WpFestDetailAcf {
+  event_date: string;        // "Ymd"
+  event_end_date: string;    // "Ymd"
+  event_time?: string;       // "H:i", optional
+  fest_content: string | null;
+  fest_images: string[] | false; // return_format: "url" — plain strings
+  fest_video: string | null;
+}
+
+interface WpFestDetailPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: WpFestDetailAcf;
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+/** "Ymd" + "Ymd" + optional "H:i" -> "19-21 Apr, 2026, 12:20PM" (same-month
+ *  range) or "28 Aug - 02 Sep, 2026, 12:20PM" (cross-month range). Falls
+ *  back to a single date if start === end. */
+function formatFestDateRange(
+  startYmd: string,
+  endYmd: string,
+  timeHi: string | undefined,
+): string {
+  if (!startYmd || startYmd.length < 8) return "";
+
+  const parse = (ymd: string) => {
+    const year = Number(ymd.slice(0, 4));
+    const month = Number(ymd.slice(4, 6)) - 1;
+    const day = Number(ymd.slice(6, 8));
+    return new Date(year, month, day);
+  };
+
+  const start = parse(startYmd);
+  const hasEnd = endYmd && endYmd.length >= 8 && endYmd !== startYmd;
+  const end = hasEnd ? parse(endYmd) : null;
+
+  let datePart: string;
+
+  if (!end) {
+    datePart = start.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  } else if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+    // same month — "19-21 Aug, 2026"
+    const startDay = start.toLocaleDateString("en-GB", { day: "2-digit" });
+    const endFull = end.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+    datePart = `${startDay}-${endFull}`;
+  } else {
+    // crosses months/years — full dates on both ends
+    const startFull = start.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+    });
+    const endFull = end.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+    datePart = `${startFull} - ${endFull}`;
+  }
+
+  if (!timeHi) return datePart;
+
+  const [hh, mm] = timeHi.split(":").map(Number);
+  const period = hh >= 12 ? "PM" : "AM";
+  const hour12 = hh % 12 === 0 ? 12 : hh % 12;
+  const timePart = `${hour12}:${String(mm).padStart(2, "0")}${period}`;
+
+  return `${datePart}, ${timePart}`;
+}
+
+function mapFestDetailPost(post: WpFestDetailPost): FestDetailPageData {
+  const acf = post.acf;
+  const featuredMedia = post._embedded?.["wp:featuredmedia"]?.[0];
+  const title = decodeHtml(post.title.rendered);
+
+  return {
+    hero: {
+      title,
+      subline: undefined,
+      image:
+        featuredMedia?.source_url ??
+        `https://picsum.photos/seed/fest-${post.id}/1200/500`,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Fest & Events", href: "/life/fest-events" },
+        { label: title, href: `/life/fest-events/fests/${post.slug}` },
+      ],
+    },
+
+    dateRangeDisplay: formatFestDateRange(
+      acf.event_date,
+      acf.event_end_date,
+      acf.event_time,
+    ),
+
+    content: acf.fest_content ? decodeHtml(acf.fest_content) : null,
+
+    // return_format: "url" — already plain strings, toArray() just normalises false -> []
+    images: toArray(acf.fest_images),
+
+    video: acf.fest_video || null,
+  };
+}
+
+export async function getFestDetailPage(
+  slug: string,
+): Promise<FestDetailPageData | null> {
+  const posts = await wpFetchSafe<WpFestDetailPost[]>(
+    `/wp/v2/fest?slug=${slug}&_embed=wp:featuredmedia&acf_format=standard`,
+    [],
+  );
+
+  if (!posts || posts.length === 0) {
+    console.warn(`[wordpress.ts] Fest post '${slug}' not found.`);
+    return null;
+  }
+
+  return mapFestDetailPost(posts[0]);
+}
+
+export async function getAllFestSlugs(): Promise<string[]> {
+  const posts = await wpFetchSafe<Array<{ slug: string }>>(
+    `/wp/v2/fest?per_page=100&_fields=slug`,
     [],
   );
   return posts.map((p) => p.slug);

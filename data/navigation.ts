@@ -108,7 +108,7 @@ export const navigation: NavItem[] = [
       { label: "Office of Dean Students", href: "/life/dean" },
       { label: "Campus Life", href: "/life/campus" },
       { label: "Student Support", href: "/life/support" },
-      { label: "Fest & Events", href: "/life/events" },
+      { label: "Fest & Events", href: "/life/fest-events" },
     ],
   },
   {

@@ -26,6 +26,7 @@ export default async function FestEventsPage() {
         title={data.upcomingFest.title}
         items={data.upcomingFest.items}
         className="bg-surface"
+        viewAllHref="/life/fest-events/fests"
       />
 
       {/* Upcoming Events — card grid with Show More */}

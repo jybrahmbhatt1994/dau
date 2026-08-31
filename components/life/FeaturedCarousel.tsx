@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { BleedTitle } from "@/components/ui/SectionTitle";
 import { ArrowRight } from "@/components/ui/icons";
+import { ActionButton } from "@/components/ui/ActionButton";
 import type { EventItem } from "@/lib/types";
 
 /**
@@ -12,17 +13,25 @@ import type { EventItem } from "@/lib/types";
  * brand prev/next arrows near the container edges, and a white card overlapping
  * the image's bottom-left showing the date + title. Keyboard-operable; arrows
  * hide when there's only one slide.
+ *
+ * Optional `viewAllHref` (+ `viewAllLabel`) renders an ActionButton below the
+ * slider — e.g. "View All Fests" linking to the Fest listing page. Omit it
+ * and nothing renders, so any other consumer of this component is unaffected.
  */
 export function FeaturedCarousel({
   title,
   items,
   id = "upcoming-fest",
   className = "bg-surface",
+  viewAllHref,
+  viewAllLabel = "View All Fests",
 }: {
   title: string;
   items: EventItem[];
   id?: string;
   className?: string;
+  viewAllHref?: string;
+  viewAllLabel?: string;
 }) {
   const [i, setI] = useState(0);
   const count = items.length;
@@ -78,6 +87,14 @@ export function FeaturedCarousel({
             </button>
           )}
         </div>
+
+        {viewAllHref && (
+          <div className="mt-10 flex justify-center">
+            <ActionButton href={viewAllHref} variant="outline">
+              {viewAllLabel}
+            </ActionButton>
+          </div>
+        )}
       </Container>
     </section>
   );

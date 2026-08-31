@@ -2103,3 +2103,11 @@ export interface EventsListingPageData {
   };
   cta: CardGridPageData["cta"];
 }
+
+export interface FestDetailPageData {
+  hero: PageHeroContent;
+  dateRangeDisplay: string;
+  content: string | null;
+  images: string[];
+  video: string | null;
+}
