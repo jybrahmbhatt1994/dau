@@ -47,12 +47,14 @@ export const internshipsPageData: InternshipsPageData = {
   cta: {
     left: {
       // Title-less per Figma
+      title: "Placement",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       cta: "Know More",
       href: "/placements/team",
     },
     right: {
+      title: "Internship Brochure",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       cta: "Know More",

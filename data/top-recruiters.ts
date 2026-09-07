@@ -103,12 +103,14 @@ export const topRecruitersPageData: TopRecruitersPageData = {
   cta: {
     left: {
       // Title-less per Figma
+      title: "Top Recruiters",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       cta: "Know More",
       href: "/placements/team",
     },
     right: {
+      title: "Top Recruiters",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       cta: "Know More",

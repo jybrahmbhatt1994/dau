@@ -107,12 +107,14 @@ export const placementStatsPageData: PlacementStatsPageData = {
   cta: {
     left: {
       // No title — title-less CTA per Figma
+      title: "Placement Brochure",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       cta: "Know More",
       href: "/placements/team",
     },
     right: {
+      title: "Contact",
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       cta: "Know More",

@@ -6932,9 +6932,11 @@ interface WpPlacementStatsAcf {
   ps_stories_title: string;
   ps_stories_items: WpPsStory[] | false;
   // CTA
+  ps_cta_left_title: string;
   ps_cta_left_description: string;
   ps_cta_left_label: string;
   ps_cta_left_href: WpPsLinkField;
+  ps_cta_right_title: string;
   ps_cta_right_description: string;
   ps_cta_right_label: string;
   ps_cta_right_href: WpPsLinkField;
@@ -7020,11 +7022,13 @@ export async function getPlacementStatsPage(): Promise<PlacementStatsPageData> {
     cta: {
       left: {
         // title-less per design — CtaPanel.title is optional, simply omitted
+        title: acf.ps_cta_left_title || undefined,
         description: acf.ps_cta_left_description,
         cta: acf.ps_cta_left_label,
         href: acf.ps_cta_left_href?.url ?? "#",
       },
       right: {
+        title: acf.ps_cta_right_title || undefined,
         description: acf.ps_cta_right_description,
         cta: acf.ps_cta_right_label,
         href: acf.ps_cta_right_href?.url ?? "#",
@@ -7090,9 +7094,11 @@ interface WpTopRecruitersAcf {
   tr_stories_title: string;
   tr_stories_items: WpTrStory[] | false;
   // CTA
+  tr_cta_left_title: string;
   tr_cta_left_description: string;
   tr_cta_left_label: string;
   tr_cta_left_href: WpTrLinkField;
+  tr_cta_right_title: string;
   tr_cta_right_description: string;
   tr_cta_right_label: string;
   tr_cta_right_href: WpTrLinkField;
@@ -7161,11 +7167,13 @@ export async function getTopRecruitersPage(): Promise<TopRecruitersPageData> {
 
     cta: {
       left: {
+        title: acf.tr_cta_left_title || undefined,
         description: acf.tr_cta_left_description,
         cta: acf.tr_cta_left_label,
         href: acf.tr_cta_left_href?.url ?? "#",
       },
       right: {
+        title: acf.tr_cta_right_title || undefined,
         description: acf.tr_cta_right_description,
         cta: acf.tr_cta_right_label,
         href: acf.tr_cta_right_href?.url ?? "#",
@@ -7216,9 +7224,11 @@ interface WpInternshipsAcf {
   // Carousel
   in_carousel_slides: WpInSlide[] | false;
   // CTA
+  in_cta_left_title: string;
   in_cta_left_description: string;
   in_cta_left_label: string;
   in_cta_left_href: WpInLinkField;
+  in_cta_right_title: string;
   in_cta_right_description: string;
   in_cta_right_label: string;
   in_cta_right_href: WpInLinkField;
@@ -7271,11 +7281,13 @@ export async function getInternshipsPage(): Promise<InternshipsPageData> {
 
     cta: {
       left: {
+        title: acf.in_cta_left_title || undefined,
         description: acf.in_cta_left_description,
         cta: acf.in_cta_left_label,
         href: acf.in_cta_left_href?.url ?? "#",
       },
       right: {
+        title: acf.in_cta_right_title || undefined,
         description: acf.in_cta_right_description,
         cta: acf.in_cta_right_label,
         href: acf.in_cta_right_href?.url ?? "#",
