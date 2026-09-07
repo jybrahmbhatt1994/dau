@@ -137,6 +137,7 @@ import type {
   EventDetailPageData,
   EventsListingPageData,
   FestDetailPageData,
+  NewslettersPageData,
 } from "@/lib/types";
 
 // ============================================================================
@@ -5040,8 +5041,127 @@ export async function getPhotoGalleryPage(): Promise<PhotoGalleryPageData> {
   };
 }
 
-export async function getNewslettersPage(): Promise<CardGridPageData> {
-  return newslettersPageData;
+interface WpNwlLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpNwlSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpNwlParagraph {
+  paragraph: string;
+}
+
+interface WpNwlPdfFile {
+  url: string;
+  filename: string;
+}
+
+interface WpNwlItem {
+  cover_image: string;
+  title: string;
+  pdf_file: WpNwlPdfFile | false;
+}
+
+interface WpNewslettersAcf {
+  nw_hero_subline: string;
+  nw_hero_image: string;
+  nw_subnav_label: string;
+  nw_subnav_links: WpNwlSubNavLink[] | false;
+  nw_intro_paragraphs: WpNwlParagraph[] | false;
+  newsletter_items: WpNwlItem[] | false;
+  nw_cta_left_title: string;
+  nw_cta_left_description: string;
+  nw_cta_left_label: string;
+  nw_cta_left_href: WpNwlLinkField;
+  nw_cta_right_title: string;
+  nw_cta_right_description: string;
+  nw_cta_right_label: string;
+  nw_cta_right_href: WpNwlLinkField;
+}
+
+export async function getNewslettersPage(): Promise<NewslettersPageData> {
+  const acf = await getPageAcf<WpNewslettersAcf>("newsletter");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Newsletter page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: {
+        title: "Newsletters",
+        image: "https://picsum.photos/seed/newsletters/1200/500",
+        breadcrumb: [
+          { label: "Home", href: "/" },
+          { label: "Newsroom", href: "/newsroom" },
+          { label: "Newsletters", href: "/newsroom/newsletters" },
+        ],
+      },
+      subNavLabel: "Page Title",
+      subNav: [],
+      intro: [],
+      items: [],
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  return {
+    hero: {
+      title: "Newsletters",
+      subline: acf.nw_hero_subline || undefined,
+      image: acf.nw_hero_image,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Newsroom", href: "/newsroom" },
+        { label: "Newsletters", href: "/newsroom/newsletters" },
+      ],
+    },
+
+    subNavLabel: acf.nw_subnav_label || "Page Title",
+
+    subNav: toArray(acf.nw_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    intro: toArray(acf.nw_intro_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    items: toArray(acf.newsletter_items).map((item, i) => ({
+      id: String(i),
+      title: item.title,
+      image:
+        item.cover_image ||
+        `https://picsum.photos/seed/newsletter-${i}/400/560`,
+      pdfUrl:
+        item.pdf_file && typeof item.pdf_file === "object"
+          ? item.pdf_file.url
+          : "#",
+    })),
+
+    cta: {
+      left: {
+        title: acf.nw_cta_left_title || undefined,
+        description: acf.nw_cta_left_description,
+        cta: acf.nw_cta_left_label,
+        href: acf.nw_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.nw_cta_right_title || undefined,
+        description: acf.nw_cta_right_description,
+        cta: acf.nw_cta_right_label,
+        href: acf.nw_cta_right_href?.url ?? "#",
+      },
+    },
+  };
 }
 
 export async function getAlumniWriteUpsPage(): Promise<CardGridPageData> {

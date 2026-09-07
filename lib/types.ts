@@ -2111,3 +2111,19 @@ export interface FestDetailPageData {
   images: string[];
   video: string | null;
 }
+
+export interface NewsletterItem {
+  id: string;
+  title: string;
+  image: string;
+  pdfUrl: string;
+}
+
+export interface NewslettersPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  intro: string[];
+  items: NewsletterItem[];
+  cta: { left: CtaPanel; right: CtaPanel };
+}

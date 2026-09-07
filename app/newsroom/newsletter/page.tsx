@@ -1,0 +1,32 @@
+import type { Metadata } from "next";
+import { getNewslettersPage } from "@/lib/wordpress";
+import { PageHero } from "@/components/layout/PageHero";
+import { PageSubNav } from "@/components/layout/PageSubNav";
+import { ProseIntro } from "@/components/layout/ProseIntro";
+import { NewsletterGrid } from "@/components/news/NewsletterGrid";
+import { SplitCta } from "@/components/academics/SplitCta";
+
+export const metadata: Metadata = {
+  title: "Newsletters | Dhirubhai Ambani University",
+  description: "Newsletters from Dhirubhai Ambani University.",
+};
+
+export default async function NewslettersPage() {
+  const data = await getNewslettersPage();
+
+  return (
+    <>
+      <PageHero {...data.hero} />
+      <PageSubNav label={data.subNavLabel} links={data.subNav} />
+      {data.intro.length > 0 && (
+        <ProseIntro paragraphs={data.intro} className="bg-surface" />
+      )}
+
+      <div id="newsletters" className="scroll-mt-24">
+        <NewsletterGrid items={data.items} className="bg-white" />
+      </div>
+
+      <SplitCta calendar={data.cta.left} catalogue={data.cta.right} />
+    </>
+  );
+}
