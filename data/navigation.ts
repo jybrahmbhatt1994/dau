@@ -76,6 +76,7 @@ export const navigation: NavItem[] = [
       // { label: "Research", href: "/research" },
       { label: "Office of the Dean-Research", href: "/research/dean" },
       { label: "Research Areas", href: "/research/areas" },
+      { label: "Publications", href: "/research/publications" },
       // { label: "Research Labs", href: "#" },
       { label: "Grants & Projects", href: "/research/grants" },
       { label: "Noteworthy Contributions", href: "#",
