@@ -142,8 +142,8 @@ export const navigation: NavItem[] = [
 ];
 
 export const utilityLinks: UtilityLink[] = [
-  { label: "Apply", href: "/apply" },
-  { label: "Scholarships", href: "/admission/ug-scholarships" },
+  { label: "Apply", href: "/admission" },
+  { label: "Scholarships", href: "/admission/scholarships" },
   { label: "Alumni", href: "/alumni" },
   { label: "Work@DAU", href: "/careers" },
   { label: "Resources", href: "/resources" },
