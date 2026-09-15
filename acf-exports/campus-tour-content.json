@@ -1,0 +1,80 @@
+[
+    {
+        "key": "group_campus_tour_content",
+        "title": "Campus Tour — Page Content",
+        "fields": [
+            {
+                "key": "field_ct_intro",
+                "label": "Intro Paragraph",
+                "name": "ct_intro",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Shown as a centered paragraph below the hero, above the button.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "rows": 4,
+                "placeholder": "",
+                "new_lines": ""
+            },
+            {
+                "key": "field_ct_button_label",
+                "label": "Button Label",
+                "name": "ct_button_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Text shown on the button below the paragraph, e.g. \"Book a Visit\".",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Book a Visit",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_ct_button_link",
+                "label": "Button Link",
+                "name": "ct_button_link",
+                "aria-label": "",
+                "type": "link",
+                "instructions": "Where the button should go — an internal page, an external booking link, etc.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Intro paragraph + CTA button shown on the Campus Tour page, below the hero.",
+        "show_in_rest": 0
+    }
+]

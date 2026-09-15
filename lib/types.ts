@@ -2057,6 +2057,16 @@ export interface CampusTourFormOptions {
   captcha: { question: string; token: string };
 }
 
+// --- Campus Tour (/campus-tour) page content ---------------------------
+// Hero keeps coming from CampusTourFormOptions (custom captcha endpoint) —
+// this is the separate ACF-driven "page" content (intro paragraph, CTA
+// button, and the photo-gallery grid) shown below the hero.
+export interface CampusTourContentData {
+  intro: string;
+  cta: { label: string; href: string };
+  galleries: SchoolCard[];
+}
+
 /** One year button on the Publications page — links out externally. */
 export interface PublicationYearLink {
   label: string;   // e.g. "2026"

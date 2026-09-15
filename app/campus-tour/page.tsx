@@ -1,35 +1,24 @@
 // DESTINATION: app/campus-tour/page.tsx
-import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/layout/PageHero";
-import { CampusTourForm } from "@/components/campus-tour/CampusTourForm";
-import { getCampusTourFormOptions } from "@/lib/wordpress";
+import { CampusTourIntro } from "@/components/campus-tour/CampusTourIntro";
+import { CampusTourGalleriesGrid } from "@/components/campus-tour/CampusTourGalleriesGrid";
+import { getCampusTourFormOptions, getCampusTourContent } from "@/lib/wordpress";
 
-export const dynamic = "force-dynamic"; // fresh captcha token on every load
-export const metadata = { title: "Campus Tour Registration | Ashoka University" };
+export const metadata = { title: "Campus Tour | Ashoka University" };
 
 export default async function CampusTourPage() {
-  const options = await getCampusTourFormOptions();
+  const [{ hero }, content] = await Promise.all([
+    getCampusTourFormOptions(),
+    getCampusTourContent(),
+  ]);
 
   return (
     <>
-      <PageHero
-        title={options.hero.title}
-        subline={options.hero.subline}
-        image={options.hero.image}
-      />
+      <PageHero title={hero.title} subline={hero.subline} image={hero.image} />
 
-      <section className="bg-navy py-14 lg:py-20">
-        <Container>
-          <div className="mx-auto max-w-2xl">
-            <h2 className="font-display text-2xl font-semibold text-white lg:text-3xl">
-              Campus Tour Registration Form
-            </h2>
-            <div className="mt-8">
-              <CampusTourForm options={options} />
-            </div>
-          </div>
-        </Container>
-      </section>
+      <CampusTourIntro text={content.intro} cta={content.cta} />
+
+      <CampusTourGalleriesGrid galleries={content.galleries} />
     </>
   );
 }

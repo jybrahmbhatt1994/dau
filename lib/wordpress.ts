@@ -33,6 +33,7 @@ import { leadershipPageData } from "@/data/leadership";
 import { administrationPageData } from "@/data/administration";
 import { newsroomPageData } from "@/data/newsroom";
 import { photoGalleryPageData } from "@/data/photo-gallery";
+import { campusTourContentData } from "@/data/campus-tour";
 import { newslettersPageData } from "@/data/newsletters";
 import { studentStoriesPageData } from "@/data/student-stories";
 import { deanStudentPageData } from "@/data/dean-student";
@@ -77,6 +78,8 @@ import type {
   NewsroomPageData,
   PhotoGalleryPageData,
   PhotoGalleryDetailPageData,
+  SchoolCard,
+  CampusTourContentData,
   CardGridPageData,
   DeanStudentPageData,
   FestEventsPageData,
@@ -4981,6 +4984,24 @@ export async function getNewsroomPage(): Promise<NewsroomPageData> {
   };
 }
 
+// Shared by the Photo Gallery listing page and any other page (e.g. Campus
+// Tour) that wants to show the same "one card per gallery" grid.
+export async function getPhotoGalleryCategories(): Promise<SchoolCard[]> {
+  const posts = await wpFetchSafe<WpPhotoGalleryPost[]>(
+    `/wp/v2/photo-gallery?_embed=wp:featuredmedia&per_page=50&orderby=menu_order&order=asc`,
+    [],
+  );
+
+  return posts.map((post) => ({
+    id: String(post.id),
+    title: decodeHtml(post.title.rendered),
+    image:
+      post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+      `https://picsum.photos/seed/gallery-${post.id}/900/380`,
+    href: `/newsroom/photo-gallery/${post.slug}`,
+  }));
+}
+
 export async function getPhotoGalleryPage(): Promise<PhotoGalleryPageData> {
   const acf = await getPageAcf<WpPhotoGalleryPageAcf>("photo-gallery");
 
@@ -4991,9 +5012,7 @@ export async function getPhotoGalleryPage(): Promise<PhotoGalleryPageData> {
     return photoGalleryPageData;
   }
 
-  const posts = await wpFetchSafe<WpPhotoGalleryPost[]>(
-    `/wp/v2/photo-gallery?_embed=wp:featuredmedia&per_page=50&orderby=menu_order&order=asc`,
-   []);
+  const categories = await getPhotoGalleryCategories();
 
   return {
     hero: {
@@ -5016,14 +5035,7 @@ export async function getPhotoGalleryPage(): Promise<PhotoGalleryPageData> {
 
     intro: acf.pg_intro || "",
 
-    categories: posts.map((post) => ({
-      id: String(post.id),
-      title: decodeHtml(post.title.rendered),
-      image:
-        post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
-        `https://picsum.photos/seed/gallery-${post.id}/900/380`,
-      href: `/newsroom/photo-gallery/${post.slug}`,
-    })),
+    categories,
 
     cta: {
       calendar: {
@@ -9166,6 +9178,33 @@ export async function getTeachingFellowPositionsPage(): Promise<TeachingFellowPo
 export async function getCampusTourFormOptions(): Promise<CampusTourFormOptions> {
   // revalidate 0 — this contains a one-time captcha token, must never be cached
   return wpFetch<CampusTourFormOptions>(`/custom/v1/campus-tour/options`, 0);
+}
+
+interface WpCampusTourAcf {
+  ct_intro: string;
+  ct_button_label: string;
+  ct_button_link: WpPgLinkField | "";
+}
+
+export async function getCampusTourContent(): Promise<CampusTourContentData> {
+  const acf = await getPageAcf<WpCampusTourAcf>("campus-tour");
+  const galleries = await getPhotoGalleryCategories();
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Campus Tour page ACF not found — falling back to mock data.",
+    );
+    return { ...campusTourContentData, galleries };
+  }
+
+  return {
+    intro: acf.ct_intro || "",
+    cta: {
+      label: acf.ct_button_label || "Know More",
+      href: (acf.ct_button_link && acf.ct_button_link.url) || "#",
+    },
+    galleries,
+  };
 }
 
 export async function getCareerPreparatoryProgrammePage(): Promise<ComputationalResourcesPageData> {
