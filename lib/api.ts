@@ -66,35 +66,27 @@ export async function wpFetch<T>(
 
 /**
  * Fetch a single WordPress page by slug and return its ACF fields.
- * Returns null if the page is not found.
+ * Returns null only when the page genuinely doesn't exist (a successful
+ * response with zero results). A transient/network failure is NOT caught
+ * here — it propagates so that:
+ *  - on an ISR-cached route, Next.js keeps serving the last good cached
+ *    page instead of this failed regeneration (stale-while-revalidate), and
+ *  - on a route that explicitly wants to degrade gracefully, the caller can
+ *    add its own `.catch()` (see getNewsListingPage for the intended pattern).
+ * Swallowing the error here previously meant EVERY page fell back to fully
+ * hardcoded mock content on any transient WP hiccup — and because that
+ * fallback still counted as a "successful" render, it could get cached and
+ * served to real visitors until the next successful regeneration.
  */
-// export async function getPageAcf<T>(
-//   slug: string,
-//   revalidate = 60,
-// ): Promise<T | null> {
-//   const pages = await wpFetch<Array<{ acf: T }>>(
-//     `/wp/v2/pages?slug=${slug}&acf_format=standard&_fields=id,slug,acf`,
-//     revalidate,
-//   );
-
-//   if (!pages || pages.length === 0) return null;
-
-//   return pages[0].acf;
-// }
 export async function getPageAcf<T>(
   slug: string,
   revalidate?: number,
 ): Promise<T | null> {
-  try {
-    const pages = await wpFetch<Array<{ acf: T }>>(
-      `/wp/v2/pages?slug=${slug}&acf_format=standard&_fields=id,slug,acf`,
-      revalidate,
-    );
-    return pages[0]?.acf ?? null;
-  } catch (err) {
-    console.warn(`[getPageAcf] Failed for slug "${slug}":`, err);
-    return null;
-  }
+  const pages = await wpFetch<Array<{ acf: T }>>(
+    `/wp/v2/pages?slug=${slug}&acf_format=standard&_fields=id,slug,acf`,
+    revalidate,
+  );
+  return pages[0]?.acf ?? null;
 }
 
 /**

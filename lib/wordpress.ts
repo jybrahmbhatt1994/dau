@@ -5908,16 +5908,17 @@ export async function getResearchAreasPage(): Promise<ResearchAreasPageData> {
 export async function getResearchAreaDetailPage(
   slug: string,
 ): Promise<ResearchAreaDetailPageData> {
-  try {
-  // revalidate=0 → bypass ISR cache so we never serve stale fallback data
-  // while production WordPress is being populated.
-  // Change to a positive number (e.g. 60) once all research area posts exist on the CMS.
-  const posts = await wpFetchSafe<
+  // Now that production WordPress has real research-area posts, this uses
+  // the normal ISR revalidate window (matching `export const revalidate = 60`
+  // on the page) instead of bypassing the cache. A transient WP fetch
+  // failure is intentionally NOT caught here: it propagates so Next.js keeps
+  // serving the last successfully cached page instead of replacing it with
+  // mock content. Only a genuine "no such slug" (a successful response with
+  // zero results) falls back below.
+  const posts = await wpFetch<
     Array<{ id: number; slug: string; title: { rendered: string }; acf: WpResearchAreaDetailAcf }>
   >(
     `/wp/v2/research-area?slug=${slug}&acf_format=standard&_fields=id,slug,title,acf`,
-    [],
-    0,
   );
 
   if (!posts || posts.length === 0) {
@@ -5942,7 +5943,6 @@ export async function getResearchAreaDetailPage(
     facultyIds
       ? wpFetch<WpFacultyPost[]>(
           `/wp/v2/faculty?include=${facultyIds}&_embed=wp:featuredmedia&acf_format=standard`,
-          0,
         ).catch((err) => {
           console.warn("[wordpress.ts] faculty fetch failed for research area — rendering without faculty:", err);
           return [] as WpFacultyPost[];
@@ -5950,7 +5950,6 @@ export async function getResearchAreaDetailPage(
       : Promise.resolve([] as WpFacultyPost[]),
     wpFetch<WpEventPost[]>(
       `/wp/v2/event?_embed=wp:featuredmedia&per_page=3&orderby=date&order=desc`,
-      0,
     ).catch((err) => {
       console.warn("[wordpress.ts] event fetch failed for research area — rendering without events:", err);
       return [] as WpEventPost[];
@@ -6086,13 +6085,6 @@ export async function getResearchAreaDetailPage(
       },
     },
   };
-  } catch (err) {
-    console.error(
-      `[wordpress.ts] getResearchAreaDetailPage('${slug}') failed — falling back to mock data.`,
-      err,
-    );
-    return researchAreaDetailPageData;
-  }
 }
 
 export async function getGrantsPage(): Promise<GrantsPageData> {

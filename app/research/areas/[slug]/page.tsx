@@ -9,30 +9,29 @@ import { VideoCta } from "@/components/research/VideoCta";
 import { UpcomingEvents } from "@/components/research/UpcomingEvents";
 import { SplitCta } from "@/components/academics/SplitCta";
 import { getResearchAreaDetailPage } from "@/lib/wordpress";
+import { wpFetch } from "@/lib/api";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Route segment config
 //
-// force-dynamic: always render fresh from WordPress — never serve a stale
-// ISR-cached response while CMS content is still being set up.
-//
-// Once all research-area posts exist on the production CMS and content is
-// stable, switch to ISR for better performance:
-//
-//   export const revalidate = 60;
-//
-//   export async function generateStaticParams() {
-//     try {
-//       const posts = await wpFetch<Array<{ slug: string }>>(
-//         "/wp/v2/research-area?_fields=slug&per_page=100",
-//       );
-//       return posts.map((p) => ({ slug: p.slug }));
-//     } catch {
-//       return [];
-//     }
-//   }
+// ISR: production WordPress now has real research-area posts, so this is
+// statically generated and revalidated every 60s (stale-while-revalidate) —
+// a transient WP hiccup on regeneration keeps serving the last good cached
+// page instead of failing the request. dynamicParams stays true (default),
+// so slugs not returned by generateStaticParams still render on-demand.
 // ─────────────────────────────────────────────────────────────────────────────
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  try {
+    const posts = await wpFetch<Array<{ slug: string }>>(
+      "/wp/v2/research-area?_fields=slug&per_page=100",
+    );
+    return posts.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Dynamic metadata — title/description derived from the actual research area
