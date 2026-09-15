@@ -76,6 +76,7 @@ import type {
   AdministrationPageData,
   NewsroomPageData,
   PhotoGalleryPageData,
+  PhotoGalleryDetailPageData,
   CardGridPageData,
   DeanStudentPageData,
   FestEventsPageData,
@@ -5039,6 +5040,71 @@ export async function getPhotoGalleryPage(): Promise<PhotoGalleryPageData> {
       },
     },
   };
+}
+
+// --- Photo Gallery detail (/newsroom/photo-gallery/[slug]) ------------------
+
+interface WpPhotoGalleryDetailAcf {
+  // ACF Gallery field, return format "Image URL" — a plain array of image
+  // URL strings (not a repeater), false when unset.
+  gallery_images: string[] | false;
+}
+
+interface WpPhotoGalleryDetailPost {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: WpPhotoGalleryDetailAcf;
+  _embedded?: {
+    "wp:featuredmedia"?: Array<{ source_url: string; alt_text: string }>;
+  };
+}
+
+function mapPhotoGalleryDetailPost(
+  post: WpPhotoGalleryDetailPost,
+): PhotoGalleryDetailPageData {
+  const featuredMedia = post._embedded?.["wp:featuredmedia"]?.[0];
+  const title = decodeHtml(post.title.rendered);
+
+  return {
+    hero: {
+      title,
+      image:
+        featuredMedia?.source_url ??
+        `https://picsum.photos/seed/photo-gallery-${post.id}/1200/500`,
+      breadcrumb: [
+        { label: "Home", href: "/" },
+        { label: "Newsroom", href: "/newsroom" },
+        { label: "Photo Gallery", href: "/newsroom/photo-gallery" },
+        { label: title, href: `/newsroom/photo-gallery/${post.slug}` },
+      ],
+    },
+    images: toArray(post.acf.gallery_images),
+  };
+}
+
+export async function getPhotoGalleryDetailPage(
+  slug: string,
+): Promise<PhotoGalleryDetailPageData | null> {
+  const posts = await wpFetchSafe<WpPhotoGalleryDetailPost[]>(
+    `/wp/v2/photo-gallery?slug=${slug}&_embed=wp:featuredmedia&acf_format=standard`,
+    [],
+  );
+
+  if (!posts || posts.length === 0) {
+    console.warn(`[wordpress.ts] Photo Gallery post '${slug}' not found.`);
+    return null;
+  }
+
+  return mapPhotoGalleryDetailPost(posts[0]);
+}
+
+export async function getAllPhotoGallerySlugs(): Promise<string[]> {
+  const posts = await wpFetchSafe<Array<{ slug: string }>>(
+    `/wp/v2/photo-gallery?per_page=100&_fields=slug`,
+    [],
+  );
+  return posts.map((p) => p.slug);
 }
 
 interface WpNwlLinkField {

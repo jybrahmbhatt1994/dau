@@ -119,7 +119,7 @@ export const navigation: NavItem[] = [
       { label: "Newsroom", href: "/newsroom" },
       { label: "Events", href: "/newsroom/events" },
       { label: "Newsletter", href: "/newsroom/newsletter" },
-      { label: "In focus", href: "/newsroom/student-stories" },
+      // { label: "In focus", href: "/newsroom/student-stories" },
       { label: "Alumni Write Ups", href: "/newsroom/alumni-write-ups" },
       { label: "Photo Gallery", href: "/newsroom/photo-gallery" },
     ],

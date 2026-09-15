@@ -513,6 +513,12 @@ export interface PhotoGalleryPageData {
   cta: { calendar: CtaPanel; areas: CtaPanel };
 }
 
+// --- Photo Gallery detail (/newsroom/photo-gallery/[slug]) ------------------
+export interface PhotoGalleryDetailPageData {
+  hero: PageHeroContent;
+  images: string[];
+}
+
 // --- Card-grid template (Newsletters + Student Stories) ---------------------
 export interface CardGridPageData {
   hero: PageHeroContent;
