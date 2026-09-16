@@ -1874,6 +1874,27 @@ export interface NirfPageData {
   feedbackEmail: string;
 }
 
+// ============================================================================
+//  ADD to lib/types.ts — NAAC page
+// ============================================================================
+
+export interface NaacDocumentLink {
+  id: string;
+  title: string;
+  fileUrl: string;
+}
+
+export interface NaacCycle {
+  id: string;
+  heading: string;
+  documents: NaacDocumentLink[];
+}
+
+export interface NaacPageData {
+  hero: PageHeroContent;
+  cycles: NaacCycle[];
+}
+
 export interface PolicyLinkItem {
   id: string;
   title: string;

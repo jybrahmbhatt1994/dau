@@ -1,0 +1,191 @@
+[
+    {
+        "key": "group_naac_content",
+        "title": "NAAC — Page Content",
+        "fields": [
+            {
+                "key": "field_naac_tab_hero",
+                "label": "Hero",
+                "name": "",
+                "type": "tab",
+                "placement": "top",
+                "endpoint": 0
+            },
+            {
+                "key": "field_naac_hero_title",
+                "label": "Hero Title",
+                "name": "naac_hero_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Page title shown in the hero's dark panel.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "NAAC",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_naac_hero_subline",
+                "label": "Hero Subline",
+                "name": "naac_hero_subline",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Optional supporting line shown under the hero title.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "rows": 3,
+                "placeholder": "",
+                "new_lines": ""
+            },
+            {
+                "key": "field_naac_hero_image",
+                "label": "Hero Image",
+                "name": "naac_hero_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Banner image shown on the left ~63% of the hero.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+            },
+            {
+                "key": "field_naac_tab_cycles",
+                "label": "Cycles",
+                "name": "",
+                "type": "tab",
+                "placement": "top",
+                "endpoint": 0
+            },
+            {
+                "key": "field_naac_cycles",
+                "label": "Cycles",
+                "name": "naac_cycles",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "One block per accreditation cycle, e.g. \"NAAC Cycle 2\", newest first.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "min": 0,
+                "max": 0,
+                "collapsed": "field_naac_cycle_heading",
+                "button_label": "Add Cycle",
+                "sub_fields": [
+                    {
+                        "key": "field_naac_cycle_heading",
+                        "label": "Heading",
+                        "name": "heading",
+                        "type": "text",
+                        "instructions": "e.g. \"NAAC Cycle 2\"",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_naac_cycle_documents",
+                        "label": "Documents",
+                        "name": "documents",
+                        "type": "repeater",
+                        "instructions": "Document links listed under this cycle's heading.",
+                        "required": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "layout": "table",
+                        "min": 0,
+                        "max": 0,
+                        "collapsed": "",
+                        "button_label": "Add Document",
+                        "sub_fields": [
+                            {
+                                "key": "field_naac_doc_title",
+                                "label": "Title",
+                                "name": "title",
+                                "type": "text",
+                                "instructions": "e.g. \"NAAC Cycle 2 SSR Submitted: 2023\"",
+                                "required": 1,
+                                "wrapper": {
+                                    "width": "60",
+                                    "class": "",
+                                    "id": ""
+                                }
+                            },
+                            {
+                                "key": "field_naac_doc_file",
+                                "label": "File",
+                                "name": "file",
+                                "type": "file",
+                                "instructions": "Uploaded PDF/document.",
+                                "required": 1,
+                                "wrapper": {
+                                    "width": "40",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "return_format": "url",
+                                "library": "all",
+                                "min_size": "",
+                                "max_size": "",
+                                "mime_types": ""
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Hero and cycle-grouped SSR/evaluative-report document lists shown on the NAAC page (page slug: naac).",
+        "show_in_rest": 0
+    }
+]

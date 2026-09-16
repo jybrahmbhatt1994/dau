@@ -127,6 +127,7 @@ import type {
   AccreditationsPageData,
   NirfPageData,
   NirfDocumentLink,
+  NaacPageData,
   PoliciesPageData,
   AnnualReportPageData,
   ConvocationPageData,
@@ -2531,6 +2532,25 @@ interface WpNirfAcf {
   // Feedback
   nirf_feedback_note: string;
   nirf_feedback_email: string;
+}
+
+interface WpNaacDocument {
+  title: string;
+  file: string; // File field returns the direct URL
+}
+
+interface WpNaacCycle {
+  heading: string;
+  documents: WpNaacDocument[] | false;
+}
+
+interface WpNaacAcf {
+  // Hero
+  naac_hero_title: string;
+  naac_hero_subline: string;
+  naac_hero_image: string;
+  // Cycles
+  naac_cycles: WpNaacCycle[] | false;
 }
 
 interface WpPoliciesAcf {
@@ -8832,6 +8852,38 @@ export async function getNirfPage(): Promise<NirfPageData> {
 
     feedbackNote: acf.nirf_feedback_note || "For feedback send an email to",
     feedbackEmail: acf.nirf_feedback_email || "",
+  };
+}
+
+export async function getNaacPage(): Promise<NaacPageData> {
+  const acf = await getPageAcf<WpNaacAcf>("naac");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] NAAC page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "NAAC", image: "https://picsum.photos/seed/naac/1200/500", breadcrumb: [] },
+      cycles: [],
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.naac_hero_title,
+      subline: acf.naac_hero_subline || undefined,
+      image: acf.naac_hero_image,
+    },
+
+    cycles: toArray(acf.naac_cycles).map((c, i) => ({
+      id: String(i),
+      heading: c.heading,
+      documents: toArray(c.documents).map((d, j) => ({
+        id: String(j),
+        title: d.title,
+        fileUrl: d.file,
+      })),
+    })),
   };
 }
 
