@@ -123,6 +123,10 @@ import type {
   ComputationalResourcesPageData,
   AlumniPageData,
   ResourcesPageData,
+  WorkDauPageData,
+  AccreditationsPageData,
+  NirfPageData,
+  NirfDocumentLink,
   PoliciesPageData,
   AnnualReportPageData,
   ConvocationPageData,
@@ -2447,9 +2451,86 @@ interface WpResourcesAcf {
   re_cards: WpReCard[] | false;
 }
 
+interface WpWdSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpWdCard {
+  label: string;
+  icon: string;
+  href: WpReLinkField;
+}
+
+interface WpWorkDauAcf {
+  // Hero
+  wd_hero_title: string;
+  wd_hero_subline: string;
+  wd_hero_image: string;
+  // Sub Nav
+  wd_subnav_label: string;
+  wd_subnav_links: WpWdSubNavLink[] | false;
+  // Cards
+  wd_cards: WpWdCard[] | false;
+}
+
+interface WpAcSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpAcCard {
+  label: string;
+  icon: string;
+  href: WpReLinkField;
+}
+
+interface WpAccreditationsAcf {
+  // Hero
+  ac_hero_title: string;
+  ac_hero_subline: string;
+  ac_hero_image: string;
+  // Sub Nav
+  ac_subnav_label: string;
+  ac_subnav_links: WpAcSubNavLink[] | false;
+  // Cards
+  ac_cards: WpAcCard[] | false;
+}
+
 interface WpPlItem {
   title: string;
   file: string; // File field returns the direct URL
+}
+
+interface WpNirfDocument {
+  title: string;
+  file: string; // File field returns the direct URL
+}
+
+interface WpNirfRankingYear {
+  heading: string;
+  documents: WpNirfDocument[] | false;
+}
+
+interface WpNirfAcf {
+  // Hero
+  nirf_hero_title: string;
+  nirf_hero_subline: string;
+  nirf_hero_image: string;
+  // Ranking Years
+  nirf_ranking_years: WpNirfRankingYear[] | false;
+  // Student Details
+  nirf_student_details_heading: string;
+  nirf_student_details: WpNirfDocument[] | false;
+  // Admission Data
+  nirf_admission_data_heading: string;
+  nirf_admission_data: WpNirfDocument[] | false;
+  // IPR / Research Funding
+  nirf_ipr_funding_heading: string;
+  nirf_ipr_funding: WpNirfDocument[] | false;
+  // Feedback
+  nirf_feedback_note: string;
+  nirf_feedback_email: string;
 }
 
 interface WpPoliciesAcf {
@@ -8590,6 +8671,82 @@ export async function getResourcesPage(): Promise<ResourcesPageData> {
   };
 }
 
+export async function getWorkDauPage(): Promise<WorkDauPageData> {
+  const acf = await getPageAcf<WpWorkDauAcf>("work-dau");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Work@DAU page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Work@DAU", image: "https://picsum.photos/seed/work-dau/1200/500", breadcrumb: [] },
+      subNavLabel: "Careers",
+      subNav: [],
+      cards: [],
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.wd_hero_title,
+      subline: acf.wd_hero_subline || undefined,
+      image: acf.wd_hero_image,
+    },
+
+    subNavLabel: acf.wd_subnav_label || "Careers",
+
+    subNav: toArray(acf.wd_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    cards: toArray(acf.wd_cards).map((c, i) => ({
+      id: String(i),
+      label: c.label,
+      icon: c.icon,
+      href: c.href?.url ?? "#",
+    })),
+  };
+}
+
+export async function getAccreditationsPage(): Promise<AccreditationsPageData> {
+  const acf = await getPageAcf<WpAccreditationsAcf>("accreditations-compliance");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Accreditations page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Accreditations & Compliance", image: "https://picsum.photos/seed/accreditations/1200/500", breadcrumb: [] },
+      subNavLabel: "Accreditations",
+      subNav: [],
+      cards: [],
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.ac_hero_title,
+      subline: acf.ac_hero_subline || undefined,
+      image: acf.ac_hero_image,
+    },
+
+    subNavLabel: acf.ac_subnav_label || "Accreditations",
+
+    subNav: toArray(acf.ac_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    cards: toArray(acf.ac_cards).map((c, i) => ({
+      id: String(i),
+      label: c.label,
+      icon: c.icon,
+      href: c.href?.url ?? "#",
+    })),
+  };
+}
+
 export async function getPoliciesPage(): Promise<PoliciesPageData> {
   const acf = await getPageAcf<WpPoliciesAcf>("policies");
 
@@ -8620,6 +8777,61 @@ export async function getPoliciesPage(): Promise<PoliciesPageData> {
       title: item.title,
       fileUrl: item.file,
     })),
+  };
+}
+
+export async function getNirfPage(): Promise<NirfPageData> {
+  const acf = await getPageAcf<WpNirfAcf>("nirf");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] NIRF page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "N.I.R.F. (National Institutional Ranking Framework)", image: "https://picsum.photos/seed/nirf/1200/500", breadcrumb: [] },
+      rankingYears: [],
+      studentDetailsHeading: "Student details",
+      studentDetails: [],
+      admissionDataHeading: "Top Universities/Institute Admission Data",
+      admissionData: [],
+      iprFundingHeading: "IPR / Research Funding",
+      iprFunding: [],
+      feedbackNote: "For feedback send an email to",
+      feedbackEmail: "",
+    };
+  }
+
+  const toDocs = (docs: WpNirfDocument[] | false): NirfDocumentLink[] =>
+    toArray(docs).map((d, i) => ({
+      id: String(i),
+      title: d.title,
+      fileUrl: d.file,
+    }));
+
+  return {
+    hero: {
+      title: acf.nirf_hero_title,
+      subline: acf.nirf_hero_subline || undefined,
+      image: acf.nirf_hero_image,
+    },
+
+    rankingYears: toArray(acf.nirf_ranking_years).map((y, i) => ({
+      id: String(i),
+      heading: y.heading,
+      documents: toDocs(y.documents),
+    })),
+
+    studentDetailsHeading: acf.nirf_student_details_heading || "Student details",
+    studentDetails: toDocs(acf.nirf_student_details),
+
+    admissionDataHeading: acf.nirf_admission_data_heading || "Top Universities/Institute Admission Data",
+    admissionData: toDocs(acf.nirf_admission_data),
+
+    iprFundingHeading: acf.nirf_ipr_funding_heading || "IPR / Research Funding",
+    iprFunding: toDocs(acf.nirf_ipr_funding),
+
+    feedbackNote: acf.nirf_feedback_note || "For feedback send an email to",
+    feedbackEmail: acf.nirf_feedback_email || "",
   };
 }
 

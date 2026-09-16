@@ -146,7 +146,7 @@ export const utilityLinks: UtilityLink[] = [
   { label: "Apply", href: "/admission" },
   { label: "Scholarships", href: "/admission/scholarships" },
   { label: "Alumni", href: "/alumni" },
-  { label: "Work@DAU", href: "/careers" },
+  { label: "Work@DAU", href: "/work-dau" },
   { label: "Resources", href: "/resources" },
   { label: "Accreditations & Compliance", href: "/accreditations" },
   { label: "People", href: "/people" },

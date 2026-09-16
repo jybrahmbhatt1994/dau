@@ -1,0 +1,219 @@
+[
+    {
+        "key": "group_work_dau_content",
+        "title": "Work@DAU — Page Content",
+        "fields": [
+            {
+                "key": "field_wd_hero_title",
+                "label": "Hero Title",
+                "name": "wd_hero_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Page title shown in the hero's dark panel, e.g. \"Work@DAU\".",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Work@DAU",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_wd_hero_subline",
+                "label": "Hero Subline",
+                "name": "wd_hero_subline",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Optional supporting line shown under the hero title.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "rows": 3,
+                "placeholder": "",
+                "new_lines": ""
+            },
+            {
+                "key": "field_wd_hero_image",
+                "label": "Hero Image",
+                "name": "wd_hero_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Banner image shown on the left ~63% of the hero.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+            },
+            {
+                "key": "field_wd_subnav_label",
+                "label": "Sub Nav Label",
+                "name": "wd_subnav_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Label shown on the left of the lavender sub-nav bar directly under the hero.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Careers",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_wd_subnav_links",
+                "label": "Sub Nav Links",
+                "name": "wd_subnav_links",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Jump-links shown on the right of the sub-nav bar.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Link",
+                "sub_fields": [
+                    {
+                        "key": "field_wd_subnav_link_label",
+                        "label": "Label",
+                        "name": "label",
+                        "type": "text",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_wd_subnav_link_href",
+                        "label": "Href",
+                        "name": "href",
+                        "type": "text",
+                        "instructions": "Anchor or relative URL, e.g. #open-positions",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    }
+                ]
+            },
+            {
+                "key": "field_wd_cards",
+                "label": "Cards",
+                "name": "wd_cards",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Icon link cards shown in the grid below the sub-nav, e.g. Open Positions, Faculty on Tenure, Benefits.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "min": 0,
+                "max": 0,
+                "collapsed": "field_wd_card_label",
+                "button_label": "Add Card",
+                "sub_fields": [
+                    {
+                        "key": "field_wd_card_label",
+                        "label": "Label",
+                        "name": "label",
+                        "type": "text",
+                        "instructions": "Text shown under the icon, e.g. \"Open Positions\".",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_wd_card_icon",
+                        "label": "Icon",
+                        "name": "icon",
+                        "type": "image",
+                        "instructions": "Icon shown above the label, typically an uploaded SVG.",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "url",
+                        "preview_size": "thumbnail",
+                        "library": "all"
+                    },
+                    {
+                        "key": "field_wd_card_href",
+                        "label": "Link",
+                        "name": "href",
+                        "type": "link",
+                        "instructions": "Where the card should go — an internal page or external application link.",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Hero, sub-nav, and icon-link card grid shown on the Work@DAU page (page slug: work-dau). Same layout as the Resources page.",
+        "show_in_rest": 0
+    }
+]

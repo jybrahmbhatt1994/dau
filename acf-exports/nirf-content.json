@@ -1,0 +1,465 @@
+[
+    {
+        "key": "group_nirf_content",
+        "title": "NIRF — Page Content",
+        "fields": [
+            {
+                "key": "field_nirf_tab_hero",
+                "label": "Hero",
+                "name": "",
+                "type": "tab",
+                "placement": "top",
+                "endpoint": 0
+            },
+            {
+                "key": "field_nirf_hero_title",
+                "label": "Hero Title",
+                "name": "nirf_hero_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Page title shown in the hero's dark panel.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "N.I.R.F. (National Institutional Ranking Framework)",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_nirf_hero_subline",
+                "label": "Hero Subline",
+                "name": "nirf_hero_subline",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Optional supporting line shown under the hero title.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "rows": 3,
+                "placeholder": "",
+                "new_lines": ""
+            },
+            {
+                "key": "field_nirf_hero_image",
+                "label": "Hero Image",
+                "name": "nirf_hero_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Banner image shown on the left ~63% of the hero.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+            },
+            {
+                "key": "field_nirf_tab_ranking_years",
+                "label": "Ranking Years",
+                "name": "",
+                "type": "tab",
+                "placement": "top",
+                "endpoint": 0
+            },
+            {
+                "key": "field_nirf_ranking_years",
+                "label": "Ranking Years",
+                "name": "nirf_ranking_years",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "One block per ranking year, e.g. \"NIRF India Ranking 2026 DCS Submitted\", newest first.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "min": 0,
+                "max": 0,
+                "collapsed": "field_nirf_ry_heading",
+                "button_label": "Add Ranking Year",
+                "sub_fields": [
+                    {
+                        "key": "field_nirf_ry_heading",
+                        "label": "Heading",
+                        "name": "heading",
+                        "type": "text",
+                        "instructions": "e.g. \"NIRF India Ranking 2026 DCS Submitted\"",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_nirf_ry_documents",
+                        "label": "Documents",
+                        "name": "documents",
+                        "type": "repeater",
+                        "instructions": "Document links listed under this year's heading.",
+                        "required": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "layout": "table",
+                        "min": 0,
+                        "max": 0,
+                        "collapsed": "",
+                        "button_label": "Add Document",
+                        "sub_fields": [
+                            {
+                                "key": "field_nirf_doc_title",
+                                "label": "Title",
+                                "name": "title",
+                                "type": "text",
+                                "instructions": "e.g. \"Submitted Overall Report - MHRD - NIRF - 2026\"",
+                                "required": 1,
+                                "wrapper": {
+                                    "width": "60",
+                                    "class": "",
+                                    "id": ""
+                                }
+                            },
+                            {
+                                "key": "field_nirf_doc_file",
+                                "label": "File",
+                                "name": "file",
+                                "type": "file",
+                                "instructions": "Uploaded PDF/document.",
+                                "required": 1,
+                                "wrapper": {
+                                    "width": "40",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "return_format": "url",
+                                "library": "all",
+                                "min_size": "",
+                                "max_size": "",
+                                "mime_types": ""
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "key": "field_nirf_tab_student_details",
+                "label": "Student Details",
+                "name": "",
+                "type": "tab",
+                "placement": "top",
+                "endpoint": 0
+            },
+            {
+                "key": "field_nirf_student_details_heading",
+                "label": "Section Heading",
+                "name": "nirf_student_details_heading",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Student details",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_nirf_student_details",
+                "label": "Documents",
+                "name": "nirf_student_details",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "e.g. UG Campus Placement, PG Campus Placement, UG/PG Higher Studies, Entrepreneurship.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Document",
+                "sub_fields": [
+                    {
+                        "key": "field_nirf_sd_title",
+                        "label": "Title",
+                        "name": "title",
+                        "type": "text",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "60",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_nirf_sd_file",
+                        "label": "File",
+                        "name": "file",
+                        "type": "file",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "40",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "url",
+                        "library": "all",
+                        "min_size": "",
+                        "max_size": "",
+                        "mime_types": ""
+                    }
+                ]
+            },
+            {
+                "key": "field_nirf_tab_admission_data",
+                "label": "Admission Data",
+                "name": "",
+                "type": "tab",
+                "placement": "top",
+                "endpoint": 0
+            },
+            {
+                "key": "field_nirf_admission_data_heading",
+                "label": "Section Heading",
+                "name": "nirf_admission_data_heading",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Top Universities/Institute Admission Data",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_nirf_admission_data",
+                "label": "Documents",
+                "name": "nirf_admission_data",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "e.g. Details of No. of Graduating students admitted into Top University/Institute.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Document",
+                "sub_fields": [
+                    {
+                        "key": "field_nirf_ad_title",
+                        "label": "Title",
+                        "name": "title",
+                        "type": "text",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "60",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_nirf_ad_file",
+                        "label": "File",
+                        "name": "file",
+                        "type": "file",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "40",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "url",
+                        "library": "all",
+                        "min_size": "",
+                        "max_size": "",
+                        "mime_types": ""
+                    }
+                ]
+            },
+            {
+                "key": "field_nirf_tab_ipr_funding",
+                "label": "IPR / Research Funding",
+                "name": "",
+                "type": "tab",
+                "placement": "top",
+                "endpoint": 0
+            },
+            {
+                "key": "field_nirf_ipr_funding_heading",
+                "label": "Section Heading",
+                "name": "nirf_ipr_funding_heading",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "IPR / Research Funding",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_nirf_ipr_funding",
+                "label": "Documents",
+                "name": "nirf_ipr_funding",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "e.g. Sponsored Research Details, Consultancy Project Detail.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Document",
+                "sub_fields": [
+                    {
+                        "key": "field_nirf_if_title",
+                        "label": "Title",
+                        "name": "title",
+                        "type": "text",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "60",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_nirf_if_file",
+                        "label": "File",
+                        "name": "file",
+                        "type": "file",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "40",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "url",
+                        "library": "all",
+                        "min_size": "",
+                        "max_size": "",
+                        "mime_types": ""
+                    }
+                ]
+            },
+            {
+                "key": "field_nirf_tab_feedback",
+                "label": "Feedback",
+                "name": "",
+                "type": "tab",
+                "placement": "top",
+                "endpoint": 0
+            },
+            {
+                "key": "field_nirf_feedback_note",
+                "label": "Feedback Note",
+                "name": "nirf_feedback_note",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Text shown before the email address, e.g. \"For feedback send an email to\".",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "For feedback send an email to",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_nirf_feedback_email",
+                "label": "Feedback Email",
+                "name": "nirf_feedback_email",
+                "aria-label": "",
+                "type": "email",
+                "instructions": "Rendered as a clickable mailto: link.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Hero, year-grouped ranking-report document lists, student/admission/IPR data lists, and feedback email shown on the NIRF page (page slug: nirf).",
+        "show_in_rest": 0
+    }
+]

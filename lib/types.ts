@@ -1809,6 +1809,71 @@ export interface ResourcesPageData {
   cards: ResourceLinkCard[];
 }
 
+// ============================================================================
+//  ADD to lib/types.ts — Work@DAU page
+// ============================================================================
+
+export interface WorkDauLinkCard {
+  id: string;
+  label: string;
+  icon: string; // uploaded SVG/image URL from WordPress
+  href: string;
+}
+
+export interface WorkDauPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  cards: WorkDauLinkCard[];
+}
+
+// ============================================================================
+//  ADD to lib/types.ts — Accreditations & Compliance page
+// ============================================================================
+
+export interface AccreditationsLinkCard {
+  id: string;
+  label: string;
+  icon: string; // uploaded SVG/image URL from WordPress
+  href: string;
+}
+
+export interface AccreditationsPageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  cards: AccreditationsLinkCard[];
+}
+
+// ============================================================================
+//  ADD to lib/types.ts — NIRF page
+// ============================================================================
+
+export interface NirfDocumentLink {
+  id: string;
+  title: string;
+  fileUrl: string;
+}
+
+export interface NirfRankingYear {
+  id: string;
+  heading: string;
+  documents: NirfDocumentLink[];
+}
+
+export interface NirfPageData {
+  hero: PageHeroContent;
+  rankingYears: NirfRankingYear[];
+  studentDetailsHeading: string;
+  studentDetails: NirfDocumentLink[];
+  admissionDataHeading: string;
+  admissionData: NirfDocumentLink[];
+  iprFundingHeading: string;
+  iprFunding: NirfDocumentLink[];
+  feedbackNote: string;
+  feedbackEmail: string;
+}
+
 export interface PolicyLinkItem {
   id: string;
   title: string;
