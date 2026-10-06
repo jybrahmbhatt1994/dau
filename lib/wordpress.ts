@@ -6527,7 +6527,7 @@ const FACULTY_TYPE_TERMS: Array<{
   label: string;
   termId: number;
 }> = [
-  { slug: "regular-faculty", label: "Faculty", termId: 27 },
+  { slug: "faculty", label: "Faculty", termId: 45 },
   { slug: "visiting-faculty", label: "Visiting Faculty", termId: 28 },
   { slug: "distinguished-profs", label: "Distinguished Profs.", termId: 29 },
   { slug: "professor-of-practice", label: "Professor of Practice", termId: 30 },
