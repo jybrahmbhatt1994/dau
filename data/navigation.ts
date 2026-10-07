@@ -97,7 +97,7 @@ export const navigation: NavItem[] = [
       { label: "Placement Team", href: "/placements/team" },
       { label: "Placement Stats", href: "/placements/stats" },
       { label: "The Career Preparatory Programme", href: "/placements/career-preparatory-programme" },
-      { label: "Top Recruiter", href: "/placements/recruiters" },
+      { label: "Top Recruiters", href: "/placements/recruiters" },
       { label: "Placement Internship", href: "/placements/internships" },
     ],
   },
@@ -128,7 +128,7 @@ export const navigation: NavItem[] = [
     children: [
       { label: "Resource Centre", href: "/academics/support/resource-centre" },
       { label: "SELC", href: "#" },
-      { label: "DCEI", href: "#" },
+      { label: "DCEI", href: "https://ceid.daiict.ac.in/" },
     ],
    },
   {
