@@ -19,35 +19,23 @@ export const festEventsPageData: FestEventsPageData = {
   // NOTE (placeholder from Figma): rename "Page Title" + "Link 1–5".
   subNavLabel: "Page Title",
   subNav: [
-    { label: "Link 1", href: "#upcoming-fest" },
-    { label: "Link 2", href: "#upcoming-events" },
-    { label: "Link 3", href: "#upcoming-fest" },
-    { label: "Link 4", href: "#upcoming-events" },
-    { label: "Link 5", href: "#upcoming-fest" },
+    { label: "Link 1", href: "#fest-events-grid" },
+    { label: "Link 2", href: "#fest-events-grid" },
+    { label: "Link 3", href: "#fest-events-grid" },
+    { label: "Link 4", href: "#fest-events-grid" },
+    { label: "Link 5", href: "#fest-events-grid" },
   ],
 
   intro: [LOREM],
 
-  upcomingFest: {
-    title: "Upcoming Fest",
-    items: [
-      { id: "fest-1", title: TITLE, date: "19 Apr, 12:20PM", image: img(1000, 560, "fest-1"), href: "#" },
-      { id: "fest-2", title: TITLE, date: "26 Apr, 06:00PM", image: img(1000, 560, "fest-2"), href: "#" },
-      { id: "fest-3", title: TITLE, date: "03 May, 11:00AM", image: img(1000, 560, "fest-3"), href: "#" },
-    ],
-  },
-
-  upcomingEvents: {
-    title: "Upcoming Events",
-    // 9 supplied; the grid shows 6, then "Show More" reveals the rest.
-    items: Array.from({ length: 9 }, (_, n) => ({
-      id: `event-${n + 1}`,
-      title: TITLE,
-      date: "19 Apr, 12:20PM",
-      image: img(600, 380, `event-${n + 1}`),
-      href: "#",
-    })),
-  },
+  // Merged Fest + Event cards — one flat grid, each with its own
+  // "Show More" link (no section titles, no "load more" pagination).
+  cards: [
+    { id: "fest-1", title: TITLE, date: "19 Apr, 12:20PM", image: img(1000, 560, "fest-1"), href: "#" },
+    { id: "fest-2", title: TITLE, date: "26 Apr, 06:00PM", image: img(1000, 560, "fest-2"), href: "#" },
+    { id: "event-1", title: TITLE, date: "19 Apr, 12:20PM", image: img(600, 380, "event-1"), href: "#" },
+    { id: "event-2", title: TITLE, date: "03 May, 11:00AM", image: img(600, 380, "event-2"), href: "#" },
+  ],
 
   cta: {
     left: {

@@ -2319,9 +2319,6 @@ interface WpFestEventsAcf {
   fe_subnav_links: WpFeSubNavLink[] | false;
   // Intro
   fe_intro_paragraphs: WpFeParagraph[] | false;
-  // Section titles
-  fe_fest_title: string;
-  fe_events_title: string;
   // CTA
   fe_cta_left_title: string;
   fe_cta_left_description: string;
@@ -5863,31 +5860,32 @@ export async function getFestEventsPage(): Promise<FestEventsPageData> {
       r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
     ),
 
-    upcomingFest: {
-      title: acf.fe_fest_title,
-      items: festPosts.map((post) => ({
-        id: String(post.id),
+    // Merged Fest + Event cards, newest first — one flat grid, no section
+    // split (each card links straight to its own detail page).
+    cards: [
+      ...festPosts.map((post) => ({
+        sortDate: post.date,
+        id: `fest-${post.id}`,
         title: decodeHtml(post.title.rendered),
         date: formatEventDateTime(post.acf?.event_date, post.acf?.event_time) || formatIsoDate(post.date),
         image:
           post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
           `https://picsum.photos/seed/fest-${post.id}/1000/560`,
-        href: `/life/events/${post.slug}`,
+        href: `/life/fest-events/fests/${post.slug}`,
       })),
-    },
-
-    upcomingEvents: {
-      title: acf.fe_events_title,
-      items: eventPosts.map((post) => ({
-        id: String(post.id),
+      ...eventPosts.map((post) => ({
+        sortDate: post.date,
+        id: `event-${post.id}`,
         title: decodeHtml(post.title.rendered),
         date: formatIsoDate(post.date),
         image:
           post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
           `https://picsum.photos/seed/event-${post.id}/600/380`,
-        href: `/life/events/${post.slug}`,
+        href: `/events/${post.slug}`,
       })),
-    },
+    ]
+      .sort((a, b) => (a.sortDate < b.sortDate ? 1 : -1))
+      .map(({ sortDate, ...card }) => card),
 
     cta: {
       left: {

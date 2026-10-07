@@ -628,9 +628,10 @@ export interface StudentSupportPageData {
 }
 
 // ============================================================================
-//  LIFE@DAU — Fest & Events page (/life/events)
-//  Reuses PageHero, PageSubNav, ProseIntro, PaginatedCardGrid ("more" mode) and
-//  SplitCta; adds a featured "Upcoming Fest" carousel.
+//  LIFE@DAU — Fest & Events page (/life/fest-events)
+//  Reuses PageHero, PageSubNav, ProseIntro and SplitCta; cards (merged Fest +
+//  Event CPT items) render in a single 4-col grid, each with its own
+//  "Show More" link to its detail page — no "load more" pagination.
 // ============================================================================
  
 export interface FestEventsPageData {
@@ -638,10 +639,8 @@ export interface FestEventsPageData {
   subNavLabel: string;
   subNav: SubNavLink[];
   intro: string[];
-  /** "Upcoming Fest" featured carousel (date + title overlay card). */
-  upcomingFest: { title: string; items: EventItem[] };
-  /** "Upcoming Events" 3-col grid with a Show More button. */
-  upcomingEvents: { title: string; items: NewsArticle[] };
+  /** Merged Fest + Event cards (sorted newest first), each linking to its own detail page. */
+  cards: EventItem[];
   cta: { left: CtaPanel; right: CtaPanel };
 }
 
