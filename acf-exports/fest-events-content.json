@@ -252,6 +252,111 @@
                 ]
             },
             {
+                "key": "field_fe_tab_cards",
+                "label": "Cards",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_fe_cards",
+                "label": "Cards",
+                "name": "fe_cards",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Image + button grid shown below the intro paragraph. Not pulled from any CPT — add/remove rows manually.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Card",
+                "rows_per_page": 20,
+                "collapsed": "field_fe_card_button_label",
+                "sub_fields": [
+                    {
+                        "key": "field_fe_card_image",
+                        "label": "Image",
+                        "name": "image",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "Recommended: square, e.g. 600x600px.",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "url",
+                        "preview_size": "medium",
+                        "library": "all",
+                        "min_width": 0,
+                        "min_height": 0,
+                        "min_size": 0,
+                        "max_width": 0,
+                        "max_height": 0,
+                        "max_size": 0,
+                        "mime_types": "",
+                        "parent_repeater": "field_fe_cards"
+                    },
+                    {
+                        "key": "field_fe_card_button_label",
+                        "label": "Button Label",
+                        "name": "button_label",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Show More",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_fe_cards"
+                    },
+                    {
+                        "key": "field_fe_card_button_link",
+                        "label": "Button Link",
+                        "name": "button_link",
+                        "aria-label": "",
+                        "type": "link",
+                        "instructions": "Internal or external URL. To open in a new tab, check \"Open in new window/tab\" on the link — this is read directly from the link field's own target, nothing extra to configure.",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "parent_repeater": "field_fe_cards"
+                    }
+                ]
+            },
+            {
                 "key": "field_fe_tab_cta",
                 "label": "CTA",
                 "name": "",
@@ -448,7 +553,7 @@
         "instruction_placement": "label",
         "hide_on_screen": "",
         "active": true,
-        "description": "Hero, sub-nav, intro and title-less split CTA for the Fest & Events page. Cards (the merged 4-col grid below the intro) are NOT edited here — they're pulled automatically from the Fest and Event CPTs and sorted newest first, so no card-related ACF fields exist in this group.",
+        "description": "Hero, sub-nav, intro, card grid, and title-less split CTA for the Fest & Events page. The card grid (fe_cards) is manually curated — image + button only, not fetched from any CPT.",
         "show_in_rest": 1,
         "display_title": "",
         "allow_ai_access": false,

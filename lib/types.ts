@@ -629,18 +629,25 @@ export interface StudentSupportPageData {
 
 // ============================================================================
 //  LIFE@DAU — Fest & Events page (/life/fest-events)
-//  Reuses PageHero, PageSubNav, ProseIntro and SplitCta; cards (merged Fest +
-//  Event CPT items) render in a single 4-col grid, each with its own
-//  "Show More" link to its detail page — no "load more" pagination.
+//  Reuses PageHero, PageSubNav, ProseIntro and SplitCta; cards are a manually
+//  curated ACF repeater (image + button), not fetched from any CPT.
 // ============================================================================
- 
+
+export interface FestEventsCard {
+  id: string;
+  image: string;
+  buttonLabel: string;
+  href: string;
+  /** True when the button link is external and should open in a new tab. */
+  newTab: boolean;
+}
+
 export interface FestEventsPageData {
   hero: PageHeroContent;
   subNavLabel: string;
   subNav: SubNavLink[];
   intro: string[];
-  /** Merged Fest + Event cards (sorted newest first), each linking to its own detail page. */
-  cards: EventItem[];
+  cards: FestEventsCard[];
   cta: { left: CtaPanel; right: CtaPanel };
 }
 

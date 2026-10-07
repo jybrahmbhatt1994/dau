@@ -2,14 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ArrowRight } from "@/components/ui/icons";
-import type { EventItem } from "@/lib/types";
+import type { FestEventsCard } from "@/lib/types";
 
 /**
- * 4-column grid of Fest + Event cards — image, title + date, and each card's
- * own gold "Show More" button linking straight to its detail page. No section
- * titles, no "load more" pagination — every fetched card renders at once.
+ * 4-column grid of manually curated cards (image + button) — admin-entered
+ * in ACF, not fetched from any CPT. Each button's link can be internal or
+ * external; an external link opens in a new tab.
  */
-export function FestEventsGrid({ items }: { items: EventItem[] }) {
+export function FestEventsGrid({ items }: { items: FestEventsCard[] }) {
   if (items.length === 0) return null;
 
   return (
@@ -21,23 +21,20 @@ export function FestEventsGrid({ items }: { items: EventItem[] }) {
               <div className="relative aspect-square w-full overflow-hidden bg-line">
                 <Image
                   src={item.image}
-                  alt={item.title}
+                  alt=""
                   fill
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   className="object-cover"
                 />
               </div>
 
-              <p className="mt-3 text-sm text-ash">{item.date}</p>
-              <h3 className="mt-1 font-display text-base font-bold leading-snug text-navy">
-                {item.title}
-              </h3>
-
               <Link
                 href={item.href}
+                target={item.newTab ? "_blank" : undefined}
+                rel={item.newTab ? "noopener noreferrer" : undefined}
                 className="group mt-4 inline-flex h-11 w-[170px] max-w-full items-center justify-between border border-gold bg-gold px-4 font-display text-sm font-bold uppercase tracking-wide text-navy transition-colors hover:bg-gold/90"
               >
-                Show More
+                {item.buttonLabel}
                 <ArrowRight className="h-4 w-6 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>

@@ -2309,6 +2309,12 @@ interface WpFeParagraph {
   paragraph: string;
 }
 
+interface WpFeCard {
+  image: string;
+  button_label: string;
+  button_link: WpFeLinkField;
+}
+
 interface WpFestEventsAcf {
   // Hero
   fe_hero_title: string;
@@ -2319,6 +2325,8 @@ interface WpFestEventsAcf {
   fe_subnav_links: WpFeSubNavLink[] | false;
   // Intro
   fe_intro_paragraphs: WpFeParagraph[] | false;
+  // Cards
+  fe_cards: WpFeCard[] | false;
   // CTA
   fe_cta_left_title: string;
   fe_cta_left_description: string;
@@ -5826,22 +5834,6 @@ export async function getFestEventsPage(): Promise<FestEventsPageData> {
     return festEventsPageData;
   }
 
-  // Fetch both CPTs in parallel — no waterfall
-  const [festPosts, eventPosts] = await Promise.all([
-  wpFetch<WpFestPost[]>(
-    `/wp/v2/fest?_embed=wp:featuredmedia&acf_format=standard&per_page=6&orderby=date&order=desc`,
-  ).catch((err) => {
-    console.warn("[wordpress.ts] Fest fetch failed, using empty list:", err);
-    return [] as WpFestPost[];
-  }),
-  wpFetch<WpEventPost[]>(
-    `/wp/v2/event?_embed=wp:featuredmedia&acf_format=standard&per_page=20&orderby=date&order=desc`,
-  ).catch((err) => {
-    console.warn("[wordpress.ts] Event fetch failed, using empty list:", err);
-    return [] as WpEventPost[];
-  }),
-]);
-
   return {
     hero: {
       title: acf.fe_hero_title,
@@ -5860,32 +5852,16 @@ export async function getFestEventsPage(): Promise<FestEventsPageData> {
       r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
     ),
 
-    // Merged Fest + Event cards, newest first — one flat grid, no section
-    // split (each card links straight to its own detail page).
-    cards: [
-      ...festPosts.map((post) => ({
-        sortDate: post.date,
-        id: `fest-${post.id}`,
-        title: decodeHtml(post.title.rendered),
-        date: formatEventDateTime(post.acf?.event_date, post.acf?.event_time) || formatIsoDate(post.date),
-        image:
-          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
-          `https://picsum.photos/seed/fest-${post.id}/1000/560`,
-        href: `/life/fest-events/fests/${post.slug}`,
-      })),
-      ...eventPosts.map((post) => ({
-        sortDate: post.date,
-        id: `event-${post.id}`,
-        title: decodeHtml(post.title.rendered),
-        date: formatIsoDate(post.date),
-        image:
-          post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
-          `https://picsum.photos/seed/event-${post.id}/600/380`,
-        href: `/events/${post.slug}`,
-      })),
-    ]
-      .sort((a, b) => (a.sortDate < b.sortDate ? 1 : -1))
-      .map(({ sortDate, ...card }) => card),
+    // Manually curated grid — image + button, admin-entered in ACF (not
+    // fetched from any CPT). Button link can be internal or external; an
+    // external link opens in a new tab via the link field's own "target".
+    cards: toArray(acf.fe_cards).map((c, i) => ({
+      id: String(i),
+      image: c.image,
+      buttonLabel: c.button_label,
+      href: c.button_link?.url ?? "#",
+      newTab: c.button_link?.target === "_blank",
+    })),
 
     cta: {
       left: {
