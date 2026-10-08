@@ -2,7 +2,6 @@ import { PageHero } from "@/components/layout/PageHero";
 import { PageSubNav } from "@/components/layout/PageSubNav";
 import { ProseIntro } from "@/components/layout/ProseIntro";
 import { AwardeesTable } from "@/components/research/AwardeesTable";
-import { PolicySection } from "@/components/research/PolicySection";
 import { SplitCta } from "@/components/academics/SplitCta";
 import { getAwardsPage } from "@/lib/wordpress";
 
@@ -28,14 +27,11 @@ export default async function AwardsPage() {
       {/* ── Lavender sticky sub-nav ───────────────────────────────────────── */}
       <PageSubNav label={data.subNavLabel} links={data.subNav} />
 
-      {/* ── Full-width intro prose ────────────────────────────────────────── */}
-      <ProseIntro paragraphs={data.intro} className="bg-white" />
+      {/* ── Full-width intro prose + "View Policy" button ──────────────────── */}
+      <ProseIntro paragraphs={data.intro} className="bg-white" button={data.introButton} />
 
       {/* ── Year tabs + List of Awardees ──────────────────────────────────── */}
       <AwardeesTable title={data.awardees.title} years={data.awardees.years} />
-
-      {/* ── Policy section ────────────────────────────────────────────────── */}
-      <PolicySection data={data.policy} />
 
       {/* ── Split CTA: Dean (Faculty) | Faculty List ─────────────────────── */}
       <SplitCta

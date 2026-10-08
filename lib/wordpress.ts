@@ -549,14 +549,12 @@ interface WpAwardsPageAcf {
   aw_subnav_links: WpAwSubNavLink[] | false;
   // Intro — wysiwyg (may contain component HTML — we strip to plain text)
   aw_intro: string;
+  // Intro button — shown directly below the intro paragraph (e.g. "View Policy")
+  aw_intro_button_label: string;
+  aw_intro_button_href: WpAwLinkField | string; // empty string when not set
   // Awardees
   aw_awardees_title: string;
   aw_years: WpAwYear[] | false;
-  // Policy — wysiwyg (rendered as-is on frontend via dangerouslySetInnerHTML)
-  aw_policy_title: string;
-  aw_policy_content: string;
-  aw_policy_button_label: string;
-  aw_policy_button_href: WpAwLinkField | string; // empty string when not set
   // CTA
   aw_cta_left_title: string;
   aw_cta_left_description: string;
@@ -6387,16 +6385,13 @@ export async function getAwardsPage(): Promise<AwardsPageData> {
     return awardsPageData;
   }
  
-  // Policy button href — can be empty string or WpAwLinkField object
-  const policyButtonHref =
-    typeof acf.aw_policy_button_href === "object" &&
-    acf.aw_policy_button_href?.url
-      ? acf.aw_policy_button_href.url
+  // Intro button href — can be empty string or WpAwLinkField object
+  const introButtonHref =
+    typeof acf.aw_intro_button_href === "object" &&
+    acf.aw_intro_button_href?.url
+      ? acf.aw_intro_button_href.url
       : null;
- 
-  // Parse policy wysiwyg HTML into PolicyData shape
-  const policyParsed = parsePolicyHtml(acf.aw_policy_content);
- 
+
   return {
     hero: {
       title: acf.aw_hero_title,
@@ -6417,7 +6412,18 @@ export async function getAwardsPage(): Promise<AwardsPageData> {
  
     // Strip component HTML from intro wysiwyg — extract plain paragraphs
     intro: extractPlainParagraphs(acf.aw_intro),
- 
+
+    introButton:
+      acf.aw_intro_button_label && introButtonHref
+        ? {
+            label: acf.aw_intro_button_label,
+            href: introButtonHref,
+            external:
+              typeof acf.aw_intro_button_href === "object" &&
+              acf.aw_intro_button_href?.target === "_blank",
+          }
+        : undefined,
+
     awardees: {
       title: acf.aw_awardees_title,
       years: toArray(acf.aw_years).map((yearRow, yi) => ({
@@ -6432,24 +6438,7 @@ export async function getAwardsPage(): Promise<AwardsPageData> {
         })),
       })),
     },
- 
-    policy: {
-      title: acf.aw_policy_title,
-      introParagraphs: policyParsed.introParagraphs,
-      bulletGroups: policyParsed.bulletGroups,
-      outroParagraphs: policyParsed.outroParagraphs,
-      button:
-        acf.aw_policy_button_label && policyButtonHref
-          ? {
-              label: acf.aw_policy_button_label,
-              href: policyButtonHref,
-              external:
-                typeof acf.aw_policy_button_href === "object" &&
-                acf.aw_policy_button_href?.target === "_blank",
-            }
-          : undefined,
-    },
- 
+
     cta: {
       left: {
         title: acf.aw_cta_left_title || undefined,

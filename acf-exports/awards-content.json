@@ -1,0 +1,739 @@
+[
+    {
+        "key": "group_awards_page",
+        "title": "Awards & Recognition Page",
+        "fields": [
+            {
+                "key": "field_aw_tab_hero",
+                "label": "Hero",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_aw_hero_title",
+                "label": "Title",
+                "name": "aw_hero_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Page title. e.g. 'Awards & Recognition'",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Awards & Recognition",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_aw_hero_subline",
+                "label": "Subline",
+                "name": "aw_hero_subline",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Supporting text in the ink panel.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_aw_hero_image",
+                "label": "Hero Image",
+                "name": "aw_hero_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Banner image. Recommended: 1200x500px.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": 0,
+                "min_height": 0,
+                "min_size": 0,
+                "max_width": 0,
+                "max_height": 0,
+                "max_size": 0,
+                "mime_types": ""
+            },
+            {
+                "key": "field_aw_breadcrumb",
+                "label": "Breadcrumb",
+                "name": "aw_breadcrumb",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Breadcrumb links. Last item is current page.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Item",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_aw_breadcrumb_label",
+                        "label": "Label",
+                        "name": "label",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_aw_breadcrumb"
+                    },
+                    {
+                        "key": "field_aw_breadcrumb_href",
+                        "label": "Link",
+                        "name": "href",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_aw_breadcrumb"
+                    }
+                ]
+            },
+            {
+                "key": "field_aw_tab_subnav",
+                "label": "Sub Nav",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_aw_subnav_label",
+                "label": "Sub Nav Label",
+                "name": "aw_subnav_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Label on the left of the lavender bar.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Awards & Recognition",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_aw_subnav_links",
+                "label": "Sub Nav Links",
+                "name": "aw_subnav_links",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Anchor links in the sub-nav bar.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Link",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_aw_subnav_link_label",
+                        "label": "Label",
+                        "name": "label",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_aw_subnav_links"
+                    },
+                    {
+                        "key": "field_aw_subnav_link_href",
+                        "label": "Href",
+                        "name": "href",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_aw_subnav_links"
+                    }
+                ]
+            },
+            {
+                "key": "field_aw_tab_intro",
+                "label": "Intro",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_aw_intro",
+                "label": "Intro Content",
+                "name": "aw_intro",
+                "aria-label": "",
+                "type": "wysiwyg",
+                "instructions": "Full-width intro text shown below the sub-nav. Write normally — paragraphs, headings, lists all supported.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "tabs": "all",
+                "toolbar": "full",
+                "media_upload": 0,
+                "delay": 0
+            },
+            {
+                "key": "field_aw_intro_button_label",
+                "label": "Intro Button Label",
+                "name": "aw_intro_button_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Button shown directly below the intro paragraph, e.g. 'View Policy'. Leave empty to hide the button.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "View Policy",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_aw_intro_button_href",
+                "label": "Intro Button Link",
+                "name": "aw_intro_button_href",
+                "aria-label": "",
+                "type": "link",
+                "instructions": "Link for the intro button. Set target to '_blank' for PDFs.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array"
+            },
+            {
+                "key": "field_aw_tab_awardees",
+                "label": "Awardees",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_aw_awardees_title",
+                "label": "Awardees Section Title",
+                "name": "aw_awardees_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "e.g. 'List of Awardees'",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "List of Awardees",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_aw_years",
+                "label": "Award Years",
+                "name": "aw_years",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "One row per year. Each year has its own list of awardees. Most recent year first.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Year",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_aw_year_label",
+                        "label": "Year",
+                        "name": "year",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "e.g. '2025-26'",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_aw_years"
+                    },
+                    {
+                        "key": "field_aw_year_awardees",
+                        "label": "Awardees",
+                        "name": "awardees",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "One row per awardee in this year.",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "min": 0,
+                        "max": 0,
+                        "layout": "block",
+                        "button_label": "Add Awardee",
+                        "rows_per_page": 20,
+                        "collapsed": "",
+                        "sub_fields": [
+                            {
+                                "key": "field_aw_awardee_student",
+                                "label": "Student Name",
+                                "name": "student_name",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 1,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_aw_year_awardees"
+                            },
+                            {
+                                "key": "field_aw_awardee_month",
+                                "label": "Publication Month",
+                                "name": "publication_month",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "e.g. 'Jul-25'",
+                                "required": 0,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_aw_year_awardees"
+                            },
+                            {
+                                "key": "field_aw_awardee_venue",
+                                "label": "Publication Venue",
+                                "name": "publication_venue",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "e.g. 'IEEE Sensors Journal'",
+                                "required": 0,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_aw_year_awardees"
+                            },
+                            {
+                                "key": "field_aw_awardee_faculty",
+                                "label": "Faculty Author",
+                                "name": "faculty_author",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_aw_year_awardees"
+                            },
+                            {
+                                "key": "field_aw_awardee_title",
+                                "label": "Publication Title",
+                                "name": "title",
+                                "aria-label": "",
+                                "type": "textarea",
+                                "instructions": "Full publication title.",
+                                "required": 0,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "rows": 3,
+                                "default_value": "",
+                                "new_lines": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "parent_repeater": "field_aw_year_awardees"
+                            }
+                        ],
+                        "parent_repeater": "field_aw_years"
+                    }
+                ]
+            },
+            {
+                "key": "field_aw_tab_cta",
+                "label": "CTA",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_aw_cta_left_title",
+                "label": "Left CTA Title",
+                "name": "aw_cta_left_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Gold panel heading.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_aw_cta_left_description",
+                "label": "Left CTA Description",
+                "name": "aw_cta_left_description",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_aw_cta_left_label",
+                "label": "Left CTA Button Label",
+                "name": "aw_cta_left_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Know More",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_aw_cta_left_href",
+                "label": "Left CTA Link",
+                "name": "aw_cta_left_href",
+                "aria-label": "",
+                "type": "link",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array"
+            },
+            {
+                "key": "field_aw_cta_right_title",
+                "label": "Right CTA Title",
+                "name": "aw_cta_right_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Red panel heading.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_aw_cta_right_description",
+                "label": "Right CTA Description",
+                "name": "aw_cta_right_description",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_aw_cta_right_label",
+                "label": "Right CTA Button Label",
+                "name": "aw_cta_right_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Know More",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_aw_cta_right_href",
+                "label": "Right CTA Link",
+                "name": "aw_cta_right_href",
+                "aria-label": "",
+                "type": "link",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page",
+                    "operator": "==",
+                    "value": "339"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 1,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": "",
+        "show_in_graphql": 1,
+        "graphql_field_name": "awards&RecognitionPage",
+        "map_graphql_types_from_location_rules": 0,
+        "graphql_types": ""
+    }
+]

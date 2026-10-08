@@ -828,9 +828,9 @@ export interface GrantsPageData {
 
 // ============================================================================
 //  RESEARCH — Awards & Recognition page (/research/awards)
-//  Reuses PageHero, PageSubNav, ProseIntro, SplitCta.
+//  Reuses PageHero, PageSubNav, ProseIntro (with its optional trailing
+//  button), SplitCta.
 //  New: AwardeesTable — year-keyed list of awardees with segmented year tabs.
-//       PolicySection — BleedTitle + mixed prose/bullets + optional gold CTA.
 // ============================================================================
 
 /** Single awardee row in the List of Awardees table */
@@ -877,12 +877,18 @@ export interface AwardsPageData {
   subNavLabel: string;
   subNav: SubNavLink[];
   intro: string[];
+  /** Optional CTA shown directly below the intro paragraph (e.g. "View Policy"). */
+  introButton?: {
+    label: string;
+    href: string;
+    /** If true, the link opens in a new tab. Use for direct PDF download links. */
+    external?: boolean;
+  };
   awardees: {
     title: string;
     /** Ordered list of years (newest first usually). Active = years[0] */
     years: AwardeesYearGroup[];
   };
-  policy: PolicyData;
   cta: { left: CtaPanel; right: CtaPanel };
 }
 
