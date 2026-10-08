@@ -24,15 +24,20 @@ export function ActionButton({
   children,
   variant = "outline",
   className = "",
+  newTab = false,
 }: {
   href: string;
   children: React.ReactNode;
   variant?: Variant;
   className?: string;
+  /** Opens the link in a new tab — e.g. a button linking straight to an uploaded PDF. */
+  newTab?: boolean;
 }) {
   return (
     <Link
       href={href}
+      target={newTab ? "_blank" : undefined}
+      rel={newTab ? "noopener noreferrer" : undefined}
       className={`group inline-flex h-12 w-[217px] max-w-full items-center justify-between px-5 font-display text-base font-bold uppercase tracking-wide transition-colors ${styles[variant]} ${className}`}
     >
       <span>{children}</span>

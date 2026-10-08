@@ -1942,6 +1942,14 @@ export interface HandbookBrochuresPageData {
   items: HandbookBrochureItem[];
 }
 
+export interface TreeSurveyPageData {
+  hero: PageHeroContent;
+  paragraphs: string[];
+  ctaLabel: string;
+  ctaFileUrl: string;
+  sideImage: string;
+}
+
 export interface ConvocationCard {
   id: string;
   title: string;

@@ -131,6 +131,7 @@ import type {
   PoliciesPageData,
   AnnualReportPageData,
   HandbookBrochuresPageData,
+  TreeSurveyPageData,
   ConvocationPageData,
   ConvocationDetailPageData,
   FacultyOnTenurePageData,
@@ -2602,6 +2603,22 @@ interface WpHandbookBrochuresAcf {
   hb_section_title: string;
   hb_section_subtitle: string;
   hb_items: WpHbItem[] | false;
+}
+
+interface WpTsParagraph {
+  paragraph: string;
+}
+
+interface WpTreeSurveyAcf {
+  // Hero
+  ts_hero_title: string;
+  ts_hero_subline: string;
+  ts_hero_image: string;
+  // Content
+  ts_paragraphs: WpTsParagraph[] | false;
+  ts_cta_label: string;
+  ts_cta_file: string;
+  ts_side_image: string;
 }
 
 interface WpCvSubNavLink {
@@ -8944,6 +8961,39 @@ export async function getHandbookBrochuresPage(): Promise<HandbookBrochuresPageD
       title: item.title,
       fileUrl: item.file,
     })),
+  };
+}
+
+export async function getTreeSurveyPage(): Promise<TreeSurveyPageData> {
+  const acf = await getPageAcf<WpTreeSurveyAcf>("tree-survey");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Tree Survey page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Tree Survey", image: "https://picsum.photos/seed/tree-survey/1200/500", breadcrumb: [] },
+      paragraphs: [],
+      ctaLabel: "Click Here to Report",
+      ctaFileUrl: "#",
+      sideImage: "https://picsum.photos/seed/tree-survey-side/900/600",
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.ts_hero_title,
+      subline: acf.ts_hero_subline || undefined,
+      image: acf.ts_hero_image,
+    },
+
+    paragraphs: toArray(acf.ts_paragraphs).map((r) =>
+      r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+    ),
+
+    ctaLabel: acf.ts_cta_label || "Click Here to Report",
+    ctaFileUrl: acf.ts_cta_file,
+    sideImage: acf.ts_side_image,
   };
 }
 
