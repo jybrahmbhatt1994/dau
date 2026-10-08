@@ -1993,6 +1993,25 @@ export interface GrievanceAccordionItem {
   buttons: GrievanceAccordionButton[];
 }
 
+export interface GrievanceAuthorityRow {
+  id: string;
+  natureOfGrievance: string;
+  level1: string;
+  level2: string;
+  level3: string;
+}
+
+export interface GrievanceTablePageData {
+  hero: PageHeroContent;
+  tableTitle: string;
+  level1Label: string;
+  level2Label: string;
+  level3Label: string;
+  rows: GrievanceAuthorityRow[];
+  /** Rich HTML from a WYSIWYG field — the Ombudsperson paragraphs, with an inline mailto link. */
+  noteHtml: string;
+}
+
 export interface GrievanceRedressalPageData {
   hero: PageHeroContent;
   intro: GrievanceIntroContent;

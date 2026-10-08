@@ -133,6 +133,7 @@ import type {
   HandbookBrochuresPageData,
   TreeSurveyPageData,
   GrievanceRedressalPageData,
+  GrievanceTablePageData,
   ConvocationPageData,
   ConvocationDetailPageData,
   FacultyOnTenurePageData,
@@ -2634,6 +2635,28 @@ interface WpGrAccordionItem {
   committee_members: WpGrCommitteeMember[] | false;
   content_after_committee: string; // wysiwyg HTML, rendered after the committee grid
   buttons: WpGrButton[] | false;
+}
+
+interface WpGtRow {
+  nature_of_grievance: string;
+  level_1: string;
+  level_2: string;
+  level_3: string;
+}
+
+interface WpGrievanceTableAcf {
+  // Hero
+  gt_hero_title: string;
+  gt_hero_subline: string;
+  gt_hero_image: string;
+  // Table
+  gt_table_title: string;
+  gt_level_1_label: string;
+  gt_level_2_label: string;
+  gt_level_3_label: string;
+  gt_rows: WpGtRow[] | false;
+  // Note
+  gt_note: string; // wysiwyg HTML
 }
 
 interface WpGrievanceRedressalAcf {
@@ -9106,6 +9129,40 @@ export async function getGrievanceRedressalPage(): Promise<GrievanceRedressalPag
         href: acf.gr_cta_right_href?.url ?? "#",
       },
     },
+  };
+}
+
+/**
+ * Shared template for the 3 "Grievance Redressal Authority" pages linked
+ * from accordion #3 on /grievance-redressal (table-1-for-students,
+ * table-2-for-faculty, table-3-for-staff) — one ACF field group assigned to
+ * all 3 WP pages, fetched here generically by slug.
+ */
+export async function getGrievanceTablePage(slug: string): Promise<GrievanceTablePageData | null> {
+  const acf = await getPageAcf<WpGrievanceTableAcf>(slug);
+  if (!acf) return null;
+
+  return {
+    hero: {
+      title: acf.gt_hero_title,
+      subline: acf.gt_hero_subline || undefined,
+      image: acf.gt_hero_image,
+    },
+
+    tableTitle: acf.gt_table_title,
+    level1Label: acf.gt_level_1_label || "Level-I Grievance Handling Authority",
+    level2Label: acf.gt_level_2_label || "Level-II Grievance Handling Authority",
+    level3Label: acf.gt_level_3_label || "Level-III Grievance Handling Authority",
+
+    rows: toArray(acf.gt_rows).map((r, i) => ({
+      id: String(i),
+      natureOfGrievance: r.nature_of_grievance,
+      level1: r.level_1,
+      level2: r.level_2,
+      level3: r.level_3,
+    })),
+
+    noteHtml: acf.gt_note,
   };
 }
 

@@ -1,0 +1,373 @@
+[
+    {
+        "key": "group_grievance_table_page",
+        "title": "Grievance Redressal Authority Table Page",
+        "fields": [
+            {
+                "key": "field_gt_tab_hero",
+                "label": "Hero",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_gt_hero_title",
+                "label": "Title",
+                "name": "gt_hero_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "e.g. 'Table 1: For Students'",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gt_hero_subline",
+                "label": "Subline",
+                "name": "gt_hero_subline",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Supporting text in the ink panel.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_gt_hero_image",
+                "label": "Hero Image",
+                "name": "gt_hero_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Banner image. Recommended: 1200x500px.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": 0,
+                "min_height": 0,
+                "min_size": 0,
+                "max_width": 0,
+                "max_height": 0,
+                "max_size": 0,
+                "mime_types": ""
+            },
+            {
+                "key": "field_gt_tab_table",
+                "label": "Table",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_gt_table_title",
+                "label": "Table Title",
+                "name": "gt_table_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Bleed-underline heading above the table, e.g. 'Table 1: Grievance Redressal Authority for Students'.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gt_level_1_label",
+                "label": "Level-I Column Label",
+                "name": "gt_level_1_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Level-I Grievance Handling Authority",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gt_level_2_label",
+                "label": "Level-II Column Label",
+                "name": "gt_level_2_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Level-II Grievance Handling Authority",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gt_level_3_label",
+                "label": "Level-III Column Label",
+                "name": "gt_level_3_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Level-III Grievance Handling Authority",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gt_rows",
+                "label": "Rows",
+                "name": "gt_rows",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "One row per nature of grievance.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "table",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_gt_row_nature",
+                        "label": "Nature of Grievances",
+                        "name": "nature_of_grievance",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_gt_rows"
+                    },
+                    {
+                        "key": "field_gt_row_level_1",
+                        "label": "Level-I",
+                        "name": "level_1",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_gt_rows"
+                    },
+                    {
+                        "key": "field_gt_row_level_2",
+                        "label": "Level-II",
+                        "name": "level_2",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_gt_rows"
+                    },
+                    {
+                        "key": "field_gt_row_level_3",
+                        "label": "Level-III",
+                        "name": "level_3",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_gt_rows"
+                    }
+                ]
+            },
+            {
+                "key": "field_gt_tab_note",
+                "label": "Note",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_gt_note",
+                "label": "Note",
+                "name": "gt_note",
+                "aria-label": "",
+                "type": "wysiwyg",
+                "instructions": "Shown on a gray band below the table — the Ombudsperson paragraphs. Use the editor's link tool for the mailto: link.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "tabs": "all",
+                "toolbar": "full",
+                "media_upload": 0,
+                "delay": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page",
+                    "operator": "==",
+                    "value": "5492"
+                }
+            ],
+            [
+                {
+                    "param": "page",
+                    "operator": "==",
+                    "value": "5498"
+                }
+            ],
+            [
+                {
+                    "param": "page",
+                    "operator": "==",
+                    "value": "5500"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Shared template for the 3 Grievance Redressal Authority table pages (table-1-for-students / 5492, table-2-for-faculty / 5498, table-3-for-staff / 5500), linked from accordion #3 on /grievance-redressal. One field group, same fields, assigned to all 3 pages.",
+        "show_in_rest": 1,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": "",
+        "show_in_graphql": 1,
+        "graphql_field_name": "grievanceTablePage",
+        "map_graphql_types_from_location_rules": 0,
+        "graphql_types": ""
+    }
+]
