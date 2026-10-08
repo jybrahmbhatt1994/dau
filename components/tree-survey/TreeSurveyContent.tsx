@@ -25,7 +25,7 @@ export function TreeSurveyContent({
             </div>
 
             <div className="mt-8">
-              <ActionButton href={ctaFileUrl} variant="filledGold" newTab className="w-auto whitespace-nowrap px-6">
+              <ActionButton href={ctaFileUrl} variant="filledGold" newTab fixedWidth={false}>
                 {ctaLabel}
               </ActionButton>
             </div>
