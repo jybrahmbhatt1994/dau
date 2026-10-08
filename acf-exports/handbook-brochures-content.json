@@ -1,0 +1,194 @@
+[
+    {
+        "key": "group_handbook_brochures_content",
+        "title": "Handbook & Brochures — Page Content",
+        "fields": [
+            {
+                "key": "field_hb_hero_title",
+                "label": "Hero Title",
+                "name": "hb_hero_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Page title shown in the hero's dark panel.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Handbook & Brochures",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_hb_hero_subline",
+                "label": "Hero Subline",
+                "name": "hb_hero_subline",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Optional supporting line shown under the hero title.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "rows": 3,
+                "placeholder": "",
+                "new_lines": ""
+            },
+            {
+                "key": "field_hb_hero_image",
+                "label": "Hero Image",
+                "name": "hb_hero_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Banner image shown on the left ~63% of the hero.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+            },
+            {
+                "key": "field_hb_section_title",
+                "label": "Section Title",
+                "name": "hb_section_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Centered heading shown above the card grid.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Handbook & Brochures",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_hb_section_subtitle",
+                "label": "Section Subtitle",
+                "name": "hb_section_subtitle",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Centered line shown below the section title.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Click on the link below to view or download the document",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_hb_items",
+                "label": "Items",
+                "name": "hb_items",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "One card per handbook/brochure — cover image + title, opens the file in a new tab.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "min": 0,
+                "max": 0,
+                "collapsed": "field_hb_item_title",
+                "button_label": "Add Item",
+                "sub_fields": [
+                    {
+                        "key": "field_hb_item_cover_image",
+                        "label": "Cover Image",
+                        "name": "cover_image",
+                        "type": "image",
+                        "instructions": "Recommended: portrait, e.g. 600x800px.",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "url",
+                        "preview_size": "medium",
+                        "library": "all"
+                    },
+                    {
+                        "key": "field_hb_item_title",
+                        "label": "Title",
+                        "name": "title",
+                        "type": "text",
+                        "instructions": "e.g. \"Student Handbook 2026\"",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_hb_item_file",
+                        "label": "File",
+                        "name": "file",
+                        "type": "file",
+                        "instructions": "Uploaded PDF.",
+                        "required": 1,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "url",
+                        "library": "all",
+                        "min_size": "",
+                        "max_size": "",
+                        "mime_types": ""
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Hero, section heading, and cover-image card grid (each opening its PDF in a new tab) shown on the Handbook & Brochures page (page slug: handbook-brochures). Same layout as the Annual Report page.",
+        "show_in_rest": 0
+    }
+]

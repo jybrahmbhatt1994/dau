@@ -130,6 +130,7 @@ import type {
   NaacPageData,
   PoliciesPageData,
   AnnualReportPageData,
+  HandbookBrochuresPageData,
   ConvocationPageData,
   ConvocationDetailPageData,
   FacultyOnTenurePageData,
@@ -2584,6 +2585,23 @@ interface WpAnnualReportAcf {
   ar_section_title: string;
   ar_section_subtitle: string;
   ar_items: WpArItem[] | false;
+}
+
+interface WpHbItem {
+  cover_image: string;
+  title: string;
+  file: string;
+}
+
+interface WpHandbookBrochuresAcf {
+  // Hero
+  hb_hero_title: string;
+  hb_hero_subline: string;
+  hb_hero_image: string;
+  // List
+  hb_section_title: string;
+  hb_section_subtitle: string;
+  hb_items: WpHbItem[] | false;
 }
 
 interface WpCvSubNavLink {
@@ -8890,6 +8908,40 @@ export async function getAnnualReportPage(): Promise<AnnualReportPageData> {
       id: String(i),
       coverImage: item.cover_image,
       year: item.year,
+      fileUrl: item.file,
+    })),
+  };
+}
+
+export async function getHandbookBrochuresPage(): Promise<HandbookBrochuresPageData> {
+  const acf = await getPageAcf<WpHandbookBrochuresAcf>("handbook-brochures");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Handbook & Brochures page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Handbook & Brochures", image: "https://picsum.photos/seed/handbook-brochures/1200/500", breadcrumb: [] },
+      sectionTitle: "Handbook & Brochures",
+      sectionSubtitle: "Click on the link below to view or download the document",
+      items: [],
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.hb_hero_title,
+      subline: acf.hb_hero_subline || undefined,
+      image: acf.hb_hero_image,
+    },
+
+    sectionTitle: acf.hb_section_title,
+    sectionSubtitle: acf.hb_section_subtitle,
+
+    items: toArray(acf.hb_items).map((item, i) => ({
+      id: String(i),
+      coverImage: item.cover_image,
+      title: item.title,
       fileUrl: item.file,
     })),
   };

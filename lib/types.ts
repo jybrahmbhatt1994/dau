@@ -1928,6 +1928,20 @@ export interface AnnualReportPageData {
   items: AnnualReportItem[];
 }
 
+export interface HandbookBrochureItem {
+  id: string;
+  coverImage: string;
+  title: string; // e.g. "Student Handbook 2026"
+  fileUrl: string;
+}
+
+export interface HandbookBrochuresPageData {
+  hero: PageHeroContent;
+  sectionTitle: string;
+  sectionSubtitle: string;
+  items: HandbookBrochureItem[];
+}
+
 export interface ConvocationCard {
   id: string;
   title: string;
