@@ -1956,6 +1956,52 @@ export interface TreeSurveyPageData {
   sideImage: string;
 }
 
+// ============================================================================
+//  Grievance Redressal page (/grievance-redressal)
+//  Reuses PageHero, SplitCta. New: GrievanceIntro (heading + paragraphs +
+//  image) and GrievanceAccordionSection (BleedTitle + intro + accordion
+//  list, one open at a time — same interaction as SupportAccordion).
+// ============================================================================
+
+export interface GrievanceIntroContent {
+  title: string;
+  paragraphs: string[];
+  image: string;
+}
+
+export interface GrievanceCommitteeMember {
+  name: string;
+  role: string;
+}
+
+export interface GrievanceAccordionButton {
+  label: string;
+  href: string;
+}
+
+export interface GrievanceAccordionItem {
+  id: string;
+  title: string; // e.g. "1. Scope" — admin includes the number
+  /** Rich HTML from a WYSIWYG field — paragraphs, sub-headings, bullet lists. */
+  bodyHtml: string;
+  /** Optional "GRHC Committee" card grid, rendered after `bodyHtml`. */
+  committeeMembers: GrievanceCommitteeMember[];
+  /** Optional rich HTML rendered after the committee grid (e.g. "Terms of
+   *  Reference" + "Conflict of interest" — only populated on one item). */
+  bodyHtmlAfterCommittee: string;
+  /** Optional row of gold buttons, rendered last (e.g. "Table 1: for Students"). */
+  buttons: GrievanceAccordionButton[];
+}
+
+export interface GrievanceRedressalPageData {
+  hero: PageHeroContent;
+  intro: GrievanceIntroContent;
+  accordionsTitle: string;
+  accordionsIntro: string;
+  accordions: GrievanceAccordionItem[];
+  cta: { left: CtaPanel; right: CtaPanel };
+}
+
 export interface ConvocationCard {
   id: string;
   title: string;

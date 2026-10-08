@@ -1,0 +1,665 @@
+[
+    {
+        "key": "group_grievance_redressal_page",
+        "title": "Grievance Redressal Page",
+        "fields": [
+            {
+                "key": "field_gr_tab_hero",
+                "label": "Hero",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_gr_hero_title",
+                "label": "Title",
+                "name": "gr_hero_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Page title. e.g. 'Grievance Redressal'",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Grievance Redressal",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gr_hero_subline",
+                "label": "Subline",
+                "name": "gr_hero_subline",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Supporting text in the ink panel.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_gr_hero_image",
+                "label": "Hero Image",
+                "name": "gr_hero_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Banner image. Recommended: 1200x500px.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": 0,
+                "min_height": 0,
+                "min_size": 0,
+                "max_width": 0,
+                "max_height": 0,
+                "max_size": 0,
+                "mime_types": ""
+            },
+            {
+                "key": "field_gr_tab_intro",
+                "label": "Intro",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_gr_intro_title",
+                "label": "Intro Title",
+                "name": "gr_intro_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "e.g. 'Grievance Redressal Procedure for Students and Employees'",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Grievance Redressal Procedure for Students and Employees",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gr_intro_paragraphs",
+                "label": "Intro Paragraphs",
+                "name": "gr_intro_paragraphs",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "One block per paragraph, shown below the intro title, left column.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Paragraph",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_gr_intro_paragraph",
+                        "label": "Paragraph",
+                        "name": "paragraph",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "rows": 4,
+                        "default_value": "",
+                        "new_lines": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "parent_repeater": "field_gr_intro_paragraphs"
+                    }
+                ]
+            },
+            {
+                "key": "field_gr_intro_image",
+                "label": "Intro Image",
+                "name": "gr_intro_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Image shown beside the intro text, right-hand column.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": 0,
+                "min_height": 0,
+                "min_size": 0,
+                "max_width": 0,
+                "max_height": 0,
+                "max_size": 0,
+                "mime_types": ""
+            },
+            {
+                "key": "field_gr_tab_accordions",
+                "label": "Accordions",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_gr_accordions_title",
+                "label": "Section Title",
+                "name": "gr_accordions_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Bleed-underline heading shown above the accordion list, e.g. 'Grievance Redressal Policy'.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Grievance Redressal Policy",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gr_accordions_intro",
+                "label": "Section Intro",
+                "name": "gr_accordions_intro",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Optional paragraph shown below the section title, above the accordion list.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_gr_accordions",
+                "label": "Accordion Items",
+                "name": "gr_accordions",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "One row per accordion (e.g. '1. Scope', '2. Nature of Grievances', ...). Only one item is open at a time on the frontend — the first row is open by default.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Accordion Item",
+                "rows_per_page": 20,
+                "collapsed": "field_gr_accordion_title",
+                "sub_fields": [
+                    {
+                        "key": "field_gr_accordion_title",
+                        "label": "Title",
+                        "name": "title",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "Include the number, e.g. '1. Scope'.",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_gr_accordions"
+                    },
+                    {
+                        "key": "field_gr_accordion_content",
+                        "label": "Content",
+                        "name": "content",
+                        "aria-label": "",
+                        "type": "wysiwyg",
+                        "instructions": "Main body — paragraphs, sub-headings (Heading 3/4), bullet lists. Rendered first.",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "tabs": "all",
+                        "toolbar": "full",
+                        "media_upload": 0,
+                        "delay": 0,
+                        "parent_repeater": "field_gr_accordions"
+                    },
+                    {
+                        "key": "field_gr_accordion_committee_members",
+                        "label": "Committee Members",
+                        "name": "committee_members",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "Optional — only used on the 'Authority and Procedure' item. Renders as a card grid (name + role) directly after the Content field above. Leave empty on items that don't need it.",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "min": 0,
+                        "max": 0,
+                        "layout": "table",
+                        "button_label": "Add Member",
+                        "rows_per_page": 20,
+                        "collapsed": "",
+                        "parent_repeater": "field_gr_accordions",
+                        "sub_fields": [
+                            {
+                                "key": "field_gr_committee_member_name",
+                                "label": "Name",
+                                "name": "name",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "e.g. 'Prof. Madhumita Mazumdar'",
+                                "required": 1,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_gr_accordion_committee_members"
+                            },
+                            {
+                                "key": "field_gr_committee_member_role",
+                                "label": "Role",
+                                "name": "role",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "e.g. 'Chairperson' or '(ex-officio) Member'",
+                                "required": 1,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_gr_accordion_committee_members"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "field_gr_accordion_content_after_committee",
+                        "label": "Content (after Committee grid)",
+                        "name": "content_after_committee",
+                        "aria-label": "",
+                        "type": "wysiwyg",
+                        "instructions": "Optional — rendered after the Committee Members grid (e.g. 'Terms of Reference of GRHC' + 'Conflict of interest'). Leave empty if this item has no committee grid.",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "tabs": "all",
+                        "toolbar": "full",
+                        "media_upload": 0,
+                        "delay": 0,
+                        "parent_repeater": "field_gr_accordions"
+                    },
+                    {
+                        "key": "field_gr_accordion_buttons",
+                        "label": "Buttons",
+                        "name": "buttons",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "Optional — row of gold buttons rendered last, e.g. 'Table 1: for Students'. Leave empty on items that don't need it.",
+                        "required": 0,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "min": 0,
+                        "max": 0,
+                        "layout": "table",
+                        "button_label": "Add Button",
+                        "rows_per_page": 20,
+                        "collapsed": "",
+                        "parent_repeater": "field_gr_accordions",
+                        "sub_fields": [
+                            {
+                                "key": "field_gr_accordion_button_label",
+                                "label": "Label",
+                                "name": "label",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "e.g. 'Table 1: for Students'",
+                                "required": 1,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_gr_accordion_buttons"
+                            },
+                            {
+                                "key": "field_gr_accordion_button_link",
+                                "label": "Link",
+                                "name": "link",
+                                "aria-label": "",
+                                "type": "link",
+                                "instructions": "Internal or external URL (e.g. a PDF). Set target to '_blank' for PDFs.",
+                                "required": 1,
+                                "conditional_logic": false,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "return_format": "array",
+                                "parent_repeater": "field_gr_accordion_buttons"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "key": "field_gr_tab_cta",
+                "label": "CTA",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_gr_cta_left_title",
+                "label": "Left CTA Title",
+                "name": "gr_cta_left_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Gold panel heading, e.g. 'Academic Calendar'.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gr_cta_left_description",
+                "label": "Left CTA Description",
+                "name": "gr_cta_left_description",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_gr_cta_left_label",
+                "label": "Left CTA Button Label",
+                "name": "gr_cta_left_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Know More",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gr_cta_left_href",
+                "label": "Left CTA Link",
+                "name": "gr_cta_left_href",
+                "aria-label": "",
+                "type": "link",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array"
+            },
+            {
+                "key": "field_gr_cta_right_title",
+                "label": "Right CTA Title",
+                "name": "gr_cta_right_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Red panel heading, e.g. 'Academic Areas'.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gr_cta_right_description",
+                "label": "Right CTA Description",
+                "name": "gr_cta_right_description",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_gr_cta_right_label",
+                "label": "Right CTA Button Label",
+                "name": "gr_cta_right_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Know More",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_gr_cta_right_href",
+                "label": "Right CTA Link",
+                "name": "gr_cta_right_href",
+                "aria-label": "",
+                "type": "link",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page",
+                    "operator": "==",
+                    "value": "5455"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Hero, intro, accordion-list (with optional per-item committee grid + buttons), and split CTA for the Grievance Redressal page (page ID 5455, slug grievance-redressal).",
+        "show_in_rest": 1,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": "",
+        "show_in_graphql": 1,
+        "graphql_field_name": "grievanceRedressalPage",
+        "map_graphql_types_from_location_rules": 0,
+        "graphql_types": ""
+    }
+]

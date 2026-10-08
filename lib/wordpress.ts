@@ -132,6 +132,7 @@ import type {
   AnnualReportPageData,
   HandbookBrochuresPageData,
   TreeSurveyPageData,
+  GrievanceRedressalPageData,
   ConvocationPageData,
   ConvocationDetailPageData,
   FacultyOnTenurePageData,
@@ -2605,6 +2606,58 @@ interface WpHandbookBrochuresAcf {
 
 interface WpTsParagraph {
   paragraph: string;
+}
+
+interface WpGrParagraph {
+  paragraph: string;
+}
+
+interface WpGrLinkField {
+  title: string;
+  url: string;
+  target: string;
+}
+
+interface WpGrCommitteeMember {
+  name: string;
+  role: string;
+}
+
+interface WpGrButton {
+  label: string;
+  link: WpGrLinkField;
+}
+
+interface WpGrAccordionItem {
+  title: string;
+  content: string; // wysiwyg HTML, rendered first
+  committee_members: WpGrCommitteeMember[] | false;
+  content_after_committee: string; // wysiwyg HTML, rendered after the committee grid
+  buttons: WpGrButton[] | false;
+}
+
+interface WpGrievanceRedressalAcf {
+  // Hero
+  gr_hero_title: string;
+  gr_hero_subline: string;
+  gr_hero_image: string;
+  // Intro
+  gr_intro_title: string;
+  gr_intro_paragraphs: WpGrParagraph[] | false;
+  gr_intro_image: string;
+  // Accordions
+  gr_accordions_title: string;
+  gr_accordions_intro: string;
+  gr_accordions: WpGrAccordionItem[] | false;
+  // CTA
+  gr_cta_left_title: string;
+  gr_cta_left_description: string;
+  gr_cta_left_label: string;
+  gr_cta_left_href: WpGrLinkField;
+  gr_cta_right_title: string;
+  gr_cta_right_description: string;
+  gr_cta_right_label: string;
+  gr_cta_right_href: WpGrLinkField;
 }
 
 interface WpTreeSurveyAcf {
@@ -8983,6 +9036,76 @@ export async function getTreeSurveyPage(): Promise<TreeSurveyPageData> {
     ctaLabel: acf.ts_cta_label || "Click Here to Report",
     ctaFileUrl: acf.ts_cta_file,
     sideImage: acf.ts_side_image,
+  };
+}
+
+export async function getGrievanceRedressalPage(): Promise<GrievanceRedressalPageData> {
+  const acf = await getPageAcf<WpGrievanceRedressalAcf>("grievance-redressal");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] Grievance Redressal page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "Grievance Redressal", image: "https://picsum.photos/seed/grievance-redressal/1200/500", breadcrumb: [] },
+      intro: { title: "Grievance Redressal Procedure for Students and Employees", paragraphs: [], image: "https://picsum.photos/seed/grievance-redressal-intro/900/600" },
+      accordionsTitle: "Grievance Redressal Policy",
+      accordionsIntro: "",
+      accordions: [],
+      cta: {
+        left: { description: "", cta: "Know More", href: "#" },
+        right: { description: "", cta: "Know More", href: "#" },
+      },
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.gr_hero_title,
+      subline: acf.gr_hero_subline || undefined,
+      image: acf.gr_hero_image,
+    },
+
+    intro: {
+      title: acf.gr_intro_title,
+      paragraphs: toArray(acf.gr_intro_paragraphs).map((r) =>
+        r.paragraph.replace(/\r\n/g, "\n").replace(/\r/g, "\n"),
+      ),
+      image: acf.gr_intro_image,
+    },
+
+    accordionsTitle: acf.gr_accordions_title,
+    accordionsIntro: acf.gr_accordions_intro,
+
+    accordions: toArray(acf.gr_accordions).map((item, i) => ({
+      id: String(i),
+      title: item.title,
+      bodyHtml: item.content,
+      committeeMembers: toArray(item.committee_members).map((m) => ({
+        name: m.name,
+        role: m.role,
+      })),
+      bodyHtmlAfterCommittee: item.content_after_committee,
+      buttons: toArray(item.buttons).map((b) => ({
+        label: b.label,
+        href: b.link?.url ?? "#",
+      })),
+    })),
+
+    cta: {
+      left: {
+        title: acf.gr_cta_left_title || undefined,
+        description: acf.gr_cta_left_description,
+        cta: acf.gr_cta_left_label,
+        href: acf.gr_cta_left_href?.url ?? "#",
+      },
+      right: {
+        title: acf.gr_cta_right_title || undefined,
+        description: acf.gr_cta_right_description,
+        cta: acf.gr_cta_right_label,
+        href: acf.gr_cta_right_href?.url ?? "#",
+      },
+    },
   };
 }
 
