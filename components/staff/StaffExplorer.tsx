@@ -51,7 +51,7 @@ export function StaffExplorer({ members }: { members: StaffCardData[] }) {
   );
 
   return (
-    <section className="bg-surface py-16 lg:py-20">
+    <section className="bg-white py-16 lg:py-20">
       <Container>
         {/* Search — centered, full width */}
         <div className="mx-auto max-w-2xl">
