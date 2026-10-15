@@ -1,0 +1,324 @@
+[
+    {
+        "key": "group_people_page",
+        "title": "People Page",
+        "fields": [
+            {
+                "key": "field_ppl_tab_hero",
+                "label": "Hero",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_ppl_hero_title",
+                "label": "Title",
+                "name": "ppl_hero_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Page title shown in the hero's dark panel.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "People",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_ppl_hero_subline",
+                "label": "Subline",
+                "name": "ppl_hero_subline",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Optional supporting line shown under the hero title.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "rows": 3,
+                "default_value": "",
+                "new_lines": "",
+                "maxlength": "",
+                "placeholder": ""
+            },
+            {
+                "key": "field_ppl_hero_image",
+                "label": "Hero Image",
+                "name": "ppl_hero_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "Banner image shown on the left ~63% of the hero.",
+                "required": 1,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": 0,
+                "min_height": 0,
+                "min_size": 0,
+                "max_width": 0,
+                "max_height": 0,
+                "max_size": 0,
+                "mime_types": ""
+            },
+            {
+                "key": "field_ppl_tab_subnav",
+                "label": "Sub Nav",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_ppl_subnav_label",
+                "label": "Sub Nav Label",
+                "name": "ppl_subnav_label",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Label shown on the left of the lavender sub-nav bar directly under the hero.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Academic Areas",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_ppl_subnav_links",
+                "label": "Sub Nav Links",
+                "name": "ppl_subnav_links",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Jump-links shown on the right of the sub-nav bar.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Link",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_ppl_subnav_link_label",
+                        "label": "Label",
+                        "name": "label",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_ppl_subnav_links"
+                    },
+                    {
+                        "key": "field_ppl_subnav_link_href",
+                        "label": "Href",
+                        "name": "href",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_ppl_subnav_links"
+                    }
+                ]
+            },
+            {
+                "key": "field_ppl_tab_cards",
+                "label": "Cards",
+                "name": "",
+                "aria-label": "",
+                "type": "tab",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placement": "top",
+                "endpoint": 0,
+                "selected": 0
+            },
+            {
+                "key": "field_ppl_cards",
+                "label": "Cards",
+                "name": "ppl_cards",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Icon link cards shown in the grid below the sub-nav, e.g. Faculty, Staff, Doctoral Scholar, Teaching Fellows, Parents. Each card's link will point to its own detail page — these are being designed separately and added later.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 0,
+                "layout": "block",
+                "button_label": "Add Card",
+                "rows_per_page": 20,
+                "collapsed": "field_ppl_card_label",
+                "sub_fields": [
+                    {
+                        "key": "field_ppl_card_label",
+                        "label": "Label",
+                        "name": "label",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "Text shown under the icon, e.g. \"Faculty\".",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_ppl_cards"
+                    },
+                    {
+                        "key": "field_ppl_card_icon",
+                        "label": "Icon",
+                        "name": "icon",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "Icon shown above the label, typically an uploaded SVG.",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "url",
+                        "preview_size": "thumbnail",
+                        "library": "all",
+                        "min_width": 0,
+                        "min_height": 0,
+                        "min_size": 0,
+                        "max_width": 0,
+                        "max_height": 0,
+                        "max_size": 0,
+                        "mime_types": "",
+                        "parent_repeater": "field_ppl_cards"
+                    },
+                    {
+                        "key": "field_ppl_card_href",
+                        "label": "Link",
+                        "name": "href",
+                        "aria-label": "",
+                        "type": "link",
+                        "instructions": "Where the card should go — an internal page or external link.",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "parent_repeater": "field_ppl_cards"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page",
+                    "operator": "==",
+                    "value": "5523"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Hero, sub-nav, and icon-link card grid shown on the People page (page ID 5523, slug people). Same layout as Resources / Work@DAU / Accreditations & Compliance.",
+        "show_in_rest": 1,
+        "display_title": "",
+        "allow_ai_access": false,
+        "ai_description": "",
+        "show_in_graphql": 1,
+        "graphql_field_name": "peoplePage",
+        "map_graphql_types_from_location_rules": 0,
+        "graphql_types": ""
+    }
+]

@@ -124,6 +124,7 @@ import type {
   AlumniPageData,
   ResourcesPageData,
   WorkDauPageData,
+  PeoplePageData,
   AccreditationsPageData,
   NirfPageData,
   NirfDocumentLink,
@@ -2480,6 +2481,29 @@ interface WpWorkDauAcf {
   wd_subnav_links: WpWdSubNavLink[] | false;
   // Cards
   wd_cards: WpWdCard[] | false;
+}
+
+interface WpPplSubNavLink {
+  label: string;
+  href: string;
+}
+
+interface WpPplCard {
+  label: string;
+  icon: string;
+  href: WpReLinkField;
+}
+
+interface WpPeopleAcf {
+  // Hero
+  ppl_hero_title: string;
+  ppl_hero_subline: string;
+  ppl_hero_image: string;
+  // Sub Nav
+  ppl_subnav_label: string;
+  ppl_subnav_links: WpPplSubNavLink[] | false;
+  // Cards
+  ppl_cards: WpPplCard[] | false;
 }
 
 interface WpAcSubNavLink {
@@ -8795,6 +8819,44 @@ export async function getWorkDauPage(): Promise<WorkDauPageData> {
     })),
 
     cards: toArray(acf.wd_cards).map((c, i) => ({
+      id: String(i),
+      label: c.label,
+      icon: c.icon,
+      href: c.href?.url ?? "#",
+    })),
+  };
+}
+
+export async function getPeoplePage(): Promise<PeoplePageData> {
+  const acf = await getPageAcf<WpPeopleAcf>("people");
+
+  if (!acf) {
+    console.warn(
+      "[wordpress.ts] People page ACF not found — using placeholder data.",
+    );
+    return {
+      hero: { title: "People", image: "https://picsum.photos/seed/people/1200/500", breadcrumb: [] },
+      subNavLabel: "Academic Areas",
+      subNav: [],
+      cards: [],
+    };
+  }
+
+  return {
+    hero: {
+      title: acf.ppl_hero_title,
+      subline: acf.ppl_hero_subline || undefined,
+      image: acf.ppl_hero_image,
+    },
+
+    subNavLabel: acf.ppl_subnav_label || "Academic Areas",
+
+    subNav: toArray(acf.ppl_subnav_links).map((l) => ({
+      label: l.label,
+      href: l.href,
+    })),
+
+    cards: toArray(acf.ppl_cards).map((c, i) => ({
       id: String(i),
       label: c.label,
       icon: c.icon,

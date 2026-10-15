@@ -1840,6 +1840,24 @@ export interface WorkDauPageData {
 }
 
 // ============================================================================
+//  ADD to lib/types.ts — People page
+// ============================================================================
+
+export interface PeopleLinkCard {
+  id: string;
+  label: string;
+  icon: string; // uploaded SVG/image URL from WordPress
+  href: string;
+}
+
+export interface PeoplePageData {
+  hero: PageHeroContent;
+  subNavLabel: string;
+  subNav: SubNavLink[];
+  cards: PeopleLinkCard[];
+}
+
+// ============================================================================
 //  ADD to lib/types.ts — Accreditations & Compliance page
 // ============================================================================
 
