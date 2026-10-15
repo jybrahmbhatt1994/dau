@@ -187,7 +187,7 @@ export function DoctoralScholarsExplorer({
             <div className="mt-10 space-y-6">
               {graduateGroups.map(([year, members]) => (
                 <YearAccordionGroup key={year} year={year}>
-                  <div className="flex flex-col">
+                  <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2">
                     {members.map((grad) => (
                       <RecentGraduateCard key={grad.id} scholar={grad} />
                     ))}

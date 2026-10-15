@@ -1,107 +1,89 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import { ExpandableText } from "@/components/doctoral-scholars/ExpandableText";
+import { RecentGraduateDetailModal } from "@/components/doctoral-scholars/RecentGraduateDetailModal";
 import type { RecentGraduateCardData } from "@/lib/types";
+
+/** Renders each comma-separated advisor name underlined, matching the reference. */
+function AdvisorNames({ advisor }: { advisor: string }) {
+  const names = advisor.split(",").map((n) => n.trim()).filter(Boolean);
+  return (
+    <>
+      {names.map((name, i) => (
+        <span key={i}>
+          {i > 0 && ", "}
+          <span className="underline underline-offset-2">{name}</span>
+        </span>
+      ))}
+    </>
+  );
+}
 
 /**
  * DESTINATION: components/doctoral-scholars/RecentGraduateCard.tsx
  *
- * Full-width, richer card used only for the "Recent Graduates" tab —
- * 2-column layout: left = photo/name/advisor/dates/thesis/employment,
- * right = journals/awards (both expandable) + personal webpage.
+ * Compact grid card — photo on the left, name/advisor/dates + a "Know More"
+ * button on the right. Same grid-cols-[photo_1fr] pattern as
+ * DoctoralScholarCard/StaffCard. "Know More" opens the full detail (thesis,
+ * post-PhD employment, publications, awards, personal webpage) in a modal
+ * instead of showing it inline.
  */
 export function RecentGraduateCard({
   scholar,
 }: {
   scholar: RecentGraduateCardData;
 }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="grid grid-cols-1 gap-8 border-b border-line/60 bg-white p-6 lg:grid-cols-2 lg:divide-x lg:divide-line">
-      {/* Left column */}
-      <div className="flex gap-5 lg:pr-8">
-        <div className="relative h-24 w-24 shrink-0 overflow-hidden border border-line">
-          <Image
-            src={scholar.image}
-            alt={scholar.name}
-            fill
-            sizes="96px"
-            className="object-cover"
-          />
-        </div>
+    <div className="grid min-h-[260px] grid-cols-[180px_1fr] bg-surface sm:grid-cols-[220px_1fr]">
+      <div className="relative h-full w-full overflow-hidden">
+        <Image
+          src={scholar.image}
+          alt={scholar.name}
+          fill
+          sizes="220px"
+          className="object-cover"
+        />
+      </div>
 
-        <div className="flex-1 space-y-3">
-          <h3 className="font-display text-lg font-bold text-brand">
-            {scholar.name}
-          </h3>
+      <div className="flex flex-col justify-center gap-4 p-6 sm:p-8">
+        <h3 className="font-display text-xl font-semibold text-navy sm:text-2xl">
+          {scholar.name}
+        </h3>
 
-          <div>
-            <p className="text-sm font-semibold text-black/85">Advisor :</p>
-            <p className="text-sm text-royal">{scholar.advisor || "---"}</p>
-          </div>
+        {scholar.advisor && (
+          <p className="text-sm text-black/80">
+            <span className="font-semibold">Advisor: </span>
+            <AdvisorNames advisor={scholar.advisor} />
+          </p>
+        )}
 
-          <div className="flex gap-8">
-            <div>
-              <p className="text-sm font-semibold text-black/85">
-                Year of Joining :
-              </p>
-              <p className="text-sm text-black/70">
-                {scholar.yearOfJoiningDisplay || "---"}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-black/85">
-                Year of Graduation :
-              </p>
-              <p className="text-sm text-black/70">
-                {scholar.yearOfGraduationDisplay || "---"}
-              </p>
-            </div>
-          </div>
+        <p className="text-sm text-black/80">
+          <span className="font-semibold">Year of Joining: </span>
+          {scholar.yearOfJoiningDisplay || "---"}
+        </p>
 
-          <div>
-            <p className="text-sm font-semibold text-black/85">
-              Thesis Topic :
-            </p>
-            <p className="text-sm text-black/70">
-              {scholar.thesisTopic || "---"}
-            </p>
-          </div>
+        <p className="text-sm text-black/80">
+          <span className="font-semibold">Year of Graduation: </span>
+          {scholar.yearOfGraduationDisplay || "---"}
+        </p>
 
-          <div>
-            <p className="text-sm font-semibold text-black/85">
-              Post PhD employment :
-            </p>
-            <p className="text-sm text-black/70">
-              {scholar.postPhdEmployment || "---"}
-            </p>
-          </div>
+        <div>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="bg-brand px-6 py-2.5 font-display text-sm font-bold text-white transition-colors hover:bg-brand/90"
+          >
+            Know More
+          </button>
         </div>
       </div>
 
-      {/* Right column */}
-      <div className="space-y-4 lg:pl-8">
-        <div>
-          <p className="text-sm font-semibold text-black/85">
-            Journals/Conferences/books/book chapters :
-          </p>
-          <ExpandableText text={scholar.journalsContent ?? "---"} limit={140} />
-        </div>
-
-        <div>
-          <p className="text-sm font-semibold text-black/85">
-            Awards/honors/research visits :
-          </p>
-          <ExpandableText text={scholar.awardsContent ?? "---"} limit={140} />
-        </div>
-
-        <div>
-          <p className="text-sm font-semibold text-black/85">
-            Personal webpage :
-          </p>
-          <p className="text-sm text-black/70">
-            {scholar.personalWebpage || "---"}
-          </p>
-        </div>
-      </div>
+      {open && (
+        <RecentGraduateDetailModal scholar={scholar} onClose={() => setOpen(false)} />
+      )}
     </div>
   );
 }
